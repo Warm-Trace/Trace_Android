@@ -102,7 +102,7 @@ jobs:
         run: |
           ISSUE_TITLE="${{ github.event.issue.title }}"
           JIRA_ISSUE_KEY="${{ steps.create.outputs.issue }}"
-          NEW_TITLE="${JIRA_ISSUE_KEY} ${ISSUE_TITLE}"
+          NEW_TITLE="${ISSUE_TITLE}(${JIRA_ISSUE_KEY})"
           echo "NEW_TITLE=${NEW_TITLE}" >> $GITHUB_ENV
 
       - name: Apply new title
