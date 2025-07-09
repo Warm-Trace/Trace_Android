@@ -18,6 +18,7 @@ import com.example.home.graph.updatepost.UpdatePostRoute
 import com.example.home.graph.writepost.WritePostRoute
 import com.example.navigation.HomeBaseRoute
 import com.example.navigation.HomeGraph
+import java.time.format.DateTimeFormatter
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
     navigate(HomeGraph.HomeRoute, navOptions)
@@ -61,7 +62,7 @@ fun NavController.navigateToPost(postDetail: PostDetail, navOptions: NavOptions?
             imageUrl = if(postDetail.images.isNotEmpty()) postDetail.images[0] else null,
             nickname = postDetail.nickname,
             viewCount = postDetail.viewCount,
-            createdAt = postDetail.createdAt.toString(),
+            createdAt = postDetail.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
             missionContent = postDetail.missionContent,
             providerId = postDetail.providerId,
             images = postDetail.images,
