@@ -35,11 +35,13 @@ fun NavController.navigateToPost(postFeed: PostFeed, navOptions: NavOptions? = n
     navigate(
         HomeGraph.PostRoute(
             postId = postFeed.postId,
+            providerId = postFeed.providerId,
             postType = postFeed.postType.name,
             title = postFeed.title,
             isVerified = postFeed.isVerified,
             content = postFeed.content,
             profileImageUrl = postFeed.profileImageUrl,
+            imageUrl = postFeed.imageUrl,
             nickname = postFeed.nickname,
             viewCount = postFeed.viewCount,
             createdAt = postFeed.createdAt.toString()
@@ -58,7 +60,12 @@ fun NavController.navigateToPost(postDetail: PostDetail, navOptions: NavOptions?
             profileImageUrl = postDetail.profileImageUrl,
             nickname = postDetail.nickname,
             viewCount = postDetail.viewCount,
-            createdAt = postDetail.createdAt.toString()
+            createdAt = postDetail.createdAt.toString(),
+            missionContent = postDetail.missionContent,
+            providerId = postDetail.providerId,
+            images = postDetail.images,
+            isOwner = postDetail.isOwner,
+            yourEmotionType = postDetail.yourEmotionType?.label
         ), navOptions
     )
 }

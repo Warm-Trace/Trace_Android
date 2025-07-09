@@ -37,10 +37,11 @@ sealed class HomeGraph : Route {
         val isVerified: Boolean = false,
         val content: String = "",
         val profileImageUrl: String? = null,
+        val imageUrl: String? = null,
         val nickname: String = "",
         val viewCount: Int = 0,
         val createdAt: String = "",
-        val missionContent: String = "", // PostDetail
+        val missionContent: String? = null,
         val providerId: String = "",
         val images: List<String> = emptyList(),
         val isOwner: Boolean = false,

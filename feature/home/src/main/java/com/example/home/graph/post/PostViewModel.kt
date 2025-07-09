@@ -56,7 +56,11 @@ class PostViewModel @Inject constructor(
             missionContent = routeArgs.missionContent,
             providerId = routeArgs.providerId,
             nickname = routeArgs.nickname,
-            images = routeArgs.images,
+            images = when {
+                routeArgs.images.isNotEmpty() -> routeArgs.images
+                routeArgs.imageUrl != null -> listOf(routeArgs.imageUrl!!)
+                else -> emptyList()
+            },
             profileImageUrl = routeArgs.profileImageUrl,
             yourEmotionType = Emotion.fromString(routeArgs.yourEmotionType),
             createdAt = if (routeArgs.createdAt.isNotEmpty()) LocalDateTime.parse(routeArgs.createdAt) else LocalDateTime.now(),
