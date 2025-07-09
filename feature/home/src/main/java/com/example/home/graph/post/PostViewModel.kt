@@ -90,7 +90,7 @@ class PostViewModel @Inject constructor(
     }
 
     private fun getPost() = viewModelScope.launch {
-        delay(300)
+        delay(300) // 화면 전환 애니메이션 버벅임 방지
 
         postRepository.getPost(postId).onSuccess {
             _postDetail.value = it

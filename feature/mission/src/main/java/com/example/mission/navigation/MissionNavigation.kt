@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.common.ui.defaultSlideDownFadeOut
+import com.example.common.ui.defaultSlideUpFadeIn
 import com.example.mission.graph.mission.MissionRoute
 import com.example.mission.graph.verifymission.VerifyMissionRoute
 import com.example.navigation.MissionBaseRoute
@@ -14,13 +16,13 @@ fun NavController.navigateToMission(navOptions: NavOptions? = null) {
     navigate(MissionGraph.MissionRoute)
 }
 
-fun NavController.navigateToVerifyMission(description : String, navOptions: NavOptions? = null) {
+fun NavController.navigateToVerifyMission(description: String, navOptions: NavOptions? = null) {
     navigate(MissionGraph.VerifyMissionRoute(description))
 }
 
 
 fun NavGraphBuilder.missionNavGraph(
-    navigateBack : () -> Unit,
+    navigateBack: () -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToVerifyMission: (String) -> Unit,
 ) {
@@ -32,10 +34,13 @@ fun NavGraphBuilder.missionNavGraph(
             )
         }
 
-        composable<MissionGraph.VerifyMissionRoute> {
+        composable<MissionGraph.VerifyMissionRoute>(
+            enterTransition = { defaultSlideUpFadeIn() },
+            exitTransition = { defaultSlideDownFadeOut() }
+        ) {
             VerifyMissionRoute(
                 navigateToPost = navigateToPost,
-               navigateBack = navigateBack,
+                navigateBack = navigateBack,
             )
         }
     }

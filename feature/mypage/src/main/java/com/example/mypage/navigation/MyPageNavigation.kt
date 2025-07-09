@@ -5,6 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.example.common.ui.defaultSlideFadeIn
+import com.example.common.ui.defaultSlideFadeOut
 import com.example.mypage.graph.mypage.MyPageRoute
 import com.example.mypage.graph.setting.SettingRoute
 import com.example.mypage.graph.updateprofile.UpdateProfileRoute
@@ -24,7 +26,7 @@ fun NavController.navigateToSetting(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.myPageNavGraph(
-    navigateToLogin : () -> Unit,
+    navigateToLogin: () -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateToUpdateProfile: () -> Unit,
     navigateToSetting: () -> Unit,
@@ -39,13 +41,19 @@ fun NavGraphBuilder.myPageNavGraph(
             )
         }
 
-        composable<MyPageGraph.UpdateProfileRoute> {
+        composable<MyPageGraph.UpdateProfileRoute>(
+            enterTransition = { defaultSlideFadeIn() },
+            exitTransition = { defaultSlideFadeOut() }
+        ) {
             UpdateProfileRoute(
                 navigateBack = navigateBack
             )
         }
 
-        composable<MyPageGraph.SettingRoute> {
+        composable<MyPageGraph.SettingRoute>(
+            enterTransition = { defaultSlideFadeIn() },
+            exitTransition = { defaultSlideFadeOut() }
+        ) {
             SettingRoute(
                 navigateToLogin = navigateToLogin,
                 navigateBack = navigateBack
