@@ -58,6 +58,7 @@ fun NavController.navigateToPost(postDetail: PostDetail, navOptions: NavOptions?
             isVerified = postDetail.isVerified,
             content = postDetail.content,
             profileImageUrl = postDetail.profileImageUrl,
+            imageUrl = if(postDetail.images.isNotEmpty()) postDetail.images[0] else null,
             nickname = postDetail.nickname,
             viewCount = postDetail.viewCount,
             createdAt = postDetail.createdAt.toString(),
