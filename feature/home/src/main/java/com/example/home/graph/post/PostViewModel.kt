@@ -57,7 +57,6 @@ class PostViewModel @Inject constructor(
             providerId = routeArgs.providerId,
             nickname = routeArgs.nickname,
             images = when {
-                routeArgs.images.isNotEmpty() -> routeArgs.images
                 routeArgs.imageUrl != null -> listOf(routeArgs.imageUrl!!)
                 else -> emptyList()
             },

@@ -59,13 +59,12 @@ fun NavController.navigateToPost(postDetail: PostDetail, navOptions: NavOptions?
             isVerified = postDetail.isVerified,
             content = postDetail.content,
             profileImageUrl = postDetail.profileImageUrl,
-            imageUrl = if(postDetail.images.isNotEmpty()) postDetail.images[0] else null,
+            imageUrl = postDetail.images.firstOrNull(),
             nickname = postDetail.nickname,
             viewCount = postDetail.viewCount,
             createdAt = postDetail.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
             missionContent = postDetail.missionContent,
             providerId = postDetail.providerId,
-            images = postDetail.images,
             isOwner = postDetail.isOwner,
             yourEmotionType = postDetail.yourEmotionType?.label
         ), navOptions

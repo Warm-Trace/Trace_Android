@@ -43,7 +43,6 @@ sealed class HomeGraph : Route {
         val createdAt: String = "",
         val missionContent: String? = null,
         val providerId: String = "",
-        val images: List<String> = emptyList(),
         val isOwner: Boolean = false,
         val yourEmotionType: String? = null,
     ) : HomeGraph()
