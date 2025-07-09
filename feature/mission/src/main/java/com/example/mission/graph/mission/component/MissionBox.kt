@@ -31,7 +31,6 @@ import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.TraceTheme
 import com.example.domain.model.mission.MissionFeed
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Composable
 internal fun VerifiedMissionBox(

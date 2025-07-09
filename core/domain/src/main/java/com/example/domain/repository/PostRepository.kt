@@ -22,20 +22,20 @@ interface PostRepository {
         title: String,
         content: String,
         images: List<String>?
-    ): Result<Int>
+    ): Result<PostDetail>
 
     suspend fun verifyAndAddPost(
         title: String,
         content: String,
         images: List<String>?
-    ) : Result<Int>
+    ) : Result<PostDetail>
 
     suspend fun updatePost(
         postId: Int,
         title: String,
         content: String,
         images: List<String>?
-    ): Result<Int>
+    ): Result<PostDetail>
 
     suspend fun deletePost(postId: Int): Result<Unit>
 

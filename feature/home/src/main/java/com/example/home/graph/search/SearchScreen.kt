@@ -41,7 +41,7 @@ import com.example.home.graph.search.component.TraceSearchField
 @Composable
 internal fun SearchRoute(
     navigateBack: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val keywordInput by viewModel.keywordInput.collectAsStateWithLifecycle()
@@ -58,7 +58,7 @@ internal fun SearchRoute(
     LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SearchEvent.NavigateToPost -> navigateToPost(event.postId)
+                is SearchEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is SearchEvent.NavigateBack -> navigateBack()
             }
         }
@@ -80,7 +80,7 @@ internal fun SearchRoute(
         searchByRecentKeyword = viewModel::searchByRecentKeyword,
         resetSearch = viewModel::resetSearch,
         navigateBack = { viewModel.onEvent(SearchEvent.NavigateBack) },
-        navigateToPost = { postId -> viewModel.onEvent(SearchEvent.NavigateToPost(postId)) }
+        navigateToPost = { postFeed -> viewModel.onEvent(SearchEvent.NavigateToPost(postFeed)) }
     )
 }
 
@@ -101,7 +101,7 @@ private fun SearchScreen(
     clearKeywords: () -> Unit,
     resetSearch: () -> Unit,
     navigateBack: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }

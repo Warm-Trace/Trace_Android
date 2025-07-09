@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
+import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,7 +74,7 @@ class UpdatePostViewModel @Inject constructor(
 
     fun updatePost() = viewModelScope.launch {
         postRepository.updatePost(postId = postId, title = _title.value, content = _content.value, images = _images.value).onSuccess {
-            postId -> _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postId))
+            postDetail -> _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
         }.onFailure {
             _eventChannel.send(UpdatePostEvent.UpdatePostFailure)
         }
@@ -81,7 +82,7 @@ class UpdatePostViewModel @Inject constructor(
 
     sealed class UpdatePostEvent {
         data object NavigateToBack : UpdatePostEvent()
-        data class UpdatePostSuccess(val postId: Int) : UpdatePostEvent()
+        data class UpdatePostSuccess(val postDetail: PostDetail) : UpdatePostEvent()
         data object UpdatePostFailure : UpdatePostEvent()
     }
 }

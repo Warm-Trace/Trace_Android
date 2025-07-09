@@ -64,7 +64,7 @@ import java.time.LocalDateTime
 @Composable
 internal fun HomeRoute(
     navigateToSearch: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -74,7 +74,7 @@ internal fun HomeRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is HomeEvent.NavigateToPost -> navigateToPost(event.postId)
+                is HomeEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is HomeEvent.NavigateToWritePost -> navigateToWritePost()
                 is HomeEvent.NavigateToSearch -> navigateToSearch()
             }
@@ -85,7 +85,7 @@ internal fun HomeRoute(
         postFeeds = postFeeds,
         tabType = tabType,
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { postId -> viewModel.onEvent(HomeEvent.NavigateToPost(postId)) },
+        navigateToPost = { postFeed -> viewModel.onEvent(HomeEvent.NavigateToPost(postFeed)) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
         navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) }
     )
@@ -99,7 +99,7 @@ private fun HomeScreen(
     tabType: HomeTab,
     onTabTypeChange: (HomeTab) -> Unit,
     navigateToSearch: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
 ) {
     var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }

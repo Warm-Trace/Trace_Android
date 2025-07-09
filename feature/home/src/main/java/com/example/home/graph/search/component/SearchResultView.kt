@@ -50,7 +50,7 @@ internal fun SearchResultView(
     displayedPosts: LazyPagingItems<PostFeed>,
     onSearchTypeChange: (SearchType) -> Unit,
     onTabTypeChange: (SearchTab) -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
 ) {
     val tabs = SearchType.entries
 
@@ -183,7 +183,7 @@ internal fun SearchResultView(
 
             items(displayedPosts.itemCount) { index ->
                 displayedPosts[index]?.let { postFeed ->
-                    PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
+                    PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed) })
 
                     Spacer(Modifier.height(8.dp))
 

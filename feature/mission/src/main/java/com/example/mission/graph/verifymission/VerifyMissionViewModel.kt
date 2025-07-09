@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
 import com.example.domain.repository.MissionRepository
+import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VerifyMissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
+    private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle,
     val eventHelper: EventHelper
 ) : ViewModel() {
@@ -61,6 +63,7 @@ class VerifyMissionViewModel @Inject constructor(
             images = _images.value
         ).onSuccess { postId ->
             _eventChannel.send(VerifyMissionEvent.VerifyMissionSuccess(postId = postId))
+            userRepository.loadUserInfo()
         }.onFailure {
             _eventChannel.send(VerifyMissionEvent.VerifyMissionFailure)
         }

@@ -3,8 +3,10 @@ package com.example.home.graph.writepost
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.common.event.EventHelper
+import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.WritePostType
 import com.example.domain.repository.PostRepository
+import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WritePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val userRepository: UserRepository,
     val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
@@ -74,8 +77,8 @@ class WritePostViewModel @Inject constructor(
             _title.value,
             _content.value,
             _images.value
-        ).onSuccess { postId ->
-            _eventChannel.send(WritePostEvent.AddPostSuccess(postId = postId))
+        ).onSuccess { postDetail ->
+            _eventChannel.send(WritePostEvent.AddPostSuccess(postDetail))
         }.onFailure {
             _eventChannel.send(WritePostEvent.AddPostFailure)
         }
@@ -90,8 +93,9 @@ class WritePostViewModel @Inject constructor(
             _title.value,
             _content.value,
             _images.value
-        ).onSuccess { postId ->
-            _eventChannel.send(WritePostEvent.AddPostSuccess(postId = postId))
+        ).onSuccess { postDetail ->
+            _eventChannel.send(WritePostEvent.AddPostSuccess(postDetail))
+            userRepository.loadUserInfo()
         }.onFailure {
             _eventChannel.send(WritePostEvent.VerifyFailure)
         }
@@ -101,7 +105,7 @@ class WritePostViewModel @Inject constructor(
 
     sealed class WritePostEvent {
         data object NavigateToBack : WritePostEvent()
-        data class AddPostSuccess(val postId: Int) : WritePostEvent()
+        data class AddPostSuccess(val postDetail: PostDetail) : WritePostEvent()
         data object AddPostFailure : WritePostEvent()
         data object VerifyFailure : WritePostEvent()
     }

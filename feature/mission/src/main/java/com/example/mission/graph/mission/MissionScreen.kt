@@ -36,7 +36,6 @@ import com.example.mission.graph.mission.component.MissionHeaderView
 import com.example.mission.graph.mission.component.VerifiedMissionBox
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Composable
 internal fun MissionRoute(

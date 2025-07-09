@@ -2,6 +2,7 @@ package com.example.navigation
 
 import kotlinx.serialization.Serializable
 
+
 sealed interface Route
 
 @Serializable
@@ -15,7 +16,7 @@ sealed class AuthGraph : Route {
     data object LoginRoute : AuthGraph()
 
     @Serializable
-    data class EditProfileRoute(val signUpToken : String, val providerId: String) : AuthGraph()
+    data class EditProfileRoute(val signUpToken: String, val providerId: String) : AuthGraph()
 }
 
 @Serializable
@@ -29,13 +30,28 @@ sealed class HomeGraph : Route {
     data object SearchRoute : HomeGraph()
 
     @Serializable
-    data class PostRoute(val postId : Int) :  HomeGraph()
+    data class PostRoute(
+        val postId: Int,
+        val postType: String = "",
+        val title: String = "",
+        val isVerified: Boolean = false,
+        val content: String = "",
+        val profileImageUrl: String? = null,
+        val imageUrl: String? = null,
+        val nickname: String = "",
+        val viewCount: Int = 0,
+        val createdAt: String = "",
+        val missionContent: String? = null,
+        val providerId: String = "",
+        val isOwner: Boolean = false,
+        val yourEmotionType: String? = null,
+    ) : HomeGraph()
 
     @Serializable
-    data object WritePostRoute :  HomeGraph()
+    data object WritePostRoute : HomeGraph()
 
     @Serializable
-    data class UpdatePostRoute(val postId : Int) :  HomeGraph()
+    data class UpdatePostRoute(val postId: Int) : HomeGraph()
 }
 
 
@@ -47,13 +63,13 @@ sealed class MissionGraph : Route {
     data object MissionRoute : MissionGraph()
 
     @Serializable
-    data class VerifyMissionRoute(val description : String) : MissionGraph()
+    data class VerifyMissionRoute(val description: String) : MissionGraph()
 }
 
 @Serializable
 data object MyPageBaseRoute : Route
 
-sealed class  MyPageGraph : Route {
+sealed class MyPageGraph : Route {
     @Serializable
     data object MyPageRoute : MyPageGraph()
 

@@ -3,6 +3,7 @@ package com.example.home.graph.post
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
@@ -12,9 +13,11 @@ import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.domain.repository.CommentRepository
 import com.example.domain.repository.PostRepository
+import com.example.navigation.HomeGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -27,13 +30,14 @@ import javax.inject.Inject
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val postId: Int = requireNotNull(savedStateHandle["postId"])
+    private val routeArgs: HomeGraph.PostRoute = savedStateHandle.toRoute()
+    private val postId: Int = routeArgs.postId
 
     init {
         getPost()
@@ -43,22 +47,25 @@ class PostViewModel @Inject constructor(
 
     private val _postDetail = MutableStateFlow(
         PostDetail(
-            postId = -1,
-            postType = PostType.GOOD_DEED,
-            viewCount = 0,
+            postId = routeArgs.postId,
+            postType = PostType.fromString(routeArgs.postType),
+            viewCount = routeArgs.viewCount,
             emotionCount = EmotionCount(),
-            title = "",
-            content = "",
-            missionContent = "",
-            providerId = "",
-            nickname = "",
-            images = emptyList(),
-            profileImageUrl = "",
-            yourEmotionType = null,
-            createdAt = LocalDateTime.MIN,
-            updatedAt =  LocalDateTime.MIN,
-            isOwner = false,
-            isVerified = false
+            title = routeArgs.title,
+            content = routeArgs.content,
+            missionContent = routeArgs.missionContent,
+            providerId = routeArgs.providerId,
+            nickname = routeArgs.nickname,
+            images = when {
+                routeArgs.imageUrl != null -> listOf(routeArgs.imageUrl!!)
+                else -> emptyList()
+            },
+            profileImageUrl = routeArgs.profileImageUrl,
+            yourEmotionType = Emotion.fromString(routeArgs.yourEmotionType),
+            createdAt = if (routeArgs.createdAt.isNotEmpty()) LocalDateTime.parse(routeArgs.createdAt) else LocalDateTime.now(),
+            updatedAt = if (routeArgs.createdAt.isNotEmpty()) LocalDateTime.parse(routeArgs.createdAt) else LocalDateTime.now(),
+            isOwner = routeArgs.isOwner,
+            isVerified = routeArgs.isVerified
         )
     )
     val postDetail = _postDetail.asStateFlow()
@@ -89,6 +96,8 @@ class PostViewModel @Inject constructor(
     }
 
     private fun getPost() = viewModelScope.launch {
+        delay(300) // 화면 전환 애니메이션 버벅임 방지
+
         postRepository.getPost(postId).onSuccess {
             _postDetail.value = it
         }
