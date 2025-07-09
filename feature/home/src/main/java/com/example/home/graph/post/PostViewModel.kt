@@ -15,6 +15,7 @@ import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -89,6 +90,8 @@ class PostViewModel @Inject constructor(
     }
 
     private fun getPost() = viewModelScope.launch {
+        delay(300)
+
         postRepository.getPost(postId).onSuccess {
             _postDetail.value = it
         }

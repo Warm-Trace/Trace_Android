@@ -83,6 +83,8 @@ internal fun MissionHeaderView(
 
             }
 
+
+
             Box(
                 modifier = Modifier.align(Alignment.TopEnd),
             ) {
@@ -128,6 +130,7 @@ internal fun MissionHeaderView(
             Spacer(Modifier.weight(1f))
 
             Box(
+
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
                     .background(VerificationButton)

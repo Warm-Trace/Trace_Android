@@ -15,7 +15,7 @@ sealed class AuthGraph : Route {
     data object LoginRoute : AuthGraph()
 
     @Serializable
-    data class EditProfileRoute(val signUpToken : String, val providerId: String) : AuthGraph()
+    data class EditProfileRoute(val signUpToken: String, val providerId: String) : AuthGraph()
 }
 
 @Serializable
@@ -29,13 +29,13 @@ sealed class HomeGraph : Route {
     data object SearchRoute : HomeGraph()
 
     @Serializable
-    data class PostRoute(val postId : Int) :  HomeGraph()
+    data class PostRoute(val postId: Int) : HomeGraph()
 
     @Serializable
-    data object WritePostRoute :  HomeGraph()
+    data object WritePostRoute : HomeGraph()
 
     @Serializable
-    data class UpdatePostRoute(val postId : Int) :  HomeGraph()
+    data class UpdatePostRoute(val postId: Int) : HomeGraph()
 }
 
 
@@ -47,13 +47,13 @@ sealed class MissionGraph : Route {
     data object MissionRoute : MissionGraph()
 
     @Serializable
-    data class VerifyMissionRoute(val description : String) : MissionGraph()
+    data class VerifyMissionRoute(val description: String) : MissionGraph()
 }
 
 @Serializable
 data object MyPageBaseRoute : Route
 
-sealed class  MyPageGraph : Route {
+sealed class MyPageGraph : Route {
     @Serializable
     data object MyPageRoute : MyPageGraph()
 

@@ -222,7 +222,7 @@ private fun PostScreen(
                     ProfileImage(
                         profileImageUrl = postDetail.profileImageUrl,
                         imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
-                        paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp
+                        paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp,
                     )
 
                     Spacer(Modifier.width(10.dp))

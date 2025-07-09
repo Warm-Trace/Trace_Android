@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.example.common.ui.defaultSlideDownFadeOut
 import com.example.common.ui.defaultSlideFadeIn
 import com.example.common.ui.defaultSlideFadeOut
-import com.example.common.ui.etaSlideIn
-import com.example.common.ui.etaSlideOut
+import com.example.common.ui.defaultSlideUpFadeIn
 import com.example.home.graph.home.HomeRoute
 import com.example.home.graph.post.PostRoute
 import com.example.home.graph.search.SearchRoute
@@ -46,21 +46,7 @@ fun NavGraphBuilder.homeNavGraph(
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
-        composable<HomeGraph.HomeRoute>(
-            enterTransition = {
-                defaultSlideFadeIn()
-            },
-            exitTransition = {
-                defaultSlideFadeOut()
-            },
-            popEnterTransition = {
-                defaultSlideFadeIn()
-            },
-            popExitTransition = {
-                defaultSlideFadeOut()
-            }
-
-        ) {
+        composable<HomeGraph.HomeRoute> {
             HomeRoute(
                 navigateToPost = navigateToPost,
                 navigateToWritePost = navigateToWritePost,
@@ -75,12 +61,6 @@ fun NavGraphBuilder.homeNavGraph(
             exitTransition = {
                 defaultSlideFadeOut()
             },
-            popEnterTransition = {
-                defaultSlideFadeIn()
-            },
-            popExitTransition = {
-                defaultSlideFadeOut()
-            }
         ) {
             SearchRoute(
                 navigateBack = navigateBack,
@@ -90,17 +70,11 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.WritePostRoute>(
             enterTransition = {
-                defaultSlideFadeIn()
+                defaultSlideUpFadeIn()
             },
             exitTransition = {
-                defaultSlideFadeOut()
+                defaultSlideDownFadeOut()
             },
-            popEnterTransition = {
-                defaultSlideFadeIn()
-            },
-            popExitTransition = {
-                defaultSlideFadeOut()
-            }
         ) {
             WritePostRoute(
                 navigateToPost = navigateToPostReplacing,
@@ -109,10 +83,17 @@ fun NavGraphBuilder.homeNavGraph(
         }
 
         composable<HomeGraph.PostRoute>(
-            enterTransition = { etaSlideIn(isBack = false) },
-            exitTransition = { etaSlideOut(isBack = false) },
-            popEnterTransition = { etaSlideIn(isBack = true) },
-            popExitTransition = { etaSlideOut(isBack = true) }
+            enterTransition = {
+                defaultSlideFadeIn()
+            },
+            exitTransition = {
+                // UpdatePostRoute로 이동할 때만 exitTransition을 null로 설정
+                if (targetState.destination.route?.contains("UpdatePostRoute") == true) {
+                    null
+                } else {
+                    defaultSlideFadeOut()
+                }
+            },
         ) {
             PostRoute(
                 navigateBack = navigateBack,
@@ -122,17 +103,11 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.UpdatePostRoute>(
             enterTransition = {
-                defaultSlideFadeIn()
+                defaultSlideUpFadeIn()
             },
             exitTransition = {
-                defaultSlideFadeOut()
+                defaultSlideDownFadeOut()
             },
-            popEnterTransition = {
-                defaultSlideFadeIn()
-            },
-            popExitTransition = {
-                defaultSlideFadeOut()
-            }
         ) {
             UpdatePostRoute(
                 navigateBack = navigateBack,
