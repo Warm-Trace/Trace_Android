@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.domain.model.mypage.MyPageTab
 import com.example.domain.model.post.PostFeed
-import com.example.domain.model.post.PostType
 import com.example.domain.model.user.UserInfo
 import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,7 +63,7 @@ class MyPageViewModel @Inject constructor(
 
     sealed class MyPageEvent {
         data object NavigateToEditProfile : MyPageEvent()
-        data class NavigateToPost(val postId: Int) : MyPageEvent()
+        data class NavigateToPost(val postFeed: PostFeed) : MyPageEvent()
         data object NavigateToSetting : MyPageEvent()
     }
 }

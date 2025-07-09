@@ -65,8 +65,8 @@ fun AppNavHost(
             navigateToSearch = {
                 navController.navigateToSearch()
             },
-            navigateToPostReplacing = { postId ->
-                navController.navigateToPost(postId, navOptions = navOptions {
+            navigateToPostReplacing = { postDetail ->
+                navController.navigateToPost(postDetail, navOptions = navOptions {
                     popUpTo<HomeGraph.HomeRoute>()
                 })
             },
@@ -86,7 +86,7 @@ fun AppNavHost(
         )
 
         myPageNavGraph(
-            navigateToPost = { postId -> navController.navigateToPost(postId) },
+            navigateToPost = { postFeed -> navController.navigateToPost(postFeed) },
             navigateToUpdateProfile = { navController.navigateToUpdateProfile() },
             navigateToSetting = { navController.navigateToSetting() },
             navigateBack = { navigateBack(navController) },

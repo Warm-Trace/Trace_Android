@@ -54,6 +54,7 @@ import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
+import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.WritePostType
 import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
 
@@ -61,7 +62,7 @@ import com.example.home.graph.writepost.WritePostViewModel.WritePostEvent
 @Composable
 internal fun WritePostRoute(
     navigateBack: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostDetail) -> Unit,
     viewModel: WritePostViewModel = hiltViewModel(),
 ) {
     val type by viewModel.type.collectAsStateWithLifecycle()
@@ -78,7 +79,7 @@ internal fun WritePostRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is WritePostEvent.AddPostSuccess -> {
-                    navigateToPost(event.postId)
+                    navigateToPost(event.postDetail)
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
                 }
 

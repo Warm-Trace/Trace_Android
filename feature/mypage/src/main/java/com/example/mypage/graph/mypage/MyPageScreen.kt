@@ -1,7 +1,6 @@
 package com.example.mypage.graph.mypage
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -59,7 +58,7 @@ import java.time.LocalDateTime
 
 @Composable
 internal fun MyPageRoute(
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel(),
@@ -71,7 +70,7 @@ internal fun MyPageRoute(
     LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is MyPageEvent.NavigateToPost -> navigateToPost(event.postId)
+                is MyPageEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is MyPageEvent.NavigateToEditProfile -> navigateToEditProfile()
                 is MyPageEvent.NavigateToSetting -> navigateToSetting()
             }
@@ -98,7 +97,7 @@ internal fun MyPageRoute(
         tabType = tabType,
         displayedPosts = displayedPosts,
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { postId -> viewModel.onEvent(MyPageEvent.NavigateToPost(postId)) },
+        navigateToPost = { postFeed -> viewModel.onEvent(MyPageEvent.NavigateToPost(postFeed)) },
         navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
         navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) }
     )
@@ -111,7 +110,7 @@ private fun MyPageScreen(
     tabType: MyPageTab,
     displayedPosts: LazyPagingItems<PostFeed>,
     onTabTypeChange: (MyPageTab) -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
 ) {
@@ -234,7 +233,7 @@ private fun MyPageScreen(
                 Box {
                     Column {
                         displayedPosts[index]?.let { postFeed ->
-                            PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed.postId) })
+                            PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed) })
 
                             Spacer(Modifier.height(8.dp))
 

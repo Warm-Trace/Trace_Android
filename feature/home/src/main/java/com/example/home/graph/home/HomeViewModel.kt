@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.domain.model.post.HomeTab
+import com.example.domain.model.post.PostFeed
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +42,7 @@ class HomeViewModel @Inject constructor(
     }
 
     sealed class HomeEvent {
-        data class NavigateToPost(val postId: Int) : HomeEvent()
+        data class NavigateToPost(val postFeed: PostFeed) : HomeEvent()
         data object NavigateToWritePost : HomeEvent()
         data object NavigateToSearch : HomeEvent()
     }

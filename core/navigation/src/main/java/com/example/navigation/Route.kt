@@ -2,6 +2,7 @@ package com.example.navigation
 
 import kotlinx.serialization.Serializable
 
+
 sealed interface Route
 
 @Serializable
@@ -29,7 +30,22 @@ sealed class HomeGraph : Route {
     data object SearchRoute : HomeGraph()
 
     @Serializable
-    data class PostRoute(val postId: Int) : HomeGraph()
+    data class PostRoute(
+        val postId: Int,
+        val postType: String = "",
+        val title: String = "",
+        val isVerified: Boolean = false,
+        val content: String = "",
+        val profileImageUrl: String? = null,
+        val nickname: String = "",
+        val viewCount: Int = 0,
+        val createdAt: String = "",
+        val missionContent: String = "", // PostDetail
+        val providerId: String = "",
+        val images: List<String> = emptyList(),
+        val isOwner: Boolean = false,
+        val yourEmotionType: String? = null,
+    ) : HomeGraph()
 
     @Serializable
     data object WritePostRoute : HomeGraph()

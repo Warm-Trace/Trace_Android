@@ -9,6 +9,8 @@ import com.example.common.ui.defaultSlideDownFadeOut
 import com.example.common.ui.defaultSlideFadeIn
 import com.example.common.ui.defaultSlideFadeOut
 import com.example.common.ui.defaultSlideUpFadeIn
+import com.example.domain.model.post.PostDetail
+import com.example.domain.model.post.PostFeed
 import com.example.home.graph.home.HomeRoute
 import com.example.home.graph.post.PostRoute
 import com.example.home.graph.search.SearchRoute
@@ -29,9 +31,46 @@ fun NavController.navigateToWritePost(navOptions: NavOptions? = null) {
     navigate(HomeGraph.WritePostRoute, navOptions)
 }
 
-fun NavController.navigateToPost(postId: Int, navOptions: NavOptions? = null) {
-    navigate(HomeGraph.PostRoute(postId), navOptions)
+fun NavController.navigateToPost(postFeed: PostFeed, navOptions: NavOptions? = null) {
+    navigate(
+        HomeGraph.PostRoute(
+            postId = postFeed.postId,
+            postType = postFeed.postType.name,
+            title = postFeed.title,
+            isVerified = postFeed.isVerified,
+            content = postFeed.content,
+            profileImageUrl = postFeed.profileImageUrl,
+            nickname = postFeed.nickname,
+            viewCount = postFeed.viewCount,
+            createdAt = postFeed.createdAt.toString()
+        ), navOptions
+    )
 }
+
+fun NavController.navigateToPost(postDetail: PostDetail, navOptions: NavOptions? = null) {
+    navigate(
+        HomeGraph.PostRoute(
+            postId = postDetail.postId,
+            postType = postDetail.postType.name,
+            title = postDetail.title,
+            isVerified = postDetail.isVerified,
+            content = postDetail.content,
+            profileImageUrl = postDetail.profileImageUrl,
+            nickname = postDetail.nickname,
+            viewCount = postDetail.viewCount,
+            createdAt = postDetail.createdAt.toString()
+        ), navOptions
+    )
+}
+
+fun NavController.navigateToPost(postId: Int, navOptions: NavOptions? = null) {
+    navigate(
+        HomeGraph.PostRoute(
+            postId = postId,
+        ), navOptions
+    )
+}
+
 
 fun NavController.navigateToUpdatePost(postId: Int, navOptions: NavOptions? = null) {
     navigate(HomeGraph.UpdatePostRoute(postId), navOptions)
@@ -39,16 +78,16 @@ fun NavController.navigateToUpdatePost(postId: Int, navOptions: NavOptions? = nu
 
 fun NavGraphBuilder.homeNavGraph(
     navigateToSearch: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
-    navigateToPostReplacing: (Int) -> Unit,
+    navigateToPostReplacing: (PostDetail) -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
         composable<HomeGraph.HomeRoute> {
             HomeRoute(
-                navigateToPost = navigateToPost,
+                navigateToPost = { postFeed -> navigateToPost(postFeed) },
                 navigateToWritePost = navigateToWritePost,
                 navigateToSearch = navigateToSearch
             )
@@ -64,7 +103,7 @@ fun NavGraphBuilder.homeNavGraph(
         ) {
             SearchRoute(
                 navigateBack = navigateBack,
-                navigateToPost = navigateToPost,
+                navigateToPost = { postFeed -> navigateToPost(postFeed) },
             )
         }
 
@@ -77,7 +116,7 @@ fun NavGraphBuilder.homeNavGraph(
             },
         ) {
             WritePostRoute(
-                navigateToPost = navigateToPostReplacing,
+                navigateToPost = { postDetail -> navigateToPostReplacing(postDetail) },
                 navigateBack = navigateBack
             )
         }
@@ -111,7 +150,7 @@ fun NavGraphBuilder.homeNavGraph(
         ) {
             UpdatePostRoute(
                 navigateBack = navigateBack,
-                navigateToPost = navigateToPostReplacing
+                navigateToPost = { postDetail -> navigateToPostReplacing(postDetail) }
             )
         }
 

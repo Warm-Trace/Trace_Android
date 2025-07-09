@@ -5,9 +5,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
 import com.example.common.event.TraceEvent
+import com.example.domain.model.post.PostFeed
+import com.example.domain.model.search.SearchCondition
 import com.example.domain.model.search.SearchTab
 import com.example.domain.model.search.SearchType
-import com.example.domain.model.search.SearchCondition
 import com.example.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -129,7 +130,7 @@ class SearchViewModel @Inject constructor(
 
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
-        data class NavigateToPost(val postId: Int) : SearchEvent()
+        data class NavigateToPost(val postFeed: PostFeed) : SearchEvent()
     }
 
     companion object {

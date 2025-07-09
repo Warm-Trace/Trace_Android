@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(libs.androidx.navigation.ui)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.datetime)
 }

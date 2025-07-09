@@ -39,21 +39,22 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.common.event.TraceEvent
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.ImageContent
+import com.example.designsystem.component.TraceContentField
+import com.example.designsystem.component.TraceTitleField
 import com.example.designsystem.theme.Background
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryActive
 import com.example.designsystem.theme.TextHint
 import com.example.designsystem.theme.TraceTheme
+import com.example.domain.model.post.PostDetail
 import com.example.domain.model.post.PostType
 import com.example.home.graph.updatepost.UpdatePostViewModel.UpdatePostEvent
-import com.example.designsystem.component.ImageContent
-import com.example.designsystem.component.TraceContentField
-import com.example.designsystem.component.TraceTitleField
 
 @Composable
 internal fun UpdatePostRoute(
     navigateBack: () -> Unit,
-    navigateToPost: (Int) -> Unit,
+    navigateToPost: (PostDetail) -> Unit,
     viewModel: UpdatePostViewModel = hiltViewModel(),
 ) {
     val type by viewModel.type.collectAsStateWithLifecycle()
@@ -65,7 +66,7 @@ internal fun UpdatePostRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is UpdatePostEvent.UpdatePostSuccess -> {
-                    navigateToPost(event.postId)
+                    navigateToPost(event.postDetail)
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
                 }
 

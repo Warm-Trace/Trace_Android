@@ -44,7 +44,7 @@ import java.time.LocalDateTime
 @Composable
 fun PostFeed(
     postFeed: PostFeed,
-    navigateToPost: (Int) -> Unit
+    navigateToPost: (PostFeed) -> Unit
 ) {
 
     val painter = postFeed.imageUrl?.let {
@@ -62,7 +62,7 @@ fun PostFeed(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                navigateToPost(postFeed.postId)
+                navigateToPost(postFeed)
             }) {
 
         Column(
@@ -200,17 +200,15 @@ private fun PostFeedPreview() {
             .padding(horizontal = 20.dp, vertical = 15.dp)
     ) {
         PostFeed(
-            postFeed = PostFeed(
-                postType = PostType.GOOD_DEED,
-                title = "깨끗한 공원 만들기",
-                content = "오늘 공원에서 쓰레기를 줍고 깨끗한 환경을 만들었습니다. 주변 사람들이 함께 참여해주셨습니다.",
-                nickname = "선행자1",
-                createdAt = LocalDateTime.now(),
-                viewCount = 150,
-                commentCount = 5,
-                isVerified = true,
-                postId = 1, providerId = "1234", updatedAt = LocalDateTime.now(),
-            ),
-        ) { }
+            postType = PostType.GOOD_DEED,
+            title = "깨끗한 공원 만들기",
+            content = "오늘 공원에서 쓰레기를 줍고 깨끗한 환경을 만들었습니다. 주변 사람들이 함께 참여해주셨습니다.",
+            nickname = "선행자1",
+            createdAt = LocalDateTime.now(),
+            viewCount = 150,
+            commentCount = 5,
+            isVerified = true,
+            postId = 1, providerId = "1234", updatedAt = LocalDateTime.now(),
+        )
     }
 }
