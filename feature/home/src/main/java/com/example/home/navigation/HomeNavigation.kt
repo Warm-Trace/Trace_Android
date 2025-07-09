@@ -134,8 +134,9 @@ fun NavGraphBuilder.homeNavGraph(
             },
             exitTransition = {
                 // UpdatePostRoute로 이동할 때만 exitTransition을 null로 설정
-                if (targetState.destination.route?.contains("UpdatePostRoute") == true) {
+                if (targetState.destination.route?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
                     null
+
                 } else {
                     defaultSlideFadeOut()
                 }
