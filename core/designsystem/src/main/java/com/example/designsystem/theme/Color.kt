@@ -8,7 +8,7 @@ val PrimaryDefault = Color(0xFF419A78)
 val PrimaryActive = Color(0xFF235240)
 val TabIndicator = Color(0xFF429474)
 
-val Background = Color(0xFFFFFEEE)
+val Background = Color(0xFFFFFFFF)
 
 val TextField = Color(0xFFF2F1E1)
 val SearchField = Color(0xFFCBD4BE)

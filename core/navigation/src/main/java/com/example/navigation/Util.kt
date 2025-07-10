@@ -15,6 +15,7 @@ private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
     MissionGraph.VerifyMissionRoute::class,
     MyPageGraph.UpdateProfileRoute::class,
     MyPageGraph.SettingRoute::class,
+    MyPageGraph.WebViewRoute::class,
     SplashRoute::class,
 )
 
