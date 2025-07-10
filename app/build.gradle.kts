@@ -1,5 +1,3 @@
-
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -22,13 +20,13 @@ android {
 
     defaultConfig {
         val properties = Properties().apply {
-            load(FileInputStream(rootProject.file("local.properties")))
+            load(rootProject.file("local.properties").bufferedReader())
         }
 
         buildConfigField(
             "String",
             "KAKAO_NATIVE_APP_KEY",
-            properties["KAKAO_NATIVE_APP_KEY"] as String
+           properties["KAKAO_NATIVE_APP_KEY"] as String
         )
 
         manifestPlaceholders["KAKAO_REDIRECT_URI"] = properties["KAKAO_REDIRECT_URI"] as String
@@ -37,7 +35,6 @@ android {
     buildFeatures {
         buildConfig = true
     }
-
 
 }
 

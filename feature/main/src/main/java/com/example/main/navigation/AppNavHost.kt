@@ -19,6 +19,7 @@ import com.example.mission.navigation.navigateToVerifyMission
 import com.example.mypage.navigation.myPageNavGraph
 import com.example.mypage.navigation.navigateToSetting
 import com.example.mypage.navigation.navigateToUpdateProfile
+import com.example.mypage.navigation.navigateToWebView
 import com.example.navigation.HomeGraph
 import com.example.navigation.MissionGraph
 import com.example.navigation.SplashRoute
@@ -94,6 +95,9 @@ fun AppNavHost(
                 navController.navigateToLogin(navOptions {
                     popUpTo(0) { inclusive = true }
                 })
+            },
+            navigateToWebView = { url ->
+                navController.navigateToWebView(url)
             }
         )
 
