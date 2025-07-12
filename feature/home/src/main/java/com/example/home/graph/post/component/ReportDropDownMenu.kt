@@ -37,8 +37,8 @@ internal fun ReportDropDownMenu(
     }
 
     val currentReason = selectedReason
-    if (showReportDialog) {
-        val reportReasonText = stringResource(id = currentReason!!.first)
+    if (showReportDialog && currentReason != null) {
+        val reportReasonText = stringResource(id = currentReason.first)
         CheckCancelDialog(
             title = reportReasonText,
             onDismiss = {
