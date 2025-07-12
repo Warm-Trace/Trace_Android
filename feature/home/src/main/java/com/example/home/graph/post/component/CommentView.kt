@@ -102,18 +102,16 @@ internal fun CommentView(
 
                     OwnCommentDropdownMenu(
                         expanded = isOwnCommentDropDownMenuExpanded,
-                        commentId = comment.commentId,
                         onDismiss = { isOwnCommentDropDownMenuExpanded = false },
                         onReply = onReply,
-                        onDelete = onDelete,
+                        onDelete = { onDelete(comment.commentId) },
                     )
 
                     OtherCommentDropdownMenu(
                         expanded = isOtherCommentDropDownMenuExpanded,
-                        commentId = comment.commentId,
                         onDismiss = { isOtherCommentDropDownMenuExpanded = false },
                         onReply = onReply,
-                        onReport = onReport,
+                        onReport = { onReport(comment.commentId) },
                     )
                 }
             }

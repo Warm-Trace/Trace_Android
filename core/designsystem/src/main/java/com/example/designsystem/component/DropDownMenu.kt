@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
@@ -48,24 +47,17 @@ fun TraceDropDownMenu(
         onDismissRequest = onDismiss,
         shape = RoundedCornerShape(16.dp),
         modifier = Modifier
-            .shadow(2.dp, RoundedCornerShape(16.dp))
+            .shadow(1.dp, RoundedCornerShape(16.dp))
             .background(White)
     ) {
         items.forEachIndexed { index, item ->
-            if (index == 0) {
-                Spacer(modifier = Modifier.size(10.dp))
-            } else {
-                Spacer(modifier = Modifier.size(20.dp))
-            }
-            
             Row(
                 modifier = Modifier
-                    .clickable() {
+                    .clickable {
                         onDismiss()
                         item.action()
                     }
-                    .padding(start = 12.dp)
-                    .widthIn(min = 170.dp),
+                    .padding(start = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 when {
@@ -73,7 +65,7 @@ fun TraceDropDownMenu(
                         Icon(
                             imageVector = item.imageVector,
                             contentDescription = null,
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
 
@@ -81,7 +73,7 @@ fun TraceDropDownMenu(
                         Image(
                             painter = painterResource(item.iconRes),
                             contentDescription = null,
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -92,10 +84,8 @@ fun TraceDropDownMenu(
                     text = stringResource(item.labelRes),
                     style = TraceTheme.typography.bodyMR
                 )
-            }
-            
-            if (index == items.lastIndex) {
-                Spacer(modifier = Modifier.size(10.dp))
+
+                Spacer(modifier = Modifier.width(50.dp))
             }
         }
     }

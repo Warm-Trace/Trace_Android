@@ -118,24 +118,6 @@ private fun HomeScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    val dropdownMenuItems = listOf(
-        DropdownMenuItem(
-            imageVector = Icons.Outlined.Refresh,
-            labelRes = R.string.refresh,
-            action = {
-                postFeeds.refresh()
-                coroutineScope.launch {
-                    listState.scrollToItem(0)
-                }
-            }
-        ),
-         DropdownMenuItem(
-            imageVector = Icons.Outlined.Edit,
-            labelRes = R.string.write_post,
-            action = { navigateToWritePost() }
-         )
-    )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -217,7 +199,23 @@ private fun HomeScreen(
                     TraceDropDownMenu(
                         expanded = isHomeDropDownMenuExpanded,
                         onDismiss = { isHomeDropDownMenuExpanded = false },
-                        items = dropdownMenuItems
+                        items = listOf(
+                            DropdownMenuItem(
+                                imageVector = Icons.Outlined.Refresh,
+                                labelRes = R.string.refresh,
+                                action = {
+                                    postFeeds.refresh()
+                                    coroutineScope.launch {
+                                        listState.scrollToItem(0)
+                                    }
+                                }
+                            ),
+                            DropdownMenuItem(
+                                imageVector = Icons.Outlined.Edit,
+                                labelRes = R.string.write_post,
+                                action = { navigateToWritePost() }
+                            )
+                        )
                     )
                 }
 
