@@ -209,16 +209,14 @@ private fun ChildCommentView(
 
                 OwnChildCommentDropdownMenu(
                     expanded = isOwnCommentDropDownMenuExpanded,
-                    commentId = comment.commentId,
                     onDismiss = { isOwnCommentDropDownMenuExpanded = false },
-                    onDelete = onDelete,
+                    onDelete = { onDelete(comment.commentId) },
                 )
 
                 OtherChildCommentDropdownMenu(
                     expanded = isOtherCommentDropDownMenuExpanded,
-                    commentId = comment.commentId,
                     onDismiss = { isOtherCommentDropDownMenuExpanded = false },
-                    onReport = onReport,
+                    onReport = { onReport(comment.commentId) },
                 )
             }
         }

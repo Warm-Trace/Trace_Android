@@ -25,8 +25,8 @@ internal fun OwnPostDropdownMenu(
     if (showDeleteDialog) {
         CheckCancelDialog(
             onCheck = {
-                onDelete()
                 showDeleteDialog = false
+                onDelete()
             },
             onDismiss = { showDeleteDialog = false },
             dialogText = "정말 삭제하시겠습니까?",
@@ -61,8 +61,16 @@ internal fun OtherPostDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
     onRefresh: () -> Unit,
-    onReport: () -> Unit,
+    onReport: (String) -> Unit,
 ) {
+    var isReportDropdownMenuExpanded by remember { mutableStateOf(false) }
+
+    ReportDropDownMenu(
+        expanded = isReportDropdownMenuExpanded,
+        onDismiss = { isReportDropdownMenuExpanded = false },
+        onReport = onReport,
+    )
+
     TraceDropDownMenu(
         expanded = expanded,
         onDismiss = onDismiss,
@@ -75,7 +83,7 @@ internal fun OtherPostDropdownMenu(
             DropdownMenuItem(
                 iconRes = R.drawable.report_ic,
                 labelRes = R.string.report,
-                action = onReport,
+                action = { isReportDropdownMenuExpanded = true },
             ),
         ),
     )

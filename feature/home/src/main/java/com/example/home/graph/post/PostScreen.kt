@@ -142,7 +142,7 @@ private fun PostScreen(
     isReplying: Boolean,
     replyTargetId: Int?,
     onDeletePost: () -> Unit,
-    onReportPost: () -> Unit,
+    onReportPost: (String) -> Unit,
     toggleEmotion: (Emotion) -> Unit,
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
@@ -168,7 +168,6 @@ private fun PostScreen(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-
     val scrollOffset = with(LocalDensity.current) { -200.dp.toPx().toInt() }
 
     Box(

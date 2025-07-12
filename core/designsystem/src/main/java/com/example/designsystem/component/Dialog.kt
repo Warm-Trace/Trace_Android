@@ -13,35 +13,22 @@ import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
 import com.example.designsystem.theme.White
 
-
-@Composable
-fun CheckDialog(
-    onDismiss: () -> Unit, dialogText: String
-) {
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        text = { Text(dialogText) },
-        shape = RoundedCornerShape(8.dp),
-        containerColor = White,
-        confirmButton = {
-            TextButton(onClick = { onDismiss() }) {
-                Text(
-                    stringResource(R.string.dialog_confirm),
-                    color = PrimaryDefault,
-                    style = TraceTheme.typography.bodySM
-                )
-            }
-        }
-    )
-}
-
 @Composable
 fun CheckCancelDialog(
-    onCheck: () -> Unit, onDismiss: () -> Unit, checkText: String = "", dialogText: String
+    onCheck: () -> Unit,
+    onDismiss: () -> Unit,
+    checkText: String? = null,
+    dialogText: String,
+    title: String? = null,
 ) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        text = { Text(dialogText) },
+        title = {
+            if (title != null) {
+                Text(text = title, style = TraceTheme.typography.bodyMSB)
+            }
+        },
+        text = { Text(dialogText, style = TraceTheme.typography.bodySM) },
         shape = RoundedCornerShape(8.dp),
         containerColor = White,
         confirmButton = {
@@ -50,9 +37,9 @@ fun CheckCancelDialog(
                 onCheck()
             }) {
                 Text(
-                    if (checkText.isEmpty()) stringResource(R.string.dialog_confirm) else checkText,
+                    if (checkText == null) stringResource(R.string.dialog_confirm) else checkText,
                     color = PrimaryDefault,
-                    style = TraceTheme.typography.bodySM
+                    style = TraceTheme.typography.bodySM,
                 )
             }
         },
@@ -61,10 +48,9 @@ fun CheckCancelDialog(
                 Text(
                     stringResource(R.string.dialog_cancel),
                     color = DarkGray,
-                    style = TraceTheme.typography.bodySM
+                    style = TraceTheme.typography.bodySM,
                 )
             }
-        }
+        },
     )
-
 }

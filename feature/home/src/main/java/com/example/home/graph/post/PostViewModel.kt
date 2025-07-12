@@ -103,7 +103,9 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun reportPost() {}
+    fun reportPost(reason: String) {
+
+    }
 
     fun deletePost() = viewModelScope.launch {
         postRepository.deletePost(postId = postId).onSuccess {

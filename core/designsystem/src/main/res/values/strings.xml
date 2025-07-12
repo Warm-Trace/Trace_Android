@@ -11,4 +11,23 @@
     <string name="report">신고</string>
     <string name="refresh">새로고침</string>
     <string name="write_post">글 쓰기</string>
+
+    <!-- Report Reasons -->
+    <string name="report_reason_profanity_slander">욕설/비방/인신공격</string>
+    <string name="report_reason_illegal_content">불법/범죄/불건전한 내용</string>
+    <string name="report_reason_obscene_content">음란/선정/불쾌한 내용</string>
+    <string name="report_reason_fraud_misinformation">사기/허위정보/유출</string>
+    <string name="report_reason_commercial_spam">상업적 광고 및 판매</string>
+    <string name="report_reason_off_topic">게시판 성격에 부적절함</string>
+    <string name="report_reason_unpleasant_user">불쾌감을 주는 사용자</string>
+
+    <!-- Report Reason Descriptions -->
+    <string name="report_reason_profanity_slander_description">타인을 모욕하거나 비방, 인격을 훼손하는 내용\n예시) 욕설, 비하, 조롱, 인신공격 등</string>
+    <string name="report_reason_illegal_content_description">법률에 위반되거나 범죄와 관련된 내용, 커뮤니티에 부적합한 불건전한 내용\n예시) 불법 거래, 범죄 모의, 폭력, 마약, 도박, 자해 등</string>
+    <string name="report_reason_obscene_content_description">성적으로 노골적이거나 불쾌감을 주는 내용\n예시) 음란물, 성적 발언, 선정적 사진·영상, 혐오스러운 이미지 등</string>
+    <string name="report_reason_fraud_misinformation_description">사실이 아닌 정보를 퍼뜨리거나, 사기·사칭·개인정보 유출과 관련된 내용\n\n예시) 허위사실 유포, 사칭, 개인정보(연락처 등) 공개, 사기 행위 등</string>
+    <string name="report_reason_commercial_spam_description">상업적 목적의 광고, 홍보, 물품 판매 또는 영리 목적의 게시물\n예시) 상품/서비스 광고, 홍보성 링크, 영업 목적의 글 등</string>
+    <string name="report_reason_off_topic_description">해당 게시판의 주제 또는 목적과 맞지 않는 내용\n예시) 게시판 취지와 무관한 글, 반복 도배, 커뮤니티 취지 훼손 등</string>
+    <string name="report_reason_unpleasant_user_description">다른 이용자에게 불쾌감, 불편함, 또는 부정적인 감정을 유발하는 행위\n예시) 의도적 도발, 반복적 비꼼·조롱, 무례한 언행, 공격적 반응</string>
+    <string name="default_report_description">신고는 반대의견을 나타내는 기능이 아닙니다.\n신고 사유에 맞지 않는 신고를 했을 경우, 해당 신고는 처리되지 않습니다.</string>
 </resources>
