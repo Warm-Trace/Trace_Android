@@ -18,7 +18,6 @@ internal fun OwnCommentDropdownMenu(
     onDelete: () -> Unit,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-
     if (showDeleteDialog) {
         CheckCancelDialog(
             onCheck = {
@@ -53,8 +52,15 @@ internal fun OtherCommentDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
     onReply: () -> Unit,
-    onReport: () -> Unit,
+    onReport: (String) -> Unit,
 ) {
+    var isReportDropdownMenuExpanded by remember { mutableStateOf(false) }
+    ReportDropDownMenu(
+        expanded = isReportDropdownMenuExpanded,
+        onDismiss = { isReportDropdownMenuExpanded = false },
+        onReport = onReport,
+    )
+
     TraceDropDownMenu(
         expanded = expanded,
         onDismiss = onDismiss,
@@ -67,7 +73,7 @@ internal fun OtherCommentDropdownMenu(
             DropdownMenuItem(
                 iconRes = R.drawable.report_ic,
                 labelRes = R.string.report,
-                action = onReport,
+                action = { isReportDropdownMenuExpanded = true },
             ),
         ),
     )
@@ -109,8 +115,15 @@ internal fun OwnChildCommentDropdownMenu(
 internal fun OtherChildCommentDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
-    onReport: () -> Unit,
+    onReport: (String) -> Unit,
 ) {
+    var isReportDropdownMenuExpanded by remember { mutableStateOf(false) }
+    ReportDropDownMenu(
+        expanded = isReportDropdownMenuExpanded,
+        onDismiss = { isReportDropdownMenuExpanded = false },
+        onReport = onReport,
+    )
+
     TraceDropDownMenu(
         expanded = expanded,
         onDismiss = onDismiss,
@@ -118,7 +131,7 @@ internal fun OtherChildCommentDropdownMenu(
             DropdownMenuItem(
                 iconRes = R.drawable.report_ic,
                 labelRes = R.string.report,
-                action = onReport,
+                action = { isReportDropdownMenuExpanded = true },
             ),
         ),
     )

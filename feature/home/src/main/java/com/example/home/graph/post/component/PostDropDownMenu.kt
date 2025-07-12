@@ -21,7 +21,6 @@ internal fun OwnPostDropdownMenu(
     onDelete: () -> Unit,
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-
     if (showDeleteDialog) {
         CheckCancelDialog(
             onCheck = {
@@ -64,7 +63,6 @@ internal fun OtherPostDropdownMenu(
     onReport: (String) -> Unit,
 ) {
     var isReportDropdownMenuExpanded by remember { mutableStateOf(false) }
-
     ReportDropDownMenu(
         expanded = isReportDropdownMenuExpanded,
         onDismiss = { isReportDropdownMenuExpanded = false },
