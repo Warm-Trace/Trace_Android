@@ -92,6 +92,11 @@ class PostRepositoryImpl @Inject constructor(
         postDataSource.deletePost(postId)
     }
 
+    override suspend fun reportPost(postId: Int, reason: String): Result<Unit> =
+        suspendRunCatching {
+            postDataSource.reportPost(postId, reason)
+        }
+
     override suspend fun toggleEmotion(postId: Int, emotionType: Emotion): Result<Boolean> =
         suspendRunCatching {
             val response = postDataSource.toggleEmotion(postId, emotionType).getOrThrow()

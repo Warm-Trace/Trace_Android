@@ -75,6 +75,11 @@ class CommentRepositoryImpl @Inject constructor(
         commentDataSource.deleteComment(commentId = commentId)
     }
 
+    override suspend fun reportComment(commentId: Int, reason: String): Result<Unit> =
+        suspendRunCatching {
+            commentDataSource.reportComment(commentId, reason)
+        }
+
     companion object {
         private const val DEFAULT_PAGE_SIZE = 30
     }

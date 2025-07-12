@@ -19,6 +19,7 @@ import com.example.network.model.post.PostResponse
 import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
+import com.example.network.model.report.ReportContentRequest
 import com.example.network.model.search.SearchPostsRequest
 import com.example.network.model.token.CheckTokenHealthRequest
 import com.example.network.model.token.CheckTokenHealthResponse
@@ -161,6 +162,10 @@ interface TraceApi {
         @Part("request") verifyMissionRequest: RequestBody,
         @Part imageFiles: List<MultipartBody.Part>? = null
     ): Result<PostResponse>
+
+    // 신고
+    @POST("/api/v1/reports")
+    suspend fun reportContent(@Body reportContentRequest: ReportContentRequest): Result<Unit>
 
     // 마이페이지
     @POST("/api/v1/user/myPosts")

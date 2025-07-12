@@ -50,4 +50,9 @@ interface PostDataSource {
         postId : Int,
         emotionType : Emotion
     ) : Result<ToggleEmotionResponse>
+
+    suspend fun reportPost(
+        postId : Int,
+        reason : String
+    ) : Result<Unit>
 }

@@ -44,7 +44,7 @@ internal fun CommentView(
     replyTargetId: Int?,
     onDelete: (Int) -> Unit,
     onReply: () -> Unit,
-    onReport: (Int) -> Unit,
+    onReport: (Int, String) -> Unit,
 ) {
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -111,7 +111,7 @@ internal fun CommentView(
                         expanded = isOtherCommentDropDownMenuExpanded,
                         onDismiss = { isOtherCommentDropDownMenuExpanded = false },
                         onReply = onReply,
-                        onReport = { onReport(comment.commentId) },
+                        onReport = { reason -> onReport(comment.commentId, reason) },
                     )
                 }
             }
@@ -157,7 +157,7 @@ internal fun CommentView(
 private fun ChildCommentView(
     comment: Comment,
     onDelete: (Int) -> Unit,
-    onReport: (Int) -> Unit
+    onReport: (Int, String) -> Unit
 ) {
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -216,7 +216,7 @@ private fun ChildCommentView(
                 OtherChildCommentDropdownMenu(
                     expanded = isOtherCommentDropDownMenuExpanded,
                     onDismiss = { isOtherCommentDropDownMenuExpanded = false },
-                    onReport = { onReport(comment.commentId) },
+                    onReport = { reason -> onReport(comment.commentId, reason) },
                 )
             }
         }
@@ -270,8 +270,8 @@ private fun CommentViewPreview() {
                 commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
             ),
             onReply = { },
-            onReport = { id -> },
-            onDelete = { id -> },
+            onReport = { _, _ -> },
+            onDelete = { _ -> },
             replyTargetId = null
         )
 

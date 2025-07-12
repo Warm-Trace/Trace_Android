@@ -12,4 +12,6 @@ interface CommentRepository {
     suspend fun addReplyToComment(postId: Int, commentId: Int, content: String): Result<Comment>
 
     suspend fun deleteComment(commentId: Int): Result<Unit>
+
+    suspend fun reportComment(commentId: Int, reason: String): Result<Unit>
 }

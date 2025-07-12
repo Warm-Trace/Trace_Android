@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
 import com.example.common.event.EventHelper
-import com.example.common.event.TraceEvent
 import com.example.domain.model.post.Emotion
 import com.example.domain.model.post.EmotionCount
 import com.example.domain.model.post.PostDetail
@@ -103,16 +102,16 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun reportPost(reason: String) {
-
+    fun reportPost(reason: String) = viewModelScope.launch {
+        postRepository.reportPost(postId, reason)
+            .onSuccess { _eventChannel.send(PostEvent.ReportPostSuccess) }
+            .onFailure { _eventChannel.send(PostEvent.ReportPostFailure) }
     }
 
     fun deletePost() = viewModelScope.launch {
-        postRepository.deletePost(postId = postId).onSuccess {
-            _eventChannel.send(PostEvent.DeletePostSuccess)
-        }.onFailure {
-            _eventChannel.send(PostEvent.DeletePostFailure)
-        }
+        postRepository.deletePost(postId = postId)
+            .onSuccess { _eventChannel.send(PostEvent.DeletePostSuccess) }
+            .onFailure { _eventChannel.send(PostEvent.DeletePostFailure) }
     }
 
     fun toggleEmotion(emotion: Emotion) = viewModelScope.launch {
@@ -158,18 +157,18 @@ class PostViewModel @Inject constructor(
 
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {
-            eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
+            _eventChannel.send(PostEvent.ShowSnackBar("내용을 입력해주세요."))
             return@launch
         }
 
         commentRepository.addComment(postId = postId, content = _commentInput.value)
-            .onSuccess { comment ->
+            .onSuccess {
                 _commentInput.value = ""
                 refreshComments()
+                _eventChannel.send(PostEvent.AddCommentSuccess)
             }.onFailure {
-                eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
+                _eventChannel.send(PostEvent.AddCommentFailure)
             }
-
     }
 
     fun replyComment(onSuccess: (Int) -> Unit) =
@@ -177,7 +176,7 @@ class PostViewModel @Inject constructor(
             val parentId = _replyTargetId.value ?: return@launch
 
             if (_commentInput.value.isEmpty()) {
-                eventHelper.sendEvent(TraceEvent.ShowSnackBar("내용을 입력해주세요."))
+                _eventChannel.send(PostEvent.ShowSnackBar("내용을 입력해주세요."))
                 return@launch
             }
 
@@ -185,34 +184,47 @@ class PostViewModel @Inject constructor(
                 postId = postId,
                 commentId = parentId,
                 content = _commentInput.value
-            ).onSuccess { replyComment ->
+            ).onSuccess {
                 clearReplyTargetId()
                 refreshComments()
                 _commentInput.value = ""
 
                 onSuccess(parentId)
+                _eventChannel.send(PostEvent.AddReplySuccess)
             }.onFailure {
-                eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
+                _eventChannel.send(PostEvent.AddReplyFailure)
             }
-
         }
 
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {
-        commentRepository.deleteComment(commentId).onSuccess {
-            refreshComments()
-        }.onFailure {
-            eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
-        }
-
+        commentRepository.deleteComment(commentId)
+            .onSuccess {
+                refreshComments()
+                _eventChannel.send(PostEvent.DeleteCommentSuccess)
+            }
+            .onFailure { _eventChannel.send(PostEvent.DeleteCommentFailure) }
     }
 
-    fun reportComment(commentId: Int) {}
+    fun reportComment(commentId: Int, reason: String) = viewModelScope.launch {
+        commentRepository.reportComment(commentId, reason)
+            .onSuccess { _eventChannel.send(PostEvent.ReportCommentSuccess) }
+            .onFailure { _eventChannel.send(PostEvent.ReportCommentFailure) }
+    }
 
     sealed class PostEvent {
+        data class ShowSnackBar(val message: String) : PostEvent()
         data object DeletePostSuccess : PostEvent()
         data object DeletePostFailure : PostEvent()
+        data object ReportPostSuccess : PostEvent()
+        data object ReportPostFailure : PostEvent()
+        data object ReportCommentSuccess : PostEvent()
+        data object ReportCommentFailure : PostEvent()
+        data object AddCommentSuccess : PostEvent()
+        data object AddCommentFailure : PostEvent()
+        data object AddReplySuccess : PostEvent()
+        data object AddReplyFailure : PostEvent()
+        data object DeleteCommentSuccess : PostEvent()
+        data object DeleteCommentFailure : PostEvent()
     }
-
 }
-

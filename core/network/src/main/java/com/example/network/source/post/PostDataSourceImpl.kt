@@ -16,6 +16,7 @@ import com.example.network.model.post.ToggleEmotionRequest
 import com.example.network.model.post.ToggleEmotionResponse
 import com.example.network.model.post.UpdatePostRequest
 import com.example.network.model.post.VerifyAndAddPostRequest
+import com.example.network.model.report.ReportContentRequest
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -164,6 +165,15 @@ class PostDataSourceImpl @Inject constructor(
             postId = postId,
             toggleEmotionRequest = ToggleEmotionRequest(
                 emotionType = emotionType.name
+            )
+        )
+
+    override suspend fun reportPost(postId: Int, reason: String): Result<Unit> =
+        traceApi.reportContent(
+            reportContentRequest = ReportContentRequest(
+                postId = postId,
+                commentId = null,
+                reason = reason,
             )
         )
 
