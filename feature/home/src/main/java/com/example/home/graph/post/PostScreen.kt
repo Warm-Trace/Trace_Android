@@ -104,10 +104,18 @@ internal fun PostRoute(
                     navigateBack()
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
                 }
-
-                is PostEvent.DeletePostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
-                }
+                is PostEvent.DeletePostFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
+                is PostEvent.ReportPostSuccess,
+                is PostEvent.ReportCommentSuccess, -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("신고가 접수되었습니다."))
+                is PostEvent.ReportPostFailure,
+                is PostEvent.ReportCommentFailure, -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("신고 접수에 실패했습니다."))
+                is PostEvent.AddCommentSuccess -> { }
+                is PostEvent.AddCommentFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
+                is PostEvent.AddReplySuccess -> {  }
+                is PostEvent.AddReplyFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
+                is PostEvent.DeleteCommentSuccess -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글이 삭제되었습니다."))
+                is PostEvent.DeleteCommentFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
+                is PostEvent.ShowSnackBar -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar(event.message))
             }
         }
     }
@@ -142,7 +150,7 @@ private fun PostScreen(
     isReplying: Boolean,
     replyTargetId: Int?,
     onDeletePost: () -> Unit,
-    onReportPost: () -> Unit,
+    onReportPost: (String) -> Unit,
     toggleEmotion: (Emotion) -> Unit,
     onAddComment: () -> Unit,
     onCommentInputChange: (String) -> Unit,
@@ -150,7 +158,7 @@ private fun PostScreen(
     onReplyComment: ((Int) -> Unit) -> Unit,
     onReplyTargetIdChange: (Int) -> Unit,
     clearReplayTargetId: () -> Unit,
-    onReportComment: (Int) -> Unit,
+    onReportComment: (Int, String) -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -168,7 +176,6 @@ private fun PostScreen(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
-
     val scrollOffset = with(LocalDensity.current) { -200.dp.toPx().toInt() }
 
     Box(
@@ -425,7 +432,7 @@ private fun PostScreen(
                             comment = comment,
                             replyTargetId = replyTargetId,
                             onDelete = onDeleteComment,
-                            onReport = onReportComment,
+                            onReport = { commentId, reason -> onReportComment(commentId, reason) },
                             onReply = {
                                 onReplyTargetIdChange(comment.commentId)
 
@@ -667,7 +674,7 @@ fun PostScreenPreview() {
         onReplyComment = { 0 },
         onDeleteComment = {},
         onDeletePost = {},
-        onReportComment = {},
+        onReportComment = { _, _ -> },
         onReportPost = {},
         onReplyTargetIdChange = {},
         clearReplayTargetId = {},

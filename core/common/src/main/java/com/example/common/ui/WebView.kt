@@ -46,7 +46,7 @@ fun TraceWebView(
                             try {
                                 val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
                                 intent.getPackage()?.let {
-                                    // 해당 인엔트를 실행할 앱이 설치되어 있으면 실행, 없으면 마켓으로 이동
+                                    // 해당 인텐트를 실행할 앱이 설치되어 있으면 실행, 없으면 마켓으로 이동
                                     if (context.packageManager.getLaunchIntentForPackage(it) != null) {
                                         context.startActivity(intent)
                                     } else {

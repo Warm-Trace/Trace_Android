@@ -131,7 +131,12 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.PostRoute>(
             enterTransition = {
-                defaultSlideFadeIn()
+                // UpdatePostRoute에서 돌아올 때는 enterTransition을 null로 설정
+                if (initialState.destination.route?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
+                    null
+                } else {
+                    defaultSlideFadeIn()
+                }
             },
             exitTransition = {
                 // UpdatePostRoute로 이동할 때만 exitTransition을 null로 설정

@@ -23,4 +23,9 @@ interface CommentDataSource {
     suspend fun deleteComment(
         commentId: Int,
     ) : Result<Unit>
+
+    suspend fun reportComment(
+        commentId: Int,
+        reason : String,
+    ) : Result<Unit>
 }
