@@ -48,7 +48,7 @@ internal fun TabTypeDropdownMenu(
                             onTabTypeChange(tabType)
                             onDismiss()
                         }
-                        .padding(top = 15.dp, bottom = 15.dp, start = 15.dp, end = 15.dp),
+                        .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(tabType.label, style = TraceTheme.typography.bodySSB)
@@ -85,6 +85,4 @@ private fun TabTypeDropdownMenuPreview() {
             selectedTabType = SearchTab.ALL
         )
     }
-
-
 }

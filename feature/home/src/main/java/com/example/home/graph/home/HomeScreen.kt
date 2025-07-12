@@ -16,6 +16,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -45,7 +48,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.common.util.clickable
 import com.example.designsystem.R
+import com.example.designsystem.component.DropdownMenuItem
 import com.example.designsystem.component.PostFeed
+import com.example.designsystem.component.TraceDropDownMenu
 import com.example.designsystem.theme.GrayLine
 import com.example.designsystem.theme.PrimaryDefault
 import com.example.designsystem.theme.TraceTheme
@@ -54,7 +59,6 @@ import com.example.domain.model.post.HomeTab
 import com.example.domain.model.post.PostFeed
 import com.example.domain.model.post.PostType
 import com.example.home.graph.home.HomeViewModel.HomeEvent
-import com.example.home.graph.home.component.HomeDropDownMenu
 import com.example.home.graph.home.component.TabSelector
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -111,9 +115,26 @@ private fun HomeScreen(
         refreshing = isRefreshing,
         onRefresh = { postFeeds.refresh() }
     )
-
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    val dropdownMenuItems = listOf(
+        DropdownMenuItem(
+            imageVector = Icons.Outlined.Refresh,
+            labelRes = R.string.refresh,
+            action = {
+                postFeeds.refresh()
+                coroutineScope.launch {
+                    listState.scrollToItem(0)
+                }
+            }
+        ),
+         DropdownMenuItem(
+            imageVector = Icons.Outlined.Edit,
+            labelRes = R.string.write_post,
+            action = { navigateToWritePost() }
+         )
+    )
 
     Box(
         modifier = Modifier
@@ -193,16 +214,10 @@ private fun HomeScreen(
                             isHomeDropDownMenuExpanded = true
                         })
 
-                    HomeDropDownMenu(
+                    TraceDropDownMenu(
                         expanded = isHomeDropDownMenuExpanded,
                         onDismiss = { isHomeDropDownMenuExpanded = false },
-                        onRefresh = {
-                            postFeeds.refresh()
-                            coroutineScope.launch {
-                                listState.scrollToItem(0)
-                            }
-                        },
-                        onWritePost = { navigateToWritePost() }
+                        items = dropdownMenuItems
                     )
                 }
 
