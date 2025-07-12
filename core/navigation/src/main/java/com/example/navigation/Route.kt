@@ -32,7 +32,7 @@ sealed class HomeGraph : Route {
     @Serializable
     data class PostRoute(
         val postId: Int,
-        val postType: String = "",
+        val postType: String = "MISSION",
         val title: String = "",
         val isVerified: Boolean = false,
         val content: String = "",
