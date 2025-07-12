@@ -33,39 +33,45 @@ internal fun TabTypeDropdownMenu(
 ) {
     val entries = SearchTab.entries
 
-    if (expanded) {
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = onDismiss,
-            shape = RoundedCornerShape(8.dp),
-            modifier = Modifier
-                .background(Background),
-        ) {
-            entries.forEach { tabType ->
-                Row(
-                    modifier = Modifier
-                        .clickable(isRipple = true) {
-                            onTabTypeChange(tabType)
-                            onDismiss()
-                        }
-                        .padding(top = 15.dp, bottom = 15.dp, start = 15.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(tabType.label, style = TraceTheme.typography.bodySSB)
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = onDismiss,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier
+            .background(Background),
+    ) {
+        entries.forEachIndexed { index, tabType ->
+            if (index == 0) {
+                Spacer(modifier = Modifier.size(10.dp))
+            } else {
+                Spacer(modifier = Modifier.size(30.dp))
+            }
 
-                    Spacer(Modifier.width(65.dp))
-
-                    if (selectedTabType == tabType) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "선택된 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        onTabTypeChange(tabType)
+                        onDismiss()
                     }
+                    .padding(start = 15.dp, end = 15.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(tabType.label, style = TraceTheme.typography.bodySSB)
+
+                Spacer(Modifier.width(65.dp))
+
+                if (selectedTabType == tabType) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "선택된 게시글 타입",
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
 
-
+            if (index == entries.lastIndex) {
+                Spacer(modifier = Modifier.size(10.dp))
+            }
         }
     }
 }

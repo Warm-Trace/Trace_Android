@@ -52,17 +52,19 @@ fun TraceDropDownMenu(
             .background(White)
     ) {
         items.forEachIndexed { index, item ->
+            if (index == 0) {
+                Spacer(modifier = Modifier.size(10.dp))
+            } else {
+                Spacer(modifier = Modifier.size(20.dp))
+            }
+            
             Row(
                 modifier = Modifier
-                    .clickable {
+                    .clickable() {
                         onDismiss()
                         item.action()
                     }
-                    .padding(
-                        start = 12.dp,
-                        top = if (index == 0) 10.dp else 20.dp,
-                        bottom = if(index == items.lastIndex) 10.dp else 0.dp
-                    )
+                    .padding(start = 12.dp)
                     .widthIn(min = 170.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -90,6 +92,10 @@ fun TraceDropDownMenu(
                     text = stringResource(item.labelRes),
                     style = TraceTheme.typography.bodyMR
                 )
+            }
+            
+            if (index == items.lastIndex) {
+                Spacer(modifier = Modifier.size(10.dp))
             }
         }
     }
