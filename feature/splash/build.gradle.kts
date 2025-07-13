@@ -3,5 +3,5 @@ plugins {
 }
 
 android {
-    namespace = "com.example.splash"
+    namespace = "com.virtuous.splash"
 }

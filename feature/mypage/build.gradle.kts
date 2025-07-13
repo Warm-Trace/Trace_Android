@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mypage"
+    namespace = "com.virtuous.mypage"
 
     defaultConfig {
         val properties = Properties().apply {

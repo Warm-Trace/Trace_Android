@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.navigation"
+    namespace = "com.virtuous.navigation"
 }
 
 dependencies {

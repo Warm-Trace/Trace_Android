@@ -1,7 +1,7 @@
-import com.example.app.configureCoroutineAndroid
-import com.example.app.configureHiltAndroid
-import com.example.app.configureKotest
-import com.example.app.configureKotlinAndroid
+import com.virtuous.app.configureCoroutineAndroid
+import com.virtuous.app.configureHiltAndroid
+import com.virtuous.app.configureKotest
+import com.virtuous.app.configureKotlinAndroid
 
 
 plugins {

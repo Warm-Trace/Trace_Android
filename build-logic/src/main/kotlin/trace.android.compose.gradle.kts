@@ -1,3 +1,3 @@
-import com.example.app.configureAndroidCompose
+import com.virtuous.app.configureAndroidCompose
 
 configureAndroidCompose()
