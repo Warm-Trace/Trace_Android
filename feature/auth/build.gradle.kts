@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.auth"
+    namespace = "com.virtuous.auth"
 
 }
 

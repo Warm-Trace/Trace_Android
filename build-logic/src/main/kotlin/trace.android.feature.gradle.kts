@@ -1,6 +1,6 @@
 
-import com.example.app.configureHiltAndroid
-import com.example.app.libs
+import com.virtuous.app.configureHiltAndroid
+import com.virtuous.app.libs
 
 plugins {
     id("trace.android.library")

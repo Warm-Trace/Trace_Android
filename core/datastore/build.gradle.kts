@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.puzzle.datastore"
+    namespace = "com.virtuous.datastore"
 }
 
 dependencies {

@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mission"
+    namespace = "com.virtuous.mission"
 }
 
 dependencies {

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.trace"
+    namespace = "com.virtuous.trace"
 
     defaultConfig {
         targetSdk = 35

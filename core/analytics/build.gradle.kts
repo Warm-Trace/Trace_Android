@@ -4,6 +4,6 @@ plugins {
 }
 
 android {
-    namespace = "com.example.analytics"
+    namespace = "com.virtuous.analytics"
 }
 

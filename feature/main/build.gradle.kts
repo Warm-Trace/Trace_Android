@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.main"
+    namespace = "com.virtuous.main"
 }
 
 dependencies {

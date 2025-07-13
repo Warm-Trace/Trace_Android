@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.network"
+    namespace = "com.virtuous.network"
 
     defaultConfig {
         val properties = Properties().apply {

@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.trace" />
-                  <option name="mobileSdkAppId" value="1:194164214137:android:371eb2148fd1f17cf487a8" />
+                  <option name="appId" value="com.virtuous.trace" />
+                  <option name="mobileSdkAppId" value="1:194164214137:android:78092185ab06069ff487a8" />
                   <option name="projectId" value="trace-e894d" />
                   <option name="projectNumber" value="194164214137" />
                 </ConnectionSetting>

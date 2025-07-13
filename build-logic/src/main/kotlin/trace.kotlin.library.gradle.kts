@@ -1,5 +1,5 @@
-import com.example.app.configureKotest
-import com.example.app.configureKotlin
+import com.virtuous.app.configureKotest
+import com.virtuous.app.configureKotlin
 import org.gradle.kotlin.dsl.kotlin
 
 plugins {

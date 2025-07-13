@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.designsystem"
+    namespace = "com.virtuous.designsystem"
 }
 
 dependencies {

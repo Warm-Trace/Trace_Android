@@ -1,6 +1,6 @@
-import com.example.app.configureHiltAndroid
-import com.example.app.configureKotestAndroid
-import com.example.app.configureKotlinAndroid
+import com.virtuous.app.configureHiltAndroid
+import com.virtuous.app.configureKotestAndroid
+import com.virtuous.app.configureKotlinAndroid
 
 plugins {
     id("com.android.application")
