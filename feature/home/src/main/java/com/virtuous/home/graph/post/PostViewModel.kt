@@ -108,6 +108,10 @@ class PostViewModel @Inject constructor(
             .onFailure { _eventChannel.send(PostEvent.ReportPostFailure) }
     }
 
+    fun blockUser(providerId : String) = {
+
+    }
+
     fun deletePost() = viewModelScope.launch {
         postRepository.deletePost(postId = postId)
             .onSuccess { _eventChannel.send(PostEvent.DeletePostSuccess) }

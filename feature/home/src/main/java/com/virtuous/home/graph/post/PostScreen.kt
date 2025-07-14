@@ -23,12 +23,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -104,18 +104,58 @@ internal fun PostRoute(
                     navigateBack()
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
                 }
-                is PostEvent.DeletePostFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 삭제에 실패했습니다."))
+
+                is PostEvent.DeletePostFailure -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "게시글 삭제에 실패했습니다."
+                    )
+                )
+
                 is PostEvent.ReportPostSuccess,
-                is PostEvent.ReportCommentSuccess, -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("신고가 접수되었습니다."))
-                is PostEvent.ReportPostFailure,
-                is PostEvent.ReportCommentFailure, -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("신고 접수에 실패했습니다."))
-                is PostEvent.AddCommentSuccess -> { }
-                is PostEvent.AddCommentFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 작성에 실패했습니다."))
-                is PostEvent.AddReplySuccess -> {  }
-                is PostEvent.AddReplyFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("답글 작성에 실패했습니다."))
-                is PostEvent.DeleteCommentSuccess -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글이 삭제되었습니다."))
-                is PostEvent.DeleteCommentFailure -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("댓글 삭제에 실패했습니다."))
-                is PostEvent.ShowSnackBar -> viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar(event.message))
+                is PostEvent.ReportCommentSuccess -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "신고가 접수되었습니다."
+                    )
+                )
+
+                is PostEvent.ReportPostFailure -> {}
+                is PostEvent.ReportCommentFailure -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "신고 접수에 실패했습니다."
+                    )
+                )
+
+                is PostEvent.AddCommentSuccess -> {}
+                is PostEvent.AddCommentFailure -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "댓글 작성에 실패했습니다."
+                    )
+                )
+
+                is PostEvent.AddReplySuccess -> {}
+                is PostEvent.AddReplyFailure -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "답글 작성에 실패했습니다."
+                    )
+                )
+
+                is PostEvent.DeleteCommentSuccess -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "댓글이 삭제되었습니다."
+                    )
+                )
+
+                is PostEvent.DeleteCommentFailure -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "댓글 삭제에 실패했습니다."
+                    )
+                )
+
+                is PostEvent.ShowSnackBar -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        event.message
+                    )
+                )
             }
         }
     }
@@ -136,6 +176,7 @@ internal fun PostRoute(
         onReplyTargetIdChange = viewModel::setReplyTargetId,
         clearReplayTargetId = viewModel::clearReplyTargetId,
         onReportComment = viewModel::reportComment,
+        onBlockUser = viewModel::blockUser,
         navigateBack = navigateBack,
         navigateToUpdatePost = navigateToUpdatePost,
     )
@@ -159,11 +200,13 @@ private fun PostScreen(
     onReplyTargetIdChange: (Int) -> Unit,
     clearReplayTargetId: () -> Unit,
     onReportComment: (Int, String) -> Unit,
+    onBlockUser: (String) -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
+
 
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
     val isAppending = comments.loadState.append is LoadState.Loading
@@ -513,7 +556,8 @@ private fun PostScreen(
                     expanded = isOtherPostDropDownMenuExpanded,
                     onDismiss = { isOtherPostDropDownMenuExpanded = false },
                     onRefresh = { comments.refresh() },
-                    onReport = onReportPost
+                    onReport = onReportPost,
+                    onBlockUser = { onBlockUser(postDetail.providerId) }
                 )
             }
         }
@@ -671,7 +715,7 @@ fun PostScreenPreview() {
         navigateBack = {},
         navigateToUpdatePost = {},
         onAddComment = {},
-        onReplyComment = { 0 },
+        onReplyComment = { },
         onDeleteComment = {},
         onDeletePost = {},
         onReportComment = { _, _ -> },
@@ -679,6 +723,7 @@ fun PostScreenPreview() {
         onReplyTargetIdChange = {},
         clearReplayTargetId = {},
         toggleEmotion = {},
+        onBlockUser = {},
         replyTargetId = null
     )
 }
