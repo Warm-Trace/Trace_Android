@@ -53,6 +53,7 @@ internal fun OtherCommentDropdownMenu(
     onDismiss: () -> Unit,
     onReply: () -> Unit,
     onReport: (String) -> Unit,
+    onBlockUser: () -> Unit,
 ) {
     var isReportDropdownMenuExpanded by remember { mutableStateOf(false) }
     ReportDropDownMenu(
@@ -60,6 +61,19 @@ internal fun OtherCommentDropdownMenu(
         onDismiss = { isReportDropdownMenuExpanded = false },
         onReport = onReport,
     )
+
+    var showBlockUserDialog by remember { mutableStateOf(false) }
+    if (showBlockUserDialog) {
+        CheckCancelDialog(
+            title = "차단하시겠어요?",
+            onCheck = {
+                showBlockUserDialog = false
+                onBlockUser()
+            },
+            onDismiss = { showBlockUserDialog = false },
+            dialogText = "해당 작성자의 게시글과 댓글이 더 이상 노출되지 않습니다.",
+        )
+    }
 
     TraceDropDownMenu(
         expanded = expanded,
@@ -74,6 +88,11 @@ internal fun OtherCommentDropdownMenu(
                 iconRes = R.drawable.report_ic,
                 labelRes = R.string.report,
                 action = { isReportDropdownMenuExpanded = true },
+            ),
+            DropdownMenuItem(
+                iconRes = R.drawable.block_ic,
+                labelRes = R.string.block,
+                action = { showBlockUserDialog = true },
             ),
         ),
     )
@@ -116,6 +135,7 @@ internal fun OtherChildCommentDropdownMenu(
     expanded: Boolean,
     onDismiss: () -> Unit,
     onReport: (String) -> Unit,
+    onBlockUser: () -> Unit,
 ) {
     var isReportDropdownMenuExpanded by remember { mutableStateOf(false) }
     ReportDropDownMenu(
@@ -123,6 +143,19 @@ internal fun OtherChildCommentDropdownMenu(
         onDismiss = { isReportDropdownMenuExpanded = false },
         onReport = onReport,
     )
+
+    var showBlockUserDialog by remember { mutableStateOf(false) }
+    if (showBlockUserDialog) {
+        CheckCancelDialog(
+            title = "차단하시겠어요?",
+            onCheck = {
+                showBlockUserDialog = false
+                onBlockUser()
+            },
+            onDismiss = { showBlockUserDialog = false },
+            dialogText = "해당 작성자의 게시글과 댓글이 더 이상 노출되지 않습니다.",
+        )
+    }
 
     TraceDropDownMenu(
         expanded = expanded,
@@ -132,6 +165,11 @@ internal fun OtherChildCommentDropdownMenu(
                 iconRes = R.drawable.report_ic,
                 labelRes = R.string.report,
                 action = { isReportDropdownMenuExpanded = true },
+            ),
+            DropdownMenuItem(
+                iconRes = R.drawable.block_ic,
+                labelRes = R.string.block,
+                action = { showBlockUserDialog = true },
             ),
         ),
     )

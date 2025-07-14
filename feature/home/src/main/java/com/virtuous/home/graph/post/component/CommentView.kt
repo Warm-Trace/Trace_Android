@@ -45,6 +45,7 @@ internal fun CommentView(
     onDelete: (Int) -> Unit,
     onReply: () -> Unit,
     onReport: (Int, String) -> Unit,
+    onBlockUser: (String) -> Unit,
 ) {
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -61,8 +62,7 @@ internal fun CommentView(
     ) {
         if (!comment.isDeleted) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 ProfileImage(
                     profileImageUrl = comment.profileImageUrl,
@@ -97,8 +97,7 @@ internal fun CommentView(
                                 } else {
                                     isOtherCommentDropDownMenuExpanded = true
                                 }
-                            }
-                    )
+                            })
 
                     OwnCommentDropdownMenu(
                         expanded = isOwnCommentDropDownMenuExpanded,
@@ -112,7 +111,7 @@ internal fun CommentView(
                         onDismiss = { isOtherCommentDropDownMenuExpanded = false },
                         onReply = onReply,
                         onReport = { reason -> onReport(comment.commentId, reason) },
-                    )
+                        onBlockUser = { onBlockUser(comment.providerId) })
                 }
             }
 
@@ -123,13 +122,9 @@ internal fun CommentView(
             Spacer(Modifier.height(5.dp))
 
             Text(
-                "답글 달기",
-                style = TraceTheme.typography.bodySM.copy(
-                    fontSize = 13.sp,
-                    lineHeight = 16.sp
-                ),
-                color = DarkGray,
-                modifier = Modifier.clickable {
+                "답글 달기", style = TraceTheme.typography.bodySM.copy(
+                    fontSize = 13.sp, lineHeight = 16.sp
+                ), color = DarkGray, modifier = Modifier.clickable {
                     onReply()
                 })
         }
@@ -146,6 +141,7 @@ internal fun CommentView(
             childComment,
             onDelete = onDelete,
             onReport = onReport,
+            onBlockUser = onBlockUser
         )
 
         if (index != comment.replies.size - 1) Spacer(Modifier.height(20.dp))
@@ -157,7 +153,8 @@ internal fun CommentView(
 private fun ChildCommentView(
     comment: Comment,
     onDelete: (Int) -> Unit,
-    onReport: (Int, String) -> Unit
+    onReport: (Int, String) -> Unit,
+    onBlockUser: (String) -> Unit
 ) {
     var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
     var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -168,8 +165,7 @@ private fun ChildCommentView(
             .padding(start = 20.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
         ) {
             ProfileImage(
                 profileImageUrl = comment.profileImageUrl,
@@ -184,9 +180,7 @@ private fun ChildCommentView(
             Spacer(Modifier.width(6.dp))
 
             Text(
-                comment.getFormattedTime(),
-                style = TraceTheme.typography.bodyXSM,
-                color = DarkGray
+                comment.getFormattedTime(), style = TraceTheme.typography.bodyXSM, color = DarkGray
             )
 
             Spacer(Modifier.weight(1f))
@@ -204,8 +198,7 @@ private fun ChildCommentView(
                             } else {
                                 isOtherCommentDropDownMenuExpanded = true
                             }
-                        }
-                )
+                        })
 
                 OwnChildCommentDropdownMenu(
                     expanded = isOwnCommentDropDownMenuExpanded,
@@ -217,6 +210,7 @@ private fun ChildCommentView(
                     expanded = isOtherCommentDropDownMenuExpanded,
                     onDismiss = { isOtherCommentDropDownMenuExpanded = false },
                     onReport = { reason -> onReport(comment.commentId, reason) },
+                    onBlockUser = { onBlockUser(comment.providerId) }
                 )
             }
         }
@@ -235,15 +229,13 @@ val fakeChildComments = listOf(
         content = "정말 좋은 내용이에요!",
         createdAt = LocalDateTime.now().minusMinutes(30), providerId = "1234", postId = 1,
         commentId = 1, parentId = 1, isOwner = true,
-    ),
-    Comment(
+    ), Comment(
         nickName = "박영희",
         profileImageUrl = null,
         content = "완전 공감해요!",
         createdAt = LocalDateTime.now().minusDays(2), providerId = "1234", postId = 1,
         commentId = 1, parentId = 1, isOwner = true,
-    ),
-    Comment(
+    ), Comment(
         nickName = "최민준",
         profileImageUrl = null,
         content = "읽기만 했는데 좋네요!",
@@ -266,12 +258,17 @@ private fun CommentViewPreview() {
                 profileImageUrl = "https://randomuser.me/api/portraits/men/1.jpg",
                 content = "이 글 정말 감동적이에요!",
                 createdAt = LocalDateTime.now().minusDays(1),
-                providerId = "1234", postId = 1,
-                commentId = 1, parentId = 1, isOwner = true, replies = fakeChildComments
+                providerId = "1234",
+                postId = 1,
+                commentId = 1,
+                parentId = 1,
+                isOwner = true,
+                replies = fakeChildComments
             ),
             onReply = { },
             onReport = { _, _ -> },
             onDelete = { _ -> },
+            onBlockUser = {},
             replyTargetId = null
         )
 

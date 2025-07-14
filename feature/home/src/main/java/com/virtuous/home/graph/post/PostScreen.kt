@@ -487,7 +487,9 @@ private fun PostScreen(
                                         index = index + 1, scrollOffset = scrollOffset
                                     )
                                 }
-                            })
+                            },
+                            onBlockUser = onBlockUser
+                        )
 
                         if (index != comments.itemCount - 1) {
                             Spacer(Modifier.height(15.dp))
