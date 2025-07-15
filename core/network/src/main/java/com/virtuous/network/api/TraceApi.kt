@@ -167,6 +167,12 @@ interface TraceApi {
     @POST("/api/v1/reports")
     suspend fun reportContent(@Body reportContentRequest: ReportContentRequest): Result<Unit>
 
+    //차단
+    @POST("/api/v1/reports/block/{blockedId}")
+    suspend fun blockUser(
+        @Path("blockedId") blockedId: String
+    ) : Result<Unit>
+
     // 마이페이지
     @POST("/api/v1/user/myPosts")
     suspend fun getMyPosts(@Body getMyPostsRequest: GetMyPostsRequest): Result<GetPostsResponse>

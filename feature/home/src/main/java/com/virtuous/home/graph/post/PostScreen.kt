@@ -156,6 +156,17 @@ internal fun PostRoute(
                         event.message
                     )
                 )
+
+                is PostEvent.BlockUserSuccess -> {
+                    navigateBack()
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("해당 유저를 차단했습니다."))
+                }
+
+                is PostEvent.BlockUserFailure -> viewModel.eventHelper.sendEvent(
+                    TraceEvent.ShowSnackBar(
+                        "유저 차단에 실패했습니다."
+                    )
+                )
             }
         }
     }
@@ -468,7 +479,6 @@ private fun PostScreen(
             ) { index ->
                 comments[index]?.let { comment ->
                     if (!comment.isDeleted || comment.replies.isNotEmpty()) {
-
                         Spacer(Modifier.height(13.dp))
 
                         CommentView(

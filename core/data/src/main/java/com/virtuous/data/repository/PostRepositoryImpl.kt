@@ -104,6 +104,10 @@ class PostRepositoryImpl @Inject constructor(
             response.isAdded
         }
 
+    override suspend fun blockUser(providerId: String): Result<Unit> = suspendRunCatching {
+        postDataSource.blockUser(providerId)
+    }
+
     companion object {
         private const val DEFAULT_PAGE_SIZE = 20
     }
