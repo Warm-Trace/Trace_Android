@@ -117,7 +117,7 @@ internal fun MissionHeaderView(
 
         Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
             Text(
-                "부모님께 안마 또는 마사지 해드리기",
+                dailyMission.mission.description,
                 style = TraceTheme.typography.missionTitle,
                 color = Black,
                 modifier = Modifier.align(Alignment.Center)
