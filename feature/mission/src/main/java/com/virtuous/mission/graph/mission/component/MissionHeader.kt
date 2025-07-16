@@ -47,7 +47,7 @@ internal fun MissionHeaderView(
                 RoundedCornerShape(16.dp)
             )
             .background(MissionBackground)
-            .padding(start = 12.dp, end = 12.dp, top = 4.dp),
+            .padding(start = 20.dp, end = 20.dp, top = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -80,10 +80,7 @@ internal fun MissionHeaderView(
                         radius = size.minDimension / 2f
                     )
                 }
-
             }
-
-
 
             Box(
                 modifier = Modifier.align(Alignment.TopEnd),

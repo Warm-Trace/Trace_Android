@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.trace",
+  "applicationId": "com.virtuous.trace",
   "variantName": "release",
   "elements": [
     {

@@ -168,9 +168,9 @@ interface TraceApi {
     suspend fun reportContent(@Body reportContentRequest: ReportContentRequest): Result<Unit>
 
     //차단
-    @POST("/api/v1/reports/block/{blockedId}")
+    @POST("/api/v1/reports/block/{blockedProviderId}")
     suspend fun blockUser(
-        @Path("blockedId") blockedId: String
+        @Path("blockedProviderId") blockedProviderId: String
     ) : Result<Unit>
 
     // 마이페이지

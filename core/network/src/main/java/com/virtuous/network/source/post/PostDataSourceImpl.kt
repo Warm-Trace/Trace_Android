@@ -178,7 +178,7 @@ class PostDataSourceImpl @Inject constructor(
         )
 
     override suspend fun blockUser(providerId: String): Result<Unit> =
-        traceApi.blockUser(blockedId = providerId)
+        traceApi.blockUser(blockedProviderId = providerId)
 
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"

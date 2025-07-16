@@ -11,12 +11,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 internal fun Project.configureKotlinAndroid() {
     plugins.apply("org.jetbrains.kotlin.android")
 
-
     androidExtension.apply {
         compileSdk = 36
 
         defaultConfig {
-            minSdk = 28
+            minSdk = 23
         }
 
         buildTypes {
