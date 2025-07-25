@@ -177,7 +177,7 @@ class PostDataSourceImpl @Inject constructor(
             )
         }
 
-        traceApi.updatePost(
+        return traceApi.updatePost(
             postId = postId,
             updatePostRequest = requestBody,
             imageFiles = requestImage
