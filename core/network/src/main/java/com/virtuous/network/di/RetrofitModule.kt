@@ -39,7 +39,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideTraeceApi(
+    fun provideTraceApi(
         json: Json,
         okHttpClient: OkHttpClient,
         callAdapterFactory : TraceCallAdapterFactory

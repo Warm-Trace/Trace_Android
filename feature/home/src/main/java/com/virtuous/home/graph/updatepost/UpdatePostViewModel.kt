@@ -42,6 +42,9 @@ class UpdatePostViewModel @Inject constructor(
     private val _images: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
+    private val _removedImages: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
+    val removedImages = _removedImages.asStateFlow()
+
 
     fun setTitle(title: String) {
         _title.value = title
@@ -61,6 +64,7 @@ class UpdatePostViewModel @Inject constructor(
 
     fun removeImage(image: String) {
         _images.value = _images.value.filter { it != image }
+        _removedImages.value += image
     }
 
     private fun getPost() = viewModelScope.launch {
@@ -73,7 +77,7 @@ class UpdatePostViewModel @Inject constructor(
     }
 
     fun updatePost() = viewModelScope.launch {
-        postRepository.updatePost(postId = postId, title = _title.value, content = _content.value, images = _images.value).onSuccess {
+        postRepository.updatePost(postId = postId, title = _title.value, content = _content.value, removedImages = _removedImages.value, images = _images.value).onSuccess {
             postDetail -> _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
         }.onFailure {
             _eventChannel.send(UpdatePostEvent.UpdatePostFailure)

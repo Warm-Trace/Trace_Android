@@ -31,15 +31,15 @@ interface PostDataSource {
     ): Result<PostResponse>
 
     suspend fun addPost(
-        postType: WritePostType, title: String, content: String, images: List<InputStream>?
+        postType: WritePostType, title: String, content: String, images: List<InputStream>
     ): Result<PostResponse>
 
     suspend fun verifyAndAddPost(
-        title: String, content: String, images: List<InputStream>?
+        title: String, content: String, images: List<InputStream>
     ): Result<PostResponse>
 
     suspend fun updatePost(
-        postId: Int, title: String, content: String, images: List<InputStream>?,
+        postId: Int, title: String, content: String, removedImages : List<String>, images: List<InputStream>,
     ): Result<PostResponse>
 
     suspend fun deletePost(

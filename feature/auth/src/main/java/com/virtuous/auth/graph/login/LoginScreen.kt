@@ -34,7 +34,6 @@ internal fun LoginRoute(
     navigateToEditProfile: (String, String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
@@ -112,13 +111,10 @@ private fun loginKakao(
                     if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                         return@loginWithKakaoTalk
                     }
-
                     loginWithKakaoAccount(context, callback = callback)
                 } else if (token?.idToken != null) {
-
                     onSuccess(token.idToken!!)
                     Log.d("idToken", token.idToken!!)
-
                 }
             }
         } else {

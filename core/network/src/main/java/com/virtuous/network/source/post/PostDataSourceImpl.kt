@@ -64,7 +64,7 @@ class PostDataSourceImpl @Inject constructor(
         postType: WritePostType,
         title: String,
         content: String,
-        images: List<InputStream>?
+        images: List<InputStream>
     ): Result<PostResponse> {
         val jsonString = Json.encodeToString(
             AddPostRequest(
@@ -86,7 +86,7 @@ class PostDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = images?.map { image ->
+        val requestImage = images.map { image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
                 name = "imageFiles",
@@ -104,7 +104,7 @@ class PostDataSourceImpl @Inject constructor(
     override suspend fun verifyAndAddPost(
         title: String,
         content: String,
-        images: List<InputStream>?
+        images: List<InputStream>
     ): Result<PostResponse> {
         val jsonString = Json.encodeToString(
             VerifyAndAddPostRequest(
@@ -126,7 +126,7 @@ class PostDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = images?.map { image ->
+        val requestImage = images.map { image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
                 name = "imageFiles",
@@ -145,15 +145,44 @@ class PostDataSourceImpl @Inject constructor(
         postId: Int,
         title: String,
         content: String,
-        images: List<InputStream>?
-    ): Result<PostResponse> =
-        traceApi.updatePost(
-            postId = postId,
-            updatePostRequest = UpdatePostRequest(
+        removedImages: List<String>,
+        images: List<InputStream>
+    ): Result<PostResponse> {
+        val jsonString = Json.encodeToString(
+            UpdatePostRequest(
                 title = title,
-                content = content
+                content = content,
+                removal = removedImages
             )
         )
+
+        val requestBody = jsonString
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
+
+        val (imageFileExtension, imageFileName) = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WEBP_MEDIA_TYPE to "post_${UUID.randomUUID()}.webp"
+        } else {
+            JPEG_MEDIA_TYPE to "post_${UUID.randomUUID()}.jpg"
+        }
+
+        val mediaType = imageFileExtension.toMediaTypeOrNull()
+            ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
+
+        val requestImage = images.map { image ->
+            val body = image.readBytes().toRequestBody(mediaType)
+            MultipartBody.Part.createFormData(
+                name = "imageFiles",
+                filename = imageFileName,
+                body = body
+            )
+        }
+
+        traceApi.updatePost(
+            postId = postId,
+            updatePostRequest = requestBody,
+            imageFiles = requestImage
+        )
+    }
 
     override suspend fun deletePost(postId: Int): Result<Unit> = traceApi.deletePost(postId)
 

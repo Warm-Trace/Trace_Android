@@ -48,9 +48,9 @@ class PostRepositoryImpl @Inject constructor(
         postType: WritePostType,
         title: String,
         content: String,
-        images: List<String>?
+        images: List<String>
     ): Result<PostDetail> = suspendRunCatching {
-        val imageStreams = images?.map { imageUrl ->
+        val imageStreams = images.map { imageUrl ->
             imageResizer.resizeImage(imageUrl)
         }
 
@@ -62,9 +62,9 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun verifyAndAddPost(
         title: String,
         content: String,
-        images: List<String>?
+        images: List<String>
     ): Result<PostDetail> = suspendRunCatching {
-        val imageStreams = images?.map { imageUrl ->
+        val imageStreams = images.map { imageUrl ->
             imageResizer.resizeImage(imageUrl)
         }
 
@@ -77,13 +77,14 @@ class PostRepositoryImpl @Inject constructor(
         postId: Int,
         title: String,
         content: String,
-        images: List<String>?
+        removedImages : List<String>,
+        images: List<String>,
     ): Result<PostDetail> = suspendRunCatching {
-//        val imageStreams = images?.mapIndexed { index, imageUrl ->
-//            imageResizer.resizeImage(imageUrl)
-//        }
+        val imageStreams = images.mapIndexed { index, imageUrl ->
+            imageResizer.resizeImage(imageUrl)
+        }
 
-        val response = postDataSource.updatePost(postId, title, content, null).getOrThrow()
+        val response = postDataSource.updatePost(postId, title, content, removedImages, imageStreams).getOrThrow()
 
         response.toDomain()
     }

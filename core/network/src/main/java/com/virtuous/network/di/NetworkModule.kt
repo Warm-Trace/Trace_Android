@@ -1,5 +1,6 @@
 package com.virtuous.network.di
 
+import com.google.firebase.messaging.FirebaseMessaging
 import com.virtuous.network.source.auth.AuthDataSource
 import com.virtuous.network.source.auth.AuthDataSourceImpl
 import com.virtuous.network.source.comment.CommentDataSource
@@ -14,7 +15,6 @@ import com.virtuous.network.source.search.SearchDataSource
 import com.virtuous.network.source.search.SearchDataSourceImpl
 import com.virtuous.network.source.user.UserDataSource
 import com.virtuous.network.source.user.UserDataSourceImpl
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -61,6 +61,5 @@ object NetworkProvidesModule {
     @Provides
     @Singleton
     fun provideFirebaseMessaging(): FirebaseMessaging = FirebaseMessaging.getInstance()
-
 }
 
