@@ -1,4 +1,4 @@
-package com.virtuous.common.util
+package com.virtuous.common_ui.util
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable

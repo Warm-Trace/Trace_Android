@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.domain.repository.PostRepository
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class UpdatePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
-    val eventHelper: EventHelper
+    val eventHelper: com.virtuous.common_ui.event.EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdatePostEvent>(Channel.BUFFERED)
     val eventChannel = _eventChannel.receiveAsFlow()

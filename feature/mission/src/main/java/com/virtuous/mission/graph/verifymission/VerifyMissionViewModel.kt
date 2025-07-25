@@ -3,7 +3,7 @@ package com.virtuous.mission.graph.verifymission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.repository.MissionRepository
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ class VerifyMissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
     private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle,
-    val eventHelper: EventHelper
+    val eventHelper: com.virtuous.common_ui.event.EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<VerifyMissionEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.EmotionCount
 import com.virtuous.domain.model.post.PostDetail
@@ -30,7 +30,7 @@ class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
     savedStateHandle: SavedStateHandle,
-    val eventHelper: EventHelper
+    val eventHelper: com.virtuous.common_ui.event.EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

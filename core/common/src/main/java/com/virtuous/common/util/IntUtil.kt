@@ -1,8 +1,6 @@
 package com.virtuous.common.util
 
-import android.annotation.SuppressLint
-
-@SuppressLint("DefaultLocale")
+@Suppress("DefaultLocale")
 fun Int.formatCount(): String {
     return when {
         this >= 10_000 -> {

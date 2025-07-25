@@ -1,4 +1,4 @@
-package com.virtuous.common.ui
+package com.virtuous.common_ui.ui
 
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource

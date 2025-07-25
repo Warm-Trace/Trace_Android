@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.virtuous.common.ui.TraceWebView
+import com.virtuous.common_ui.ui.TraceWebView
 
 @Composable
 internal fun WebViewRoute(
@@ -23,7 +23,7 @@ private fun WebViewScreen(
     url: String,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        TraceWebView(
+       TraceWebView(
             url = url,
             modifier = Modifier
                 .imePadding(),

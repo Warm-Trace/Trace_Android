@@ -1,4 +1,4 @@
-package com.virtuous.common.event
+package com.virtuous.common_ui.event
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED

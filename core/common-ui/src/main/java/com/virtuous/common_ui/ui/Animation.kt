@@ -1,4 +1,4 @@
-package com.virtuous.common.ui
+package com.virtuous.common_ui.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope

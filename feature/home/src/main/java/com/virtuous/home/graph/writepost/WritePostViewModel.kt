@@ -2,7 +2,7 @@ package com.virtuous.home.graph.writepost
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.domain.repository.PostRepository
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class WritePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-    val eventHelper: EventHelper
+    val eventHelper: com.virtuous.common_ui.event.EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

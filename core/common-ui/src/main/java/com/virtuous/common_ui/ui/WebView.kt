@@ -1,4 +1,4 @@
-package com.virtuous.common.ui
+package com.virtuous.common_ui.ui
 
 import android.content.Context
 import android.content.Intent

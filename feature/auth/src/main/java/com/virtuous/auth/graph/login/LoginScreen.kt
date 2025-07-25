@@ -22,8 +22,8 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.virtuous.auth.graph.login.LoginViewModel.LoginEvent
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.TraceTheme
 
@@ -48,7 +48,7 @@ internal fun LoginRoute(
 
     LoginScreen(
         viewModel::loginKakao,
-        onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
+        onLoginFailure = { viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
     )
 }
 

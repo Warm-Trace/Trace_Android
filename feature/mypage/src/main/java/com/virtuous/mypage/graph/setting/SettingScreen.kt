@@ -25,8 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.CheckCancelDialog
 import com.virtuous.designsystem.theme.Gray
@@ -51,7 +51,7 @@ internal fun SettingRoute(
                 is SettingEvent.Logout -> navigateToLogin()
                 is SettingEvent.UnregisterUserSuccess -> navigateToLogin()
                 is SettingEvent.UnregisterUserFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
                 }
             }
         }

@@ -40,8 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.CheckCancelDialog
 import com.virtuous.designsystem.component.ImageContent
@@ -80,11 +80,11 @@ internal fun WritePostRoute(
             when (event) {
                 is WritePostEvent.AddPostSuccess -> {
                     navigateToPost(event.postDetail)
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
                 }
 
                 is WritePostEvent.AddPostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
                 }
 
                 is WritePostEvent.VerifyFailure -> {
