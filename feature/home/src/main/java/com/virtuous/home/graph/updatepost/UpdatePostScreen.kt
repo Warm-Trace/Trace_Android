@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -132,55 +131,7 @@ private fun UpdatePostScreen(
         ) {
 
             item {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.clickable(isRipple = true) {
-                            onTypeChange(PostType.GOOD_DEED)
-                        }
-                    ) {
-                        Image(
-                            painter = if (type == PostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
-                                R.drawable.checkbox_off
-                            ),
-                            contentDescription = "선행 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
-
-                        Spacer(Modifier.width(2.dp))
-
-
-                        Text(
-                            "선행",
-                            color = if (type == PostType.GOOD_DEED) PrimaryActive else TextHint,
-                            style = TraceTheme.typography.bodySSB,
-                        )
-                    }
-
-                    Spacer(Modifier.width(20.dp))
-
-                    Row(
-                        modifier = Modifier.clickable(isRipple = true) {
-                            onTypeChange(PostType.FREE)
-                        }
-                    ) {
-                        Image(
-                            painter = if (type == PostType.FREE) painterResource(R.drawable.checkbox_on) else painterResource(
-                                R.drawable.checkbox_off
-                            ),
-                            contentDescription = "선행 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
-
-                        Spacer(Modifier.width(2.dp))
-
-
-                        Text(
-                            "자유",
-                            color = if (type == PostType.FREE) PrimaryActive else TextHint,
-                            style = TraceTheme.typography.bodySSB,
-                        )
-                    }
-                }
+                Text("${type.label}게시판", style = TraceTheme.typography.bodyMSB)
 
                 Spacer(Modifier.height(28.dp))
 

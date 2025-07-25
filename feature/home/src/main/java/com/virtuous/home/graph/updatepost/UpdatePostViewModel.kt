@@ -1,5 +1,6 @@
 package com.virtuous.home.graph.updatepost
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,9 +43,9 @@ class UpdatePostViewModel @Inject constructor(
     private val _images: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
-    private val _removedImages: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
-    val removedImages = _removedImages.asStateFlow()
+    private val _removedImages = mutableListOf<String>()
 
+    private val _newImages = mutableListOf<String>()
 
     fun setTitle(title: String) {
         _title.value = title
@@ -60,11 +61,13 @@ class UpdatePostViewModel @Inject constructor(
 
     fun addImages(images: List<String>) {
         _images.value += images
+        _newImages += images
     }
 
     fun removeImage(image: String) {
         _images.value = _images.value.filter { it != image }
-        _removedImages.value += image
+        _newImages.remove(image)
+        if (!image.contains("http")) _removedImages += image
     }
 
     private fun getPost() = viewModelScope.launch {
@@ -77,8 +80,20 @@ class UpdatePostViewModel @Inject constructor(
     }
 
     fun updatePost() = viewModelScope.launch {
-        postRepository.updatePost(postId = postId, title = _title.value, content = _content.value, removedImages = _removedImages.value, images = _images.value).onSuccess {
-            postDetail -> _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
+
+        Log.d("UpdatePostVM", "postId: $postId")
+        Log.d("UpdatePostVM", "title: ${_title.value}")
+        Log.d("UpdatePostVM", "content: ${_content.value}")
+        Log.d("UpdatePostVM", "removedImages: $_removedImages")
+        Log.d("UpdatePostVM", "images: $_newImages")
+        postRepository.updatePost(
+            postId = postId,
+            title = _title.value,
+            content = _content.value,
+            removedImages = _removedImages,
+            images = _newImages
+        ).onSuccess { postDetail ->
+            _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
         }.onFailure {
             _eventChannel.send(UpdatePostEvent.UpdatePostFailure)
         }

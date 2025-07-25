@@ -77,14 +77,20 @@ class PostRepositoryImpl @Inject constructor(
         postId: Int,
         title: String,
         content: String,
-        removedImages : List<String>,
+        removedImages: List<String>,
         images: List<String>,
     ): Result<PostDetail> = suspendRunCatching {
-        val imageStreams = images.mapIndexed { index, imageUrl ->
+        val imageStreams = images.filterNot { it.startsWith("http") }.map { imageUrl ->
             imageResizer.resizeImage(imageUrl)
         }
 
-        val response = postDataSource.updatePost(postId, title, content, removedImages, imageStreams).getOrThrow()
+        val response = postDataSource.updatePost(
+            postId = postId,
+            title = title,
+            content = content,
+            removedImages = removedImages,
+            newImages = imageStreams
+        ).getOrThrow()
 
         response.toDomain()
     }

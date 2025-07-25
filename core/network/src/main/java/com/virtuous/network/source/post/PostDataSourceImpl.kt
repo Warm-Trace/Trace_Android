@@ -146,7 +146,7 @@ class PostDataSourceImpl @Inject constructor(
         title: String,
         content: String,
         removedImages: List<String>,
-        images: List<InputStream>
+        newImages: List<InputStream>
     ): Result<PostResponse> {
         val jsonString = Json.encodeToString(
             UpdatePostRequest(
@@ -168,7 +168,7 @@ class PostDataSourceImpl @Inject constructor(
         val mediaType = imageFileExtension.toMediaTypeOrNull()
             ?: throw IllegalArgumentException("Invalid media type: $imageFileExtension")
 
-        val requestImage = images.map { image ->
+        val requestImage: List<MultipartBody.Part> = newImages.map { image ->
             val body = image.readBytes().toRequestBody(mediaType)
             MultipartBody.Part.createFormData(
                 name = "imageFiles",

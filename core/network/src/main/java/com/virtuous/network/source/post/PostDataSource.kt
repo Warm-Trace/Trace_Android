@@ -39,7 +39,7 @@ interface PostDataSource {
     ): Result<PostResponse>
 
     suspend fun updatePost(
-        postId: Int, title: String, content: String, removedImages : List<String>, images: List<InputStream>,
+        postId: Int, title: String, content: String, removedImages : List<String>, newImages: List<InputStream>,
     ): Result<PostResponse>
 
     suspend fun deletePost(
