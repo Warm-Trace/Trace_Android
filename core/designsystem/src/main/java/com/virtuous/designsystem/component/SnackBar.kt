@@ -26,7 +26,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.virtuous.designsystem.theme.PrimaryDefault
+import com.virtuous.designsystem.theme.PrimaryActive
 import com.virtuous.designsystem.theme.TraceTheme
 import kotlinx.coroutines.delay
 
@@ -47,7 +47,7 @@ fun TraceSnackBar(
             .padding(horizontal = 28.dp)
             .padding(bottom = 36.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(PrimaryDefault)
+            .background(PrimaryActive)
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
     ) {
         Text(
