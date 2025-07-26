@@ -45,7 +45,7 @@ fun TraceSnackBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 28.dp)
-            .padding(bottom = 36.dp)
+            .padding(bottom = bottomOffset)
             .clip(RoundedCornerShape(8.dp))
             .background(PrimaryActive)
             .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
