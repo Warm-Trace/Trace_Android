@@ -1,6 +1,9 @@
 package com.virtuous.main
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -29,9 +33,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.ui.TraceBottomBarAnimation
-import com.virtuous.common.util.PermissionUtil
+import com.virtuous.common_ui.ui.TraceBottomBarAnimation
 import com.virtuous.designsystem.component.TraceSnackBar
 import com.virtuous.designsystem.component.TraceSnackBarHost
 import com.virtuous.designsystem.theme.Background
@@ -61,7 +63,7 @@ class MainActivity : ComponentActivity() {
             handleNotificationIntent(intent, viewModel.navigationHelper)
         } else {
             viewModel.checkSession()
-            PermissionUtil.requestNotificationPermission(this)
+            requestNotificationPermission(this)
         }
 
         enableEdgeToEdge()
@@ -88,7 +90,7 @@ class MainActivity : ComponentActivity() {
                         launch {
                             viewModel.eventHelper.eventChannel.collect { event ->
                                 when (event) {
-                                    is TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
+                                    is com.virtuous.common_ui.event.TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
                                         event.message
                                     )
                                 }
@@ -207,6 +209,17 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+    }
+
+    fun requestNotificationPermission(activity: Activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = Manifest.permission.POST_NOTIFICATIONS
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+                ActivityCompat.requestPermissions(activity, arrayOf(permission), 1001)
+            }
+
         }
     }
 }

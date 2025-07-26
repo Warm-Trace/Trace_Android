@@ -54,8 +54,8 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.common.util.formatCount
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ProfileImage
@@ -102,68 +102,68 @@ internal fun PostRoute(
             when (event) {
                 is PostEvent.DeletePostSuccess -> {
                     navigateBack()
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
                 }
 
                 is PostEvent.DeletePostFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "게시글 삭제에 실패했습니다."
                     )
                 )
 
                 is PostEvent.ReportPostSuccess,
                 is PostEvent.ReportCommentSuccess -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "신고가 접수되었습니다."
                     )
                 )
 
                 is PostEvent.ReportPostFailure -> {}
                 is PostEvent.ReportCommentFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "신고 접수에 실패했습니다."
                     )
                 )
 
                 is PostEvent.AddCommentSuccess -> {}
                 is PostEvent.AddCommentFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "댓글 작성에 실패했습니다."
                     )
                 )
 
                 is PostEvent.AddReplySuccess -> {}
                 is PostEvent.AddReplyFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "답글 작성에 실패했습니다."
                     )
                 )
 
                 is PostEvent.DeleteCommentSuccess -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "댓글이 삭제되었습니다."
                     )
                 )
 
                 is PostEvent.DeleteCommentFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "댓글 삭제에 실패했습니다."
                     )
                 )
 
                 is PostEvent.ShowSnackBar -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         event.message
                     )
                 )
 
                 is PostEvent.BlockUserSuccess -> {
                     navigateBack()
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("해당 유저를 차단했습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("해당 유저를 차단했습니다."))
                 }
 
                 is PostEvent.BlockUserFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
+                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
                         "유저 차단에 실패했습니다."
                     )
                 )

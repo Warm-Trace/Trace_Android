@@ -10,8 +10,8 @@ android {
     namespace = "com.virtuous.trace"
 
     defaultConfig {
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
         targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -42,7 +42,6 @@ android {
             keyPassword = keystoreProperties["KEY_PASSWORD"] as String
         }
     }
-
 
     buildTypes {
         release {

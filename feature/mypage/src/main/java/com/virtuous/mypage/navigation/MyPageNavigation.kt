@@ -6,8 +6,8 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
-import com.virtuous.common.ui.defaultSlideFadeIn
-import com.virtuous.common.ui.defaultSlideFadeOut
+import com.virtuous.common_ui.ui.defaultSlideFadeIn
+import com.virtuous.common_ui.ui.defaultSlideFadeOut
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.mypage.graph.mypage.MyPageRoute
 import com.virtuous.mypage.graph.setting.SettingRoute

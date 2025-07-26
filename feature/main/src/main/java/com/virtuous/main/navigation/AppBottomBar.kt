@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
-import com.virtuous.common.ui.NoRippleInteractionSource
+import com.virtuous.common_ui.ui.NoRippleInteractionSource
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.CloudGray
 import com.virtuous.designsystem.theme.PrimaryDefault

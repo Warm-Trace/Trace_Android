@@ -2,7 +2,7 @@ package com.virtuous.home.graph.writepost
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.domain.repository.PostRepository

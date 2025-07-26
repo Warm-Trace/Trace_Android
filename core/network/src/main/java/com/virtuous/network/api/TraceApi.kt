@@ -18,7 +18,6 @@ import com.virtuous.network.model.post.GetPostsResponse
 import com.virtuous.network.model.post.PostResponse
 import com.virtuous.network.model.post.ToggleEmotionRequest
 import com.virtuous.network.model.post.ToggleEmotionResponse
-import com.virtuous.network.model.post.UpdatePostRequest
 import com.virtuous.network.model.report.ReportContentRequest
 import com.virtuous.network.model.search.SearchPostsRequest
 import com.virtuous.network.model.token.CheckTokenHealthRequest
@@ -88,20 +87,22 @@ interface TraceApi {
     @POST("/api/v1/posts")
     suspend fun addPost(
         @Part("request") addPostRequest: RequestBody,
-        @Part imageFiles: List<MultipartBody.Part>? = null
+        @Part imageFiles: List<MultipartBody.Part>
     ): Result<PostResponse>
 
     @Multipart
     @POST("/api/v1/posts/verify")
     suspend fun verifyAndAddPost(
         @Part("request") verifyAndAddPostRequest: RequestBody,
-        @Part imageFiles: List<MultipartBody.Part>? = null
+        @Part imageFiles: List<MultipartBody.Part>
     ): Result<PostResponse>
 
+    @Multipart
     @PUT("/api/v1/posts/{id}")
     suspend fun updatePost(
         @Path("id") postId: Int,
-        @Body updatePostRequest: UpdatePostRequest
+        @Part("request") updatePostRequest: RequestBody,
+        @Part imageFiles: List<MultipartBody.Part>
     ): Result<PostResponse>
 
     @DELETE("/api/v1/posts/{id}")

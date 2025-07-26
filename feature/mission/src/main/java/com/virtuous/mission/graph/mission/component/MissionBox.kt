@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.mission.MissionFeed

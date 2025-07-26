@@ -5,8 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.virtuous.common.ui.defaultSlideDownFadeOut
-import com.virtuous.common.ui.defaultSlideUpFadeIn
+import com.virtuous.common_ui.ui.defaultSlideDownFadeOut
+import com.virtuous.common_ui.ui.defaultSlideUpFadeIn
 import com.virtuous.mission.graph.mission.MissionRoute
 import com.virtuous.mission.graph.verifymission.VerifyMissionRoute
 import com.virtuous.navigation.MissionBaseRoute

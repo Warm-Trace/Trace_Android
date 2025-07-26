@@ -1,6 +1,6 @@
 [versions]
 ## Android gradle plugin
-androidGradlePlugin = "8.10.1"
+androidGradlePlugin = "8.11.1"
 ## AndroidX
 # https://developer.android.com/jetpack/androidx/releases/core
 androidxCore = "1.16.0"

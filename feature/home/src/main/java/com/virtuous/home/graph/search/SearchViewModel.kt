@@ -3,8 +3,8 @@ package com.virtuous.home.graph.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.virtuous.common.event.EventHelper
-import com.virtuous.common.event.TraceEvent
+import com.virtuous.common_ui.event.EventHelper
+import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.search.SearchCondition
 import com.virtuous.domain.model.search.SearchTab
@@ -26,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
-    val eventHelper: EventHelper
+    val eventHelper: com.virtuous.common_ui.event.EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<SearchEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -91,12 +91,12 @@ class SearchViewModel @Inject constructor(
 
     fun searchByInput() = viewModelScope.launch {
         if (_keywordInput.value.isEmpty()) {
-            eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
             return@launch
         }
 
         if (_keywordInput.value.length < MIN_SEARCH_LENGTH) {
-            eventHelper.sendEvent(TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
+            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
 

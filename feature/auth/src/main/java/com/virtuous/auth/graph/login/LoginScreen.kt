@@ -22,8 +22,8 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.virtuous.auth.graph.login.LoginViewModel.LoginEvent
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.TraceTheme
 
@@ -34,7 +34,6 @@ internal fun LoginRoute(
     navigateToEditProfile: (String, String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
-
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
@@ -112,13 +111,10 @@ private fun loginKakao(
                     if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                         return@loginWithKakaoTalk
                     }
-
                     loginWithKakaoAccount(context, callback = callback)
                 } else if (token?.idToken != null) {
-
                     onSuccess(token.idToken!!)
                     Log.d("idToken", token.idToken!!)
-
                 }
             }
         } else {
