@@ -20,7 +20,7 @@ import javax.inject.Inject
 class UpdatePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper
+    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdatePostEvent>(Channel.BUFFERED)
     val eventChannel = _eventChannel.receiveAsFlow()

@@ -80,11 +80,11 @@ internal fun WritePostRoute(
             when (event) {
                 is WritePostEvent.AddPostSuccess -> {
                     navigateToPost(event.postDetail)
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
                 }
 
                 is WritePostEvent.AddPostFailure -> {
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
                 }
 
                 is WritePostEvent.VerifyFailure -> {

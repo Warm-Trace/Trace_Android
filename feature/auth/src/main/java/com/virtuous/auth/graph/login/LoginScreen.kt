@@ -48,7 +48,7 @@ internal fun LoginRoute(
 
     LoginScreen(
         viewModel::loginKakao,
-        onLoginFailure = { viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
+        onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
     )
 }
 

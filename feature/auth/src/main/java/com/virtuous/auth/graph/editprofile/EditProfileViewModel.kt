@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper,
+    val eventHelper: EventHelper,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _eventChannel = Channel<EditProfileEvent>()

@@ -19,7 +19,7 @@ import javax.inject.Inject
 class WritePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper
+    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

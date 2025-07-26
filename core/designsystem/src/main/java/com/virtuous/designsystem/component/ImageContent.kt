@@ -76,7 +76,7 @@ fun ImageContent(
                     )
                 }
 
-                if (pageIndex.equals(0)) {
+                if (pageIndex == 0) {
                     Box(
                         modifier = modifier
                             .align(Alignment.TopStart)

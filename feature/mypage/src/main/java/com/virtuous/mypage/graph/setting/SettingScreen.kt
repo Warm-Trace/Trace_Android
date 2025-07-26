@@ -51,7 +51,7 @@ internal fun SettingRoute(
                 is SettingEvent.Logout -> navigateToLogin()
                 is SettingEvent.UnregisterUserSuccess -> navigateToLogin()
                 is SettingEvent.UnregisterUserFailure -> {
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
                 }
             }
         }

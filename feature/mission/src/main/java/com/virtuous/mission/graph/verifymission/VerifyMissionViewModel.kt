@@ -19,7 +19,7 @@ class VerifyMissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
     private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper
+    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<VerifyMissionEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

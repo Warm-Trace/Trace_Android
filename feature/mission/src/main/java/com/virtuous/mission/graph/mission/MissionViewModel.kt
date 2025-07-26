@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.virtuous.common_ui.event.EventHelper
-import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.domain.model.mission.DailyMission
 import com.virtuous.domain.model.mission.Mission
 import com.virtuous.domain.repository.MissionRepository
@@ -17,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
-    private val eventHelper: com.virtuous.common_ui.event.EventHelper,
+    private val eventHelper: EventHelper,
 ) : ViewModel() {
     private val _dailyMission = MutableStateFlow(
         DailyMission(

@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ImageContent
@@ -69,12 +70,12 @@ internal fun VerifyMissionRoute(
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is VerifyMissionEvent.VerifyMissionSuccess -> {
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
                     navigateToPost(event.postId)
                 }
 
                 is VerifyMissionEvent.VerifyMissionFailure -> {
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("미션 인증에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 실패했습니다."))
                 }
 
                 is VerifyMissionEvent.NavigateToBack -> navigateBack()

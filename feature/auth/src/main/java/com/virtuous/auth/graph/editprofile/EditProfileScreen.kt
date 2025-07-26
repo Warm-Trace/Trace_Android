@@ -86,7 +86,7 @@ internal fun EditProfileRoute(
                 }
 
                 is EditProfileEvent.RegisterUserFailure -> {
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("프로필 설정에 실패했습니다"))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("프로필 설정에 실패했습니다"))
                 }
             }
         }
