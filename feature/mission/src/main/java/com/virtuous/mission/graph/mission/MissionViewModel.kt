@@ -3,8 +3,7 @@ package com.virtuous.mission.graph.mission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.virtuous.common.event.EventHelper
-import com.virtuous.common.event.TraceEvent
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.mission.DailyMission
 import com.virtuous.domain.model.mission.Mission
 import com.virtuous.domain.repository.MissionRepository
@@ -43,7 +42,7 @@ class MissionViewModel @Inject constructor(
         missionRepository.changeDailyMission().onSuccess { dailyMission ->
             _dailyMission.value = dailyMission
         }.onFailure {
-            eventHelper.sendEvent(TraceEvent.ShowSnackBar("일일 미션 변경횟수를 초과했습니다."))
+            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("일일 미션 변경횟수를 초과했습니다."))
         }
     }
 }

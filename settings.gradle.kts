@@ -36,6 +36,7 @@ include(":core:navigation")
 include(":core:domain")
 include(":core:analytics")
 include(":core:datastore")
+include(":core:common-ui")
 
 include(":feature")
 include(":feature:splash")
@@ -44,5 +45,6 @@ include(":feature:auth")
 include(":feature:home")
 include(":feature:mission")
 include(":feature:mypage")
+
 
 

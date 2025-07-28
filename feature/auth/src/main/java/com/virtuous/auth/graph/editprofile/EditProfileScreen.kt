@@ -56,8 +56,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.virtuous.auth.graph.editprofile.EditProfileViewModel.EditProfileEvent
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.PrimaryActive

@@ -37,8 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ImageContent
 import com.virtuous.designsystem.component.TraceContentField

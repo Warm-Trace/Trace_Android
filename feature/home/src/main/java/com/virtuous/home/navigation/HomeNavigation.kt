@@ -5,10 +5,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.virtuous.common.ui.defaultSlideDownFadeOut
-import com.virtuous.common.ui.defaultSlideFadeIn
-import com.virtuous.common.ui.defaultSlideFadeOut
-import com.virtuous.common.ui.defaultSlideUpFadeIn
+import com.virtuous.common_ui.ui.defaultSlideDownFadeOut
+import com.virtuous.common_ui.ui.defaultSlideFadeIn
+import com.virtuous.common_ui.ui.defaultSlideFadeOut
+import com.virtuous.common_ui.ui.defaultSlideUpFadeIn
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.home.graph.home.HomeRoute

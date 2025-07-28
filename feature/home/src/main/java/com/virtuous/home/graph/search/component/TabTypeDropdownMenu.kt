@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.search.SearchTab

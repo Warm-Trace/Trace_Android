@@ -3,7 +3,7 @@ package com.virtuous.home.graph.updatepost
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.domain.repository.PostRepository
@@ -42,6 +42,9 @@ class UpdatePostViewModel @Inject constructor(
     private val _images: MutableStateFlow<List<String>> = MutableStateFlow(emptyList())
     val images = _images.asStateFlow()
 
+    private val _removedImages = mutableListOf<String>()
+
+    private val _newImages = mutableListOf<String>()
 
     fun setTitle(title: String) {
         _title.value = title
@@ -57,10 +60,13 @@ class UpdatePostViewModel @Inject constructor(
 
     fun addImages(images: List<String>) {
         _images.value += images
+        _newImages += images
     }
 
     fun removeImage(image: String) {
         _images.value = _images.value.filter { it != image }
+        _newImages.remove(image)
+        if (image.contains("http")) _removedImages += image
     }
 
     private fun getPost() = viewModelScope.launch {
@@ -73,8 +79,14 @@ class UpdatePostViewModel @Inject constructor(
     }
 
     fun updatePost() = viewModelScope.launch {
-        postRepository.updatePost(postId = postId, title = _title.value, content = _content.value, images = _images.value).onSuccess {
-            postDetail -> _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
+        postRepository.updatePost(
+            postId = postId,
+            title = _title.value,
+            content = _content.value,
+            removedImages = _removedImages,
+            images = _newImages
+        ).onSuccess { postDetail ->
+            _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
         }.onFailure {
             _eventChannel.send(UpdatePostEvent.UpdatePostFailure)
         }

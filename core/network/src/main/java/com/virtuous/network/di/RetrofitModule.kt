@@ -39,7 +39,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideTraeceApi(
+    fun provideTraceApi(
         json: Json,
         okHttpClient: OkHttpClient,
         callAdapterFactory : TraceCallAdapterFactory
@@ -47,7 +47,7 @@ object RetrofitModule {
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .addCallAdapterFactory(callAdapterFactory)
-        .baseUrl(_root_ide_package_.com.virtuous.network.BuildConfig.TRACE_BASE_URL)
+        .baseUrl(com.virtuous.network.BuildConfig.TRACE_BASE_URL)
         .build()
         .create(TraceApi::class.java)
 }

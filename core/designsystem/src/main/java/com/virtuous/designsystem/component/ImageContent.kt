@@ -32,7 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
@@ -76,7 +76,7 @@ fun ImageContent(
                     )
                 }
 
-                if (pageIndex.equals(0)) {
+                if (pageIndex == 0) {
                     Box(
                         modifier = modifier
                             .align(Alignment.TopStart)

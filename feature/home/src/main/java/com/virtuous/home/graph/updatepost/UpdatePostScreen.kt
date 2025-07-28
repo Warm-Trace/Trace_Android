@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -36,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common.event.TraceEvent
-import com.virtuous.common.util.clickable
+import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ImageContent
 import com.virtuous.designsystem.component.TraceContentField
@@ -67,11 +66,11 @@ internal fun UpdatePostRoute(
             when (event) {
                 is UpdatePostEvent.UpdatePostSuccess -> {
                     navigateToPost(event.postDetail)
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
                 }
 
                 is UpdatePostEvent.UpdatePostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 수정에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글 수정에 실패했습니다."))
                 }
 
                 is UpdatePostEvent.NavigateToBack -> navigateBack()
@@ -132,55 +131,7 @@ private fun UpdatePostScreen(
         ) {
 
             item {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = Modifier.clickable(isRipple = true) {
-                            onTypeChange(PostType.GOOD_DEED)
-                        }
-                    ) {
-                        Image(
-                            painter = if (type == PostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
-                                R.drawable.checkbox_off
-                            ),
-                            contentDescription = "선행 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
-
-                        Spacer(Modifier.width(2.dp))
-
-
-                        Text(
-                            "선행",
-                            color = if (type == PostType.GOOD_DEED) PrimaryActive else TextHint,
-                            style = TraceTheme.typography.bodySSB,
-                        )
-                    }
-
-                    Spacer(Modifier.width(20.dp))
-
-                    Row(
-                        modifier = Modifier.clickable(isRipple = true) {
-                            onTypeChange(PostType.FREE)
-                        }
-                    ) {
-                        Image(
-                            painter = if (type == PostType.FREE) painterResource(R.drawable.checkbox_on) else painterResource(
-                                R.drawable.checkbox_off
-                            ),
-                            contentDescription = "선행 게시글 타입",
-                            modifier = Modifier.size(20.dp)
-                        )
-
-                        Spacer(Modifier.width(2.dp))
-
-
-                        Text(
-                            "자유",
-                            color = if (type == PostType.FREE) PrimaryActive else TextHint,
-                            style = TraceTheme.typography.bodySSB,
-                        )
-                    }
-                }
+                Text("${type.label}게시판", style = TraceTheme.typography.bodyMSB)
 
                 Spacer(Modifier.height(28.dp))
 

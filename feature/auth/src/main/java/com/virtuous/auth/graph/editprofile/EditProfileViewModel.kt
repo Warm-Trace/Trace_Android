@@ -3,7 +3,7 @@ package com.virtuous.auth.graph.editprofile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common.event.EventHelper
+import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
