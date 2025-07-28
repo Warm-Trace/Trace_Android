@@ -4,6 +4,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,17 +39,17 @@ fun TraceSnackBar(
     val ime = WindowInsets.ime
     val density = LocalDensity.current
     val imeBottomPx = ime.getBottom(density)
-    val bottomOffset = with(density) { imeBottomPx.toDp() + 36.dp }
+    val bottomOffset = with(density) { imeBottomPx.toDp() + 20.dp }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 28.dp)
+            .padding(horizontal = 20.dp)
             .padding(bottom = bottomOffset)
             .clip(RoundedCornerShape(8.dp))
             .background(PrimaryActive)
-            .padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp),
+            .padding(14.dp),
     ) {
         Text(
             text = message,
@@ -90,6 +91,8 @@ private fun TraceSnackBarPreview() {
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(Modifier.weight(1f))
+
         TraceSnackBar(
             snackBarData = object : SnackbarData {
                 override val visuals: SnackbarVisuals = object : SnackbarVisuals {

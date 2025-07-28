@@ -1,6 +1,5 @@
 package com.virtuous.home.graph.updatepost
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -67,7 +66,7 @@ class UpdatePostViewModel @Inject constructor(
     fun removeImage(image: String) {
         _images.value = _images.value.filter { it != image }
         _newImages.remove(image)
-        if (!image.contains("http")) _removedImages += image
+        if (image.contains("http")) _removedImages += image
     }
 
     private fun getPost() = viewModelScope.launch {
@@ -80,12 +79,6 @@ class UpdatePostViewModel @Inject constructor(
     }
 
     fun updatePost() = viewModelScope.launch {
-
-        Log.d("UpdatePostVM", "postId: $postId")
-        Log.d("UpdatePostVM", "title: ${_title.value}")
-        Log.d("UpdatePostVM", "content: ${_content.value}")
-        Log.d("UpdatePostVM", "removedImages: $_removedImages")
-        Log.d("UpdatePostVM", "images: $_newImages")
         postRepository.updatePost(
             postId = postId,
             title = _title.value,
