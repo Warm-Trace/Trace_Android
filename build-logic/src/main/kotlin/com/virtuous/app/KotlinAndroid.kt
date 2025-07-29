@@ -31,6 +31,7 @@ internal fun Project.configureKotlinAndroid() {
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_21
             targetCompatibility = JavaVersion.VERSION_21
+            isCoreLibraryDesugaringEnabled = true
         }
 
         packaging {

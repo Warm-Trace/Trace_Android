@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TextHint
 import com.virtuous.designsystem.theme.TraceTheme
+import com.virtuous.domain.model.post.PostRule
 import kotlinx.coroutines.launch
 
 private val customTextSelectionColors = TextSelectionColors(
@@ -35,19 +36,21 @@ private val customTextSelectionColors = TextSelectionColors(
 )
 
 @Composable
-fun TraceTitleField(modifier: Modifier = Modifier,
+fun TraceTitleField(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
     onNext: () -> Unit,
     hint: String = "제목",
     keyboardType: KeyboardType = KeyboardType.Text,
+    maxLength: Int = PostRule.MAX_TITLE_LENGTH
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,
-            onValueChange = { onValueChange(it) },
+            onValueChange = { if (it.length <= maxLength) onValueChange(it) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType,
                 imeAction = ImeAction.Next
@@ -84,6 +87,7 @@ fun TraceContentField(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String = "",
+    maxLength: Int = PostRule.MAX_CONTENT_LENGTH
 ) {
     val coroutineScope = rememberCoroutineScope()
     var prevHeight by remember { mutableStateOf(0) }
@@ -91,7 +95,7 @@ fun TraceContentField(
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
             value = value,
-            onValueChange = { onValueChange(it) },
+            onValueChange = { if (it.length <= maxLength) onValueChange(it) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Default
@@ -126,6 +130,6 @@ fun TraceContentField(
                         )
                     }
                 }
-            )
+        )
     }
 }

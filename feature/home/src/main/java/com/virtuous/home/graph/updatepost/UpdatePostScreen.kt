@@ -66,11 +66,11 @@ internal fun UpdatePostRoute(
             when (event) {
                 is UpdatePostEvent.UpdatePostSuccess -> {
                     navigateToPost(event.postDetail)
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
                 }
 
                 is UpdatePostEvent.UpdatePostFailure -> {
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글 수정에 실패했습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 수정에 실패했습니다."))
                 }
 
                 is UpdatePostEvent.NavigateToBack -> navigateBack()
@@ -88,7 +88,6 @@ internal fun UpdatePostRoute(
         onContentChange = viewModel::setContent,
         addImages = viewModel::addImages,
         removeImage = viewModel::removeImage,
-        onTypeChange = viewModel::setType,
         updatePost = viewModel::updatePost
     )
 }
@@ -99,7 +98,6 @@ private fun UpdatePostScreen(
     title: String,
     content: String,
     images: List<String>,
-    onTypeChange: (PostType) -> Unit,
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     addImages: (List<String>) -> Unit,
@@ -276,7 +274,6 @@ fun UpdatePostScreenPreview() {
         type = PostType.GOOD_DEED,
         title = "",
         content = "",
-        onTypeChange = {},
         onTitleChange = {},
         onContentChange = {},
         navigateBack = {},
