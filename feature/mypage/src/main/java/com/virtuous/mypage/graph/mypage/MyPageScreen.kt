@@ -256,6 +256,10 @@ private fun MyPageScreen(
                     }
                 }
             }
+
+            item {
+                Spacer(Modifier.height(50.dp))
+            }
         }
     }
 

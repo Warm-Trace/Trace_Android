@@ -206,6 +206,10 @@ private fun UserProfileScreen(
                     }
                 }
             }
+
+            item {
+                Spacer(Modifier.height(50.dp))
+            }
         }
 
         Row(
