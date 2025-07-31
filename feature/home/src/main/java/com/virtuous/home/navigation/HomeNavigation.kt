@@ -138,9 +138,8 @@ fun NavGraphBuilder.homeNavGraph(
         composable<HomeGraph.PostRoute>(
             enterTransition = {
                 val initialRoute = initialState.destination.route
-                if (initialRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true ||
-                    initialRoute?.contains(HomeGraph.UserProfileRoute::class.simpleName.toString()) == true
-                ) {
+                val targetRoute = targetState.destination.route
+                if (initialRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
                     null
                 } else {
                     defaultSlideFadeIn()
@@ -156,6 +155,8 @@ fun NavGraphBuilder.homeNavGraph(
                     defaultSlideFadeOut()
                 }
             },
+            popEnterTransition = null,
+            popExitTransition = { defaultSlideFadeOut() }
         ) {
             PostRoute(
                 navigateBack = navigateBack,
@@ -180,7 +181,16 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.UserProfileRoute>(
             enterTransition = { defaultSlideFadeIn() },
-            exitTransition = { defaultSlideFadeOut() }
+            exitTransition = {
+                val targetRoute = targetState.destination.route
+                if (targetRoute?.contains(HomeGraph.PostRoute::class.simpleName.toString()) == true) {
+                    null
+                } else {
+                    defaultSlideFadeOut()
+                }
+            },
+            popEnterTransition = null,
+            popExitTransition = { defaultSlideFadeOut() }
         ) {
             UserProfileRoute(
                 navigateBack = navigateBack,

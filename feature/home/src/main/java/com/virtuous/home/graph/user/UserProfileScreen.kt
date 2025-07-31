@@ -102,11 +102,11 @@ private fun UserProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    start = 20.dp, end = 14.dp
+                    top = 42.dp, start = 20.dp, end = 14.dp
                 )
         ) {
             item {
-                Spacer(Modifier.height(68.dp))
+                Spacer(Modifier.height(5.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -218,8 +218,8 @@ private fun UserProfileScreen(
             IconButton(
                 onClick = { navigateBack() },
                 modifier = Modifier
-                    .padding(start = 20.dp, top = 16.dp)
-                    .size(32.dp)
+                    .padding(start = 20.dp, top = 4.dp)
+                    .size(36.dp)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
