@@ -1,6 +1,7 @@
 package com.virtuous.domain.repository
 
 import androidx.paging.PagingData
+import com.virtuous.domain.model.home.UserProfileTab
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.HomeTab
@@ -14,6 +15,8 @@ interface PostRepository {
     fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>>
 
     fun getMyPosts(tabType: MyPageTab) : Flow<PagingData<PostFeed>>
+
+    fun getUserPosts(providerId: String, tabType: UserProfileTab) : Flow<PagingData<PostFeed>>
 
     suspend fun getPost(postId: Int): Result<PostDetail>
 

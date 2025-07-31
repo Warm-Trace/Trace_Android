@@ -2,8 +2,6 @@ package com.virtuous.mypage.graph.updateprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common_ui.event.EventHelper
-import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -40,11 +38,11 @@ class UpdateProfileViewModel @Inject constructor(
     private var originalProfileImageUrl: String? = null
 
     init {
-        getUserInfo()
+        getMyUserInfo()
     }
 
-    private fun getUserInfo() = viewModelScope.launch {
-        userRepository.loadUserInfo().onSuccess { userInfo ->
+    private fun getMyUserInfo() = viewModelScope.launch {
+        userRepository.loadMyUserInfo().onSuccess { userInfo ->
             originalName = userInfo.name
             originalProfileImageUrl = userInfo.profileImageUrl
 
@@ -86,7 +84,7 @@ class UpdateProfileViewModel @Inject constructor(
             }
 
             if (success) {
-                userRepository.loadUserInfo().onSuccess {
+                userRepository.loadMyUserInfo().onSuccess {
                     _eventChannel.send(UpdateProfileEvent.NavigateBack)
                 }
             } else {

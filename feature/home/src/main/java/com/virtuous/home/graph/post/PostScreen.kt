@@ -54,9 +54,9 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.virtuous.common.util.formatCount
 import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.util.clickable
-import com.virtuous.common.util.formatCount
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Background
@@ -90,6 +90,7 @@ import java.time.LocalDateTime
 internal fun PostRoute(
     navigateBack: () -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
+    navigateToUserProfile: (String) -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
     val comments = viewModel.commentPagingFlow.collectAsLazyPagingItems()
@@ -102,18 +103,18 @@ internal fun PostRoute(
             when (event) {
                 is PostEvent.DeletePostSuccess -> {
                     navigateBack()
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
                 }
 
                 is PostEvent.DeletePostFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "게시글 삭제에 실패했습니다."
                     )
                 )
 
                 is PostEvent.ReportPostSuccess,
                 is PostEvent.ReportCommentSuccess -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "신고가 접수되었습니다."
                     )
                 )
@@ -127,43 +128,47 @@ internal fun PostRoute(
 
                 is PostEvent.AddCommentSuccess -> {}
                 is PostEvent.AddCommentFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "댓글 작성에 실패했습니다."
                     )
                 )
 
                 is PostEvent.AddReplySuccess -> {}
                 is PostEvent.AddReplyFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "답글 작성에 실패했습니다."
                     )
                 )
 
                 is PostEvent.DeleteCommentSuccess -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "댓글이 삭제되었습니다."
                     )
                 )
 
                 is PostEvent.DeleteCommentFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "댓글 삭제에 실패했습니다."
                     )
                 )
 
                 is PostEvent.ShowSnackBar -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         event.message
                     )
                 )
 
                 is PostEvent.BlockUserSuccess -> {
                     navigateBack()
-                    viewModel.eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("해당 유저를 차단했습니다."))
+                    viewModel.eventHelper.sendEvent(
+                        TraceEvent.ShowSnackBar(
+                            "해당 유저를 차단했습니다."
+                        )
+                    )
                 }
 
                 is PostEvent.BlockUserFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "유저 차단에 실패했습니다."
                     )
                 )
@@ -190,6 +195,7 @@ internal fun PostRoute(
         onBlockUser = viewModel::blockUser,
         navigateBack = navigateBack,
         navigateToUpdatePost = navigateToUpdatePost,
+        navigateToUserProfile = navigateToUserProfile
     )
 }
 
@@ -213,6 +219,7 @@ private fun PostScreen(
     onReportComment: (Int, String) -> Unit,
     onBlockUser: (String) -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
+    navigateToUserProfile: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
@@ -281,9 +288,11 @@ private fun PostScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ProfileImage(
+                        providerId = postDetail.providerId,
                         profileImageUrl = postDetail.profileImageUrl,
                         imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
                         paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp,
+                        navigateToUserProfile = navigateToUserProfile
                     )
 
                     Spacer(Modifier.width(10.dp))
@@ -291,7 +300,9 @@ private fun PostScreen(
                     Column(
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB)
+                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB, modifier = Modifier.clickable {
+                            navigateToUserProfile(postDetail.providerId)
+                        })
 
                         Spacer(Modifier.height(3.dp))
 
@@ -498,7 +509,8 @@ private fun PostScreen(
                                     )
                                 }
                             },
-                            onBlockUser = onBlockUser
+                            onBlockUser = onBlockUser,
+                            navigateToUserProfile = navigateToUserProfile
                         )
 
                         if (index != comments.itemCount - 1) {
@@ -736,7 +748,8 @@ fun PostScreenPreview() {
         clearReplayTargetId = {},
         toggleEmotion = {},
         onBlockUser = {},
-        replyTargetId = null
+        replyTargetId = null,
+        navigateToUserProfile = {}
     )
 }
 

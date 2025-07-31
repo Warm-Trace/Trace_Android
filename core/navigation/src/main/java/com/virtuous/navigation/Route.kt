@@ -52,6 +52,9 @@ sealed class HomeGraph : Route {
 
     @Serializable
     data class UpdatePostRoute(val postId: Int) : HomeGraph()
+
+    @Serializable
+    data class UserProfileRoute(val providerId: String) : HomeGraph()
 }
 
 

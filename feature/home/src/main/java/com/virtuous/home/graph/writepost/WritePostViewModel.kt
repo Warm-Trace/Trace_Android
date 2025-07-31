@@ -95,7 +95,7 @@ class WritePostViewModel @Inject constructor(
             _images.value
         ).onSuccess { postDetail ->
             _eventChannel.send(WritePostEvent.AddPostSuccess(postDetail))
-            userRepository.loadUserInfo()
+            userRepository.loadMyUserInfo()
         }.onFailure {
             _eventChannel.send(WritePostEvent.VerifyFailure)
         }

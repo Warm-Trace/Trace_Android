@@ -14,7 +14,12 @@ import javax.inject.Inject
 class UserDataSourceImpl @Inject constructor(
     private val traceApi: TraceApi,
 ) : UserDataSource {
-    override suspend fun loadUserInfo(): Result<LoadUserInfoResponse> = traceApi.loadUserInfo()
+    override suspend fun loadMyUserInfo(): Result<LoadUserInfoResponse> =
+        traceApi.loadMyUserInfo()
+
+    override suspend fun loadUserInfo(providerId: String): Result<LoadUserInfoResponse> =
+        traceApi.loadUserInfo(providerId)
+
     override suspend fun updateNickname(nickname: String): Result<LoadUserInfoResponse> =
         traceApi.updateNickname(
             updateNicknameRequest = UpdateNicknameRequest(nickname)

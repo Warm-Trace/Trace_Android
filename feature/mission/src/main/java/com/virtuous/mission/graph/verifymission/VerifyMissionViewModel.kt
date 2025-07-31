@@ -63,7 +63,7 @@ class VerifyMissionViewModel @Inject constructor(
             images = _images.value
         ).onSuccess { postId ->
             _eventChannel.send(VerifyMissionEvent.VerifyMissionSuccess(postId = postId))
-            userRepository.loadUserInfo()
+            userRepository.loadMyUserInfo()
         }.onFailure {
             _eventChannel.send(VerifyMissionEvent.VerifyMissionFailure)
         }

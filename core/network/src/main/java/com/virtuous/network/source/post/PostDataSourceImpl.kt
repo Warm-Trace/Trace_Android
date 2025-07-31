@@ -1,6 +1,7 @@
 package com.virtuous.network.source.post
 
 import android.os.Build
+import com.virtuous.domain.model.home.UserProfileTab
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.HomeTab
@@ -11,6 +12,7 @@ import com.virtuous.network.model.post.AddPostRequest
 import com.virtuous.network.model.post.GetMyPostsRequest
 import com.virtuous.network.model.post.GetPostsRequest
 import com.virtuous.network.model.post.GetPostsResponse
+import com.virtuous.network.model.post.GetUserPostsRequest
 import com.virtuous.network.model.post.PostResponse
 import com.virtuous.network.model.post.ToggleEmotionRequest
 import com.virtuous.network.model.post.ToggleEmotionResponse
@@ -51,6 +53,22 @@ class PostDataSourceImpl @Inject constructor(
         tabType: MyPageTab
     ): Result<GetPostsResponse> = traceApi.getMyPosts(
         getMyPostsRequest = GetMyPostsRequest(
+            cursorDateTime = cursorDateTime,
+            cursorId = cursorId,
+            size = size,
+            myPageTab = tabType.name
+        )
+    )
+
+    override suspend fun getUserPosts(
+        cursorDateTime: LocalDateTime?,
+        cursorId: Int?,
+        size: Int,
+        providerId: String,
+        tabType: UserProfileTab
+    ): Result<GetPostsResponse> = traceApi.getUserPosts(
+        providerId = providerId,
+        getUserPostsRequest = GetUserPostsRequest(
             cursorDateTime = cursorDateTime,
             cursorId = cursorId,
             size = size,

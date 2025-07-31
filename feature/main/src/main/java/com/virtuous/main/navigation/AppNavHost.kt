@@ -13,6 +13,7 @@ import com.virtuous.home.navigation.navigateToHome
 import com.virtuous.home.navigation.navigateToPost
 import com.virtuous.home.navigation.navigateToSearch
 import com.virtuous.home.navigation.navigateToUpdatePost
+import com.virtuous.home.navigation.navigateToUserProfile
 import com.virtuous.home.navigation.navigateToWritePost
 import com.virtuous.mission.navigation.missionNavGraph
 import com.virtuous.mission.navigation.navigateToVerifyMission
@@ -70,6 +71,9 @@ fun AppNavHost(
                 navController.navigateToPost(postDetail, navOptions = navOptions {
                     popUpTo<HomeGraph.HomeRoute>()
                 })
+            },
+            navigateToUserProfile = { providerId ->
+                navController.navigateToUserProfile(providerId)
             },
             navigateBack = { navigateBack(navController) },
         )

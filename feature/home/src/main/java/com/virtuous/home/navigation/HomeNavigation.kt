@@ -15,6 +15,7 @@ import com.virtuous.home.graph.home.HomeRoute
 import com.virtuous.home.graph.post.PostRoute
 import com.virtuous.home.graph.search.SearchRoute
 import com.virtuous.home.graph.updatepost.UpdatePostRoute
+import com.virtuous.home.graph.user.UserProfileRoute
 import com.virtuous.home.graph.writepost.WritePostRoute
 import com.virtuous.navigation.HomeBaseRoute
 import com.virtuous.navigation.HomeGraph
@@ -84,12 +85,17 @@ fun NavController.navigateToUpdatePost(postId: Int, navOptions: NavOptions? = nu
     navigate(HomeGraph.UpdatePostRoute(postId), navOptions)
 }
 
+fun NavController.navigateToUserProfile(providerId: String, navOptions: NavOptions? = null) {
+    navigate(HomeGraph.UserProfileRoute(providerId), navOptions)
+}
+
 fun NavGraphBuilder.homeNavGraph(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
+    navigateToPostReplacing: (PostDetail) -> Unit,
     navigateToWritePost: () -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
-    navigateToPostReplacing: (PostDetail) -> Unit,
+    navigateToUserProfile: (String) -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
@@ -131,25 +137,31 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.PostRoute>(
             enterTransition = {
-                // UpdatePostRoute에서 돌아올 때는 enterTransition을 null로 설정
-                if (initialState.destination.route?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
+                val initialRoute = initialState.destination.route
+                val targetRoute = targetState.destination.route
+                if (initialRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
                     null
                 } else {
                     defaultSlideFadeIn()
                 }
             },
             exitTransition = {
-                // UpdatePostRoute로 이동할 때만 exitTransition을 null로 설정
-                if (targetState.destination.route?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
+                val targetRoute = targetState.destination.route
+                if (targetRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true ||
+                    targetRoute?.contains(HomeGraph.UserProfileRoute::class.simpleName.toString()) == true
+                ) {
                     null
                 } else {
                     defaultSlideFadeOut()
                 }
             },
+            popEnterTransition = null,
+            popExitTransition = { defaultSlideFadeOut() }
         ) {
             PostRoute(
                 navigateBack = navigateBack,
-                navigateToUpdatePost = navigateToUpdatePost
+                navigateToUpdatePost = navigateToUpdatePost,
+                navigateToUserProfile = navigateToUserProfile
             )
         }
 
@@ -164,6 +176,25 @@ fun NavGraphBuilder.homeNavGraph(
             UpdatePostRoute(
                 navigateBack = navigateBack,
                 navigateToPost = { postDetail -> navigateToPostReplacing(postDetail) }
+            )
+        }
+
+        composable<HomeGraph.UserProfileRoute>(
+            enterTransition = { defaultSlideFadeIn() },
+            exitTransition = {
+                val targetRoute = targetState.destination.route
+                if (targetRoute?.contains(HomeGraph.PostRoute::class.simpleName.toString()) == true) {
+                    null
+                } else {
+                    defaultSlideFadeOut()
+                }
+            },
+            popEnterTransition = null,
+            popExitTransition = { defaultSlideFadeOut() }
+        ) {
+            UserProfileRoute(
+                navigateBack = navigateBack,
+                navigateToPost = { postFeed -> navigateToPost(postFeed) }
             )
         }
 

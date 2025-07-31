@@ -9,7 +9,6 @@ import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.domain.repository.PostRepository
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +43,6 @@ class MyPageViewModel @Inject constructor(
     private val _tapType = MutableStateFlow(MyPageTab.WRITTEN_POSTS)
     val tabType = _tapType.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val displayedPosts = tabType
         .flatMapLatest { tab ->
             postRepository.getMyPosts(tab)
@@ -52,7 +50,7 @@ class MyPageViewModel @Inject constructor(
         .cachedIn(viewModelScope)
 
     fun getUserInfo() = viewModelScope.launch {
-        userRepository.getUserInfo().onSuccess { userInfo ->
+        userRepository.getMyUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
         }
     }
