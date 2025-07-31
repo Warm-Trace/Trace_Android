@@ -1,6 +1,5 @@
 package com.virtuous.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.virtuous.domain.model.home.UserProfileTab
@@ -27,8 +26,6 @@ class UserPostPagingSource(
             ).getOrThrow()
 
             val postFeeds = response.toDomain()
-
-            Log.d("userPostPagingSource", "postFeeds: $postFeeds")
 
             val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
                 id = response.cursor?.id
