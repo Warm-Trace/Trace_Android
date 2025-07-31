@@ -70,6 +70,7 @@ internal fun HomeRoute(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
+    navigateToNotification: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val postFeeds = viewModel.postFeeds.collectAsLazyPagingItems()
@@ -81,6 +82,7 @@ internal fun HomeRoute(
                 is HomeEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is HomeEvent.NavigateToWritePost -> navigateToWritePost()
                 is HomeEvent.NavigateToSearch -> navigateToSearch()
+                is HomeEvent.NavigateToNotification -> navigateToNotification()
             }
         }
     }
@@ -91,7 +93,8 @@ internal fun HomeRoute(
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postFeed -> viewModel.onEvent(HomeEvent.NavigateToPost(postFeed)) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
-        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) }
+        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) },
+        navigateToNotification = { viewModel.onEvent(HomeEvent.NavigateToNotification) }
     )
 }
 
@@ -105,6 +108,7 @@ private fun HomeScreen(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
+    navigateToNotification: () -> Unit,
 ) {
     var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
@@ -180,13 +184,22 @@ private fun HomeScreen(
                 Spacer(Modifier.weight(1f))
 
                 Image(
+                    painter = painterResource(R.drawable.notificiation_ic),
+                    contentDescription = "알림",
+                    modifier = Modifier.clickable {
+                        navigateToNotification()
+                    })
+
+                Spacer(Modifier.width(18.dp))
+
+                Image(
                     painter = painterResource(R.drawable.search_ic),
                     contentDescription = "검색",
                     modifier = Modifier.clickable {
                         navigateToSearch()
                     })
 
-                Spacer(Modifier.width(35.dp))
+                Spacer(Modifier.width(18.dp))
 
                 Box() {
                     Image(
@@ -280,6 +293,7 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         navigateToSearch = {},
+        navigateToNotification = {},
         postFeeds = fakeLazyPagingPosts()
     )
 }

@@ -220,7 +220,7 @@ private fun UserProfileScreen(
             IconButton(
                 onClick = { navigateBack() },
                 modifier = Modifier
-                    .padding(start = 10.dp, top = 4.dp)
+                    .padding(start = 10.dp, top = 2.dp)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
