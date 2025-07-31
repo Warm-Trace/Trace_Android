@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -106,17 +106,19 @@ private fun UserProfileScreen(
                 )
         ) {
             item {
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(28.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ProfileImage(
+                        providerId = "",
                         profileImageUrl = userInfo.profileImageUrl,
                         imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
                         paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
                         strokeWidth = 10f,
+                        navigateToUserProfile = {}
                     )
 
                     Spacer(Modifier.width(20.dp))
@@ -218,12 +220,12 @@ private fun UserProfileScreen(
             IconButton(
                 onClick = { navigateBack() },
                 modifier = Modifier
-                    .padding(start = 20.dp, top = 4.dp)
-                    .size(36.dp)
+                    .padding(start = 10.dp, top = 4.dp)
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                    contentDescription = "뒤로가기"
+                    imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
+                    contentDescription = "뒤로가기",
+                    modifier = Modifier.size(36.dp),
                 )
             }
         }

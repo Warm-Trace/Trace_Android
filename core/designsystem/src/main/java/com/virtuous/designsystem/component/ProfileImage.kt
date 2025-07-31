@@ -22,12 +22,12 @@ import com.virtuous.designsystem.theme.PrimaryDefault
 
 @Composable
 fun ProfileImage(
-    providerId: String = "",
+    providerId: String,
     profileImageUrl: String?,
     imageSize: Dp,
     paddingValue: Dp,
     strokeWidth: Float = 4f,
-    navigateToUserProfile: (String) -> Unit = {}
+    navigateToUserProfile: (String) -> Unit
 ) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
