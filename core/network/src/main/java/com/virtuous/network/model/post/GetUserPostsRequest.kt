@@ -1,7 +1,9 @@
 package com.virtuous.network.model.post
 
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GetUserPostsRequest(
     val cursorDateTime : LocalDateTime?,
     val cursorId : Int?,
