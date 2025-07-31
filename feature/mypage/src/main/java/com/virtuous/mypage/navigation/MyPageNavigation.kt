@@ -16,10 +16,6 @@ import com.virtuous.mypage.graph.webview.WebViewRoute
 import com.virtuous.navigation.MyPageBaseRoute
 import com.virtuous.navigation.MyPageGraph
 
-fun NavController.navigateToMyPage(navOptions: NavOptions? = null) {
-    navigate(MyPageGraph.MyPageRoute, navOptions)
-}
-
 fun NavController.navigateToUpdateProfile(navOptions: NavOptions? = null) {
     navigate(MyPageGraph.UpdateProfileRoute, navOptions)
 }

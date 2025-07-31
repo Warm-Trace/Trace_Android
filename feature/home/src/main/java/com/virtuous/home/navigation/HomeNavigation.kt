@@ -15,6 +15,7 @@ import com.virtuous.home.graph.home.HomeRoute
 import com.virtuous.home.graph.post.PostRoute
 import com.virtuous.home.graph.search.SearchRoute
 import com.virtuous.home.graph.updatepost.UpdatePostRoute
+import com.virtuous.home.graph.user.UserProfileRoute
 import com.virtuous.home.graph.writepost.WritePostRoute
 import com.virtuous.navigation.HomeBaseRoute
 import com.virtuous.navigation.HomeGraph
@@ -87,9 +88,10 @@ fun NavController.navigateToUpdatePost(postId: Int, navOptions: NavOptions? = nu
 fun NavGraphBuilder.homeNavGraph(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
+    navigateToPostReplacing: (PostDetail) -> Unit,
     navigateToWritePost: () -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
-    navigateToPostReplacing: (PostDetail) -> Unit,
+    navigateToUserProfile: (String) -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
@@ -164,6 +166,15 @@ fun NavGraphBuilder.homeNavGraph(
             UpdatePostRoute(
                 navigateBack = navigateBack,
                 navigateToPost = { postDetail -> navigateToPostReplacing(postDetail) }
+            )
+        }
+
+        composable<HomeGraph.UserProfileRoute>(
+
+        ) {
+            UserProfileRoute(
+                navigateBack = navigateBack,
+                navigateToPost = { postFeed -> navigateToPost(postFeed) }
             )
         }
 

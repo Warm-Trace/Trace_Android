@@ -1,6 +1,5 @@
-package com.virtuous.mypage.graph.mypage
+package com.virtuous.home.graph.user
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,36 +8,34 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.clickable
-import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Background
@@ -47,21 +44,19 @@ import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TabIndicator
 import com.virtuous.designsystem.theme.TraceTheme
-import com.virtuous.domain.model.mypage.MyPageTab
+import com.virtuous.domain.model.home.UserProfileTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.domain.model.user.UserInfo
-import com.virtuous.mypage.graph.mypage.MyPageViewModel.MyPageEvent
+import com.virtuous.home.graph.user.UserProfileViewModel.UserProfileEvent
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 
-
 @Composable
-internal fun MyPageRoute(
+internal fun UserProfileRoute(
+    navigateBack: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
-    navigateToEditProfile: () -> Unit,
-    navigateToSetting: () -> Unit,
-    viewModel: MyPageViewModel = hiltViewModel(),
+    viewModel: UserProfileViewModel = hiltViewModel()
 ) {
     val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
@@ -70,51 +65,32 @@ internal fun MyPageRoute(
     LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is MyPageEvent.NavigateToPost -> navigateToPost(event.postFeed)
-                is MyPageEvent.NavigateToEditProfile -> navigateToEditProfile()
-                is MyPageEvent.NavigateToSetting -> navigateToSetting()
+                is UserProfileEvent.NavigateBack -> navigateBack()
+                is UserProfileEvent.NavigateToPost -> navigateToPost(event.postFeed)
             }
         }
     }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.getUserInfo()
-            }
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-    MyPageScreen(
+    UserProfileScreen(
         userInfo = userInfo,
         tabType = tabType,
         displayedPosts = displayedPosts,
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { postFeed -> viewModel.onEvent(MyPageEvent.NavigateToPost(postFeed)) },
-        navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
-        navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) }
+        navigateToPost = { postFeed -> viewModel.onEvent(UserProfileEvent.NavigateToPost(postFeed)) },
+        navigateBack = {}
     )
-
 }
 
 @Composable
-private fun MyPageScreen(
+private fun UserProfileScreen(
     userInfo: UserInfo,
-    tabType: MyPageTab,
+    tabType: UserProfileTab,
     displayedPosts: LazyPagingItems<PostFeed>,
-    onTabTypeChange: (MyPageTab) -> Unit,
+    onTabTypeChange: (UserProfileTab) -> Unit,
     navigateToPost: (PostFeed) -> Unit,
-    navigateToEditProfile: () -> Unit,
-    navigateToSetting: () -> Unit,
+    navigateBack: () -> Unit
 ) {
-    val tabs = MyPageTab.entries
+    val tabs = UserProfileTab.entries
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
 
@@ -126,25 +102,11 @@ private fun MyPageScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = 13.dp, start = 20.dp, end = 14.dp
+                    start = 20.dp, end = 14.dp
                 )
         ) {
             item {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.setting_ic),
-                        contentDescription = "설정",
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .clickable {
-                                navigateToSetting()
-                            }
-                    )
-                }
-
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(68.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -160,20 +122,8 @@ private fun MyPageScreen(
                     Spacer(Modifier.width(20.dp))
 
                     Column {
-                        Row() {
-                            Text(userInfo.name, style = TraceTheme.typography.headingLB)
+                        Text(userInfo.name, style = TraceTheme.typography.headingLB)
 
-                            Spacer(Modifier.width(2.dp))
-
-                            Image(
-                                painter = painterResource(R.drawable.arrow_right),
-                                contentDescription = "설정",
-                                modifier = Modifier
-                                    .clickable {
-                                        navigateToEditProfile()
-                                    }
-                            )
-                        }
 
                         Spacer(Modifier.height(10.dp))
 
@@ -257,21 +207,34 @@ private fun MyPageScreen(
                 }
             }
         }
-    }
 
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
+                contentDescription = "뒤로가기",
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 16.dp)
+                    .size(32.dp)
+                    .clickable {
+                        navigateBack()
+                    }
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun MyPageScreenPreview() {
-    MyPageScreen(
+private fun UserProfileScreenPreview() {
+    UserProfileScreen(
         userInfo = UserInfo("닉네임", null, 0, 0),
-        navigateToEditProfile = {},
-        navigateToSetting = {},
+        tabType = UserProfileTab.WRITTEN_POSTS,
         displayedPosts = fakeLazyPagingPosts(),
-        tabType = MyPageTab.WRITTEN_POSTS,
+        onTabTypeChange = {},
         navigateToPost = {},
-        onTabTypeChange = {}
+        navigateBack = {}
     )
 }
 

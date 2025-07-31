@@ -3,10 +3,12 @@ package com.virtuous.home.graph.updatepost
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.domain.repository.PostRepository
+import com.virtuous.navigation.HomeGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +26,8 @@ class UpdatePostViewModel @Inject constructor(
     private val _eventChannel = Channel<UpdatePostEvent>(Channel.BUFFERED)
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    private val postId: Int = requireNotNull(savedStateHandle["postId"])
+    private val routeArgs: HomeGraph.PostRoute = savedStateHandle.toRoute()
+    private val postId = routeArgs.postId
 
     init {
         getPost()
