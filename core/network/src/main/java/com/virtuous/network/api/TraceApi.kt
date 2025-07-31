@@ -56,18 +56,21 @@ interface TraceApi {
     suspend fun unregisterUser(): Result<Unit>
 
     @GET("/api/v1/user")
-    suspend fun loadUserInfo(): Result<LoadUserInfoResponse>
+    suspend fun loadMyUserInfo(): Result<LoadUserInfoResponse>
+
+    @GET("/api/v1/user/{providerId}/profile")
+    suspend fun loadUserInfo(@Path("providerId") providerId: String): Result<LoadUserInfoResponse>
 
     @PUT("/api/v1/user/profile/nickname")
     suspend fun updateNickname(
-        @Body updateNicknameRequest : UpdateNicknameRequest
-    ) : Result<LoadUserInfoResponse>
+        @Body updateNicknameRequest: UpdateNicknameRequest
+    ): Result<LoadUserInfoResponse>
 
     @Multipart
     @PUT("/api/v1/user/profile/image")
     suspend fun updateProfileImage(
         @Part profileImage: MultipartBody.Part
-    ) : Result<LoadUserInfoResponse>
+    ): Result<LoadUserInfoResponse>
 
     // 토큰
     @HTTP(method = "POST", path = "/api/v1/token/refresh", hasBody = true)
@@ -121,7 +124,7 @@ interface TraceApi {
     suspend fun getComments(
         @Path("postId") postId: Int,
         @Body getCommentsRequest: GetCommentsRequest
-    ) : Result<GetCommentsResponse>
+    ): Result<GetCommentsResponse>
 
     @POST("/api/v1/comments/{postId}")
     suspend fun addComment(
@@ -144,18 +147,18 @@ interface TraceApi {
     // 검색
     @POST("/api/v1/posts/search")
     suspend fun searchPosts(
-        @Body searchPostsRequest : SearchPostsRequest
-    ) : Result<GetPostsResponse>
+        @Body searchPostsRequest: SearchPostsRequest
+    ): Result<GetPostsResponse>
 
     // 미션
     @GET("/api/v1/missions/today")
-    suspend fun getDailyMission() : Result<DailyMissionResponse>
+    suspend fun getDailyMission(): Result<DailyMissionResponse>
 
     @POST("/api/v1/missions/completed")
-    suspend fun getCompletedMissions(@Body getCompletedMissionsRequest: GetCompletedMissionsRequest) : Result<GetCompletedMissionsResponse>
+    suspend fun getCompletedMissions(@Body getCompletedMissionsRequest: GetCompletedMissionsRequest): Result<GetCompletedMissionsResponse>
 
     @POST("/api/v1/missions/change")
-    suspend fun changeDailyMission() : Result<DailyMissionResponse>
+    suspend fun changeDailyMission(): Result<DailyMissionResponse>
 
     @Multipart
     @POST("/api/v1/missions/submit")
@@ -172,7 +175,7 @@ interface TraceApi {
     @POST("/api/v1/reports/block/{blockedProviderId}")
     suspend fun blockUser(
         @Path("blockedProviderId") blockedProviderId: String
-    ) : Result<Unit>
+    ): Result<Unit>
 
     // 마이페이지
     @POST("/api/v1/user/myPosts")

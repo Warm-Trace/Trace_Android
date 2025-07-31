@@ -28,13 +28,13 @@ class UserRepositoryImpl @Inject constructor(
         }.isExpired
     }
 
-    override suspend fun getUserInfo(): Result<UserInfo> = suspendRunCatching {
+    override suspend fun getMyUserInfo(): Result<UserInfo> = suspendRunCatching {
         val userInfo = localUserDataSource.userInfo.firstOrNull()
-        userInfo ?: loadUserInfo().getOrThrow()
+        userInfo ?: loadMyUserInfo().getOrThrow()
     }
 
-    override suspend fun loadUserInfo(): Result<UserInfo> = suspendRunCatching {
-        val response = userDataSource.loadUserInfo().getOrThrow()
+    override suspend fun loadMyUserInfo(): Result<UserInfo> = suspendRunCatching {
+        val response = userDataSource.loadMyUserInfo().getOrThrow()
         val userInfo = UserInfo(
             name = response.nickname,
             profileImageUrl = response.profileImageUrl,
@@ -44,6 +44,16 @@ class UserRepositoryImpl @Inject constructor(
 
         localUserDataSource.setUserInfo(userInfo)
         userInfo
+    }
+
+    override suspend fun loadUserInfo(providerId: String): Result<UserInfo> = suspendRunCatching {
+        val response = userDataSource.loadUserInfo(providerId).getOrThrow()
+        UserInfo(
+            name = response.nickname,
+            profileImageUrl = response.profileImageUrl,
+            verificationScore = response.verificationScore,
+            verificationCount = response.verificationCount,
+        )
     }
 
     override suspend fun updateNickname(nickname: String): Result<Unit> = suspendRunCatching {

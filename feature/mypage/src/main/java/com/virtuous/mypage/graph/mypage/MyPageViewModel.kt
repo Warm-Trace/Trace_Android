@@ -50,7 +50,7 @@ class MyPageViewModel @Inject constructor(
         .cachedIn(viewModelScope)
 
     fun getUserInfo() = viewModelScope.launch {
-        userRepository.getUserInfo().onSuccess { userInfo ->
+        userRepository.getMyUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
         }
     }
