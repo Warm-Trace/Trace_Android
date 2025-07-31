@@ -300,7 +300,9 @@ private fun PostScreen(
                     Column(
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB)
+                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB, modifier = Modifier.clickable {
+                            navigateToUserProfile(postDetail.providerId)
+                        })
 
                         Spacer(Modifier.height(3.dp))
 
@@ -507,7 +509,8 @@ private fun PostScreen(
                                     )
                                 }
                             },
-                            onBlockUser = onBlockUser
+                            onBlockUser = onBlockUser,
+                            navigateToUserProfile = navigateToUserProfile
                         )
 
                         if (index != comments.itemCount - 1) {
