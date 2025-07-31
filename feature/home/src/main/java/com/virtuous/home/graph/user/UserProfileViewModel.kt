@@ -37,8 +37,7 @@ class UserProfileViewModel @Inject constructor(
     private val providerId = routeArgs.providerId
 
     init {
-        getUserInfo(providerId)
-        getUserPosts(providerId)
+        getUserInfo()
     }
 
     private val _userInfo = MutableStateFlow(
@@ -51,28 +50,25 @@ class UserProfileViewModel @Inject constructor(
     private val _tapType = MutableStateFlow(UserProfileTab.WRITTEN_POSTS)
     val tabType = _tapType.asStateFlow()
 
-    private fun getUserInfo(providerId: String) {
-
-    }
-
-    private fun getUserPosts(providerId: String) {
-
-    }
-
-    fun setTabType(tab: UserProfileTab) {
-        _tapType.value = tab
-    }
-
-
     val displayedPosts = tabType
         .flatMapLatest { tab ->
             postRepository.getUserPosts(providerId, tab)
         }
         .cachedIn(viewModelScope)
 
+    private fun getUserInfo() = viewModelScope.launch {
+        userRepository.loadUserInfo(providerId).onSuccess {
+            _userInfo.value = it
+        }
+    }
+
+    fun setTabType(tab: UserProfileTab) {
+        _tapType.value = tab
+    }
+
     sealed class UserProfileEvent {
         data class NavigateToPost(val postFeed: PostFeed) : UserProfileEvent()
         data object NavigateBack : UserProfileEvent()
     }
-
 }
+

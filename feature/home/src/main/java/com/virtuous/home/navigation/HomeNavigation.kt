@@ -85,6 +85,10 @@ fun NavController.navigateToUpdatePost(postId: Int, navOptions: NavOptions? = nu
     navigate(HomeGraph.UpdatePostRoute(postId), navOptions)
 }
 
+fun NavController.navigateToUserProfile(providerId: String, navOptions: NavOptions? = null) {
+    navigate(HomeGraph.UserProfileRoute(providerId), navOptions)
+}
+
 fun NavGraphBuilder.homeNavGraph(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
@@ -151,7 +155,8 @@ fun NavGraphBuilder.homeNavGraph(
         ) {
             PostRoute(
                 navigateBack = navigateBack,
-                navigateToUpdatePost = navigateToUpdatePost
+                navigateToUpdatePost = navigateToUpdatePost,
+                navigateToUserProfile = navigateToUserProfile
             )
         }
 

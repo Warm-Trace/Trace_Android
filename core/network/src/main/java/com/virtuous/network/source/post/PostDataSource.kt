@@ -1,6 +1,7 @@
 package com.virtuous.network.source.post
 
 
+import com.virtuous.domain.model.home.UserProfileTab
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.HomeTab
@@ -24,6 +25,14 @@ interface PostDataSource {
         cursorId: Int?,
         size: Int,
         tabType: MyPageTab
+    ): Result<GetPostsResponse>
+
+    suspend fun getUserPosts(
+        cursorDateTime: LocalDateTime?,
+        cursorId: Int?,
+        size: Int,
+        providerId: String,
+        tabType: UserProfileTab
     ): Result<GetPostsResponse>
 
     suspend fun getPost(

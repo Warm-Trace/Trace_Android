@@ -16,22 +16,27 @@ import androidx.compose.ui.unit.Dp
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.PrimaryDefault
 
 @Composable
 fun ProfileImage(
+    providerId: String = "",
     profileImageUrl: String?,
     imageSize: Dp,
     paddingValue: Dp,
-    strokeWidth : Float = 4f,
+    strokeWidth: Float = 4f,
+    navigateToUserProfile: (String) -> Unit = {}
 ) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
             .data(profileImageUrl ?: R.drawable.default_profile).crossfade(true).build()
     )
 
-    Box(contentAlignment = Alignment.Center) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.clickable {
+        navigateToUserProfile(providerId)
+    }) {
         Canvas(modifier = Modifier.size(imageSize + paddingValue)) {
             val canvasWidth = size.width
             val center = center
@@ -44,7 +49,6 @@ fun ProfileImage(
                 style = Stroke(strokeWidth)
             )
         }
-
 
         Image(
             painter = profileImage,

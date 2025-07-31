@@ -15,6 +15,7 @@ import com.virtuous.network.model.notification.PostDeviceTokenRequest
 import com.virtuous.network.model.post.GetMyPostsRequest
 import com.virtuous.network.model.post.GetPostsRequest
 import com.virtuous.network.model.post.GetPostsResponse
+import com.virtuous.network.model.post.GetUserPostsRequest
 import com.virtuous.network.model.post.PostResponse
 import com.virtuous.network.model.post.ToggleEmotionRequest
 import com.virtuous.network.model.post.ToggleEmotionResponse
@@ -82,6 +83,12 @@ interface TraceApi {
     // 게시글
     @POST("/api/v1/posts/feed")
     suspend fun getPosts(@Body getPostsRequest: GetPostsRequest): Result<GetPostsResponse>
+
+    @POST("/api/v1/user/{providerId}/posts")
+    suspend fun getUserPosts(
+        @Path("providerId") providerId: String,
+        @Body getUserPostsRequest: GetUserPostsRequest
+    ): Result<GetPostsResponse>
 
     @GET("/api/v1/posts/{id}")
     suspend fun getPost(@Path("id") postId: Int): Result<PostResponse>

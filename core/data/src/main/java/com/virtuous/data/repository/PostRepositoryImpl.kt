@@ -7,6 +7,7 @@ import com.virtuous.common.util.suspendRunCatching
 import com.virtuous.data.image.ImageResizer
 import com.virtuous.data.paging.MyPostPagingSource
 import com.virtuous.data.paging.PostPagingSource
+import com.virtuous.data.paging.UserPostPagingSource
 import com.virtuous.domain.model.home.UserProfileTab
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.Emotion
@@ -48,7 +49,7 @@ class PostRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
             pagingSourceFactory = {
-                MyPostPagingSource(postDataSource, tabType, providerId)
+                UserPostPagingSource(postDataSource, providerId, tabType)
             }
         ).flow
     }

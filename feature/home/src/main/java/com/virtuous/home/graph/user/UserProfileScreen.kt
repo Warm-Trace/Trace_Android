@@ -16,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -35,7 +36,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Background
@@ -77,7 +77,7 @@ internal fun UserProfileRoute(
         displayedPosts = displayedPosts,
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postFeed -> viewModel.onEvent(UserProfileEvent.NavigateToPost(postFeed)) },
-        navigateBack = {}
+        navigateBack = navigateBack
     )
 }
 
@@ -211,16 +211,17 @@ private fun UserProfileScreen(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                contentDescription = "뒤로가기",
+            IconButton(
+                onClick = { navigateBack() },
                 modifier = Modifier
                     .padding(start = 20.dp, top = 16.dp)
                     .size(32.dp)
-                    .clickable {
-                        navigateBack()
-                    }
-            )
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
+                    contentDescription = "뒤로가기"
+                )
+            }
         }
     }
 }
