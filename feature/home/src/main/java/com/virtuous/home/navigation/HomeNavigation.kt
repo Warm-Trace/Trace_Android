@@ -137,16 +137,20 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.PostRoute>(
             enterTransition = {
-                // UpdatePostRoute에서 돌아올 때는 enterTransition을 null로 설정
-                if (initialState.destination.route?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
+                val initialRoute = initialState.destination.route
+                if (initialRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true ||
+                    initialRoute?.contains(HomeGraph.UserProfileRoute::class.simpleName.toString()) == true
+                ) {
                     null
                 } else {
                     defaultSlideFadeIn()
                 }
             },
             exitTransition = {
-                // UpdatePostRoute로 이동할 때만 exitTransition을 null로 설정
-                if (targetState.destination.route?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
+                val targetRoute = targetState.destination.route
+                if (targetRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true ||
+                    targetRoute?.contains(HomeGraph.UserProfileRoute::class.simpleName.toString()) == true
+                ) {
                     null
                 } else {
                     defaultSlideFadeOut()
@@ -175,7 +179,8 @@ fun NavGraphBuilder.homeNavGraph(
         }
 
         composable<HomeGraph.UserProfileRoute>(
-
+            enterTransition = { defaultSlideFadeIn() },
+            exitTransition = { defaultSlideFadeOut() }
         ) {
             UserProfileRoute(
                 navigateBack = navigateBack,
