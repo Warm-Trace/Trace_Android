@@ -47,8 +47,8 @@ class UserProfileViewModel @Inject constructor(
     )
     val userInfo = _userInfo.asStateFlow()
 
-    private val _tapType = MutableStateFlow(UserProfileTab.WRITTEN_POSTS)
-    val tabType = _tapType.asStateFlow()
+    private val _tabType = MutableStateFlow(UserProfileTab.WRITTEN_POSTS)
+    val tabType = _tabType.asStateFlow()
 
     val displayedPosts = tabType
         .flatMapLatest { tab ->
@@ -63,7 +63,7 @@ class UserProfileViewModel @Inject constructor(
     }
 
     fun setTabType(tab: UserProfileTab) {
-        _tapType.value = tab
+        _tabType.value = tab
     }
 
     sealed class UserProfileEvent {
