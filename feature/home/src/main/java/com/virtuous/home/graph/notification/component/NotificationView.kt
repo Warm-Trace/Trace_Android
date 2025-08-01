@@ -20,7 +20,6 @@ import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Gray
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
-import com.virtuous.domain.model.notification.NotificationData
 import com.virtuous.domain.model.notification.NotificationType
 import com.virtuous.domain.model.post.Emotion.GRATEFUL
 import com.virtuous.domain.model.post.Emotion.HEARTWARMING
@@ -34,7 +33,7 @@ internal fun NotificationView(
     notification: Notification,
     navigateToPost: (Int) -> Unit,
 ) {
-    val icon = with(notification.notificationData) {
+    val icon = with(notification) {
         when (type) {
             NotificationType.COMMENT -> R.drawable.comment_ic
 
@@ -54,8 +53,8 @@ internal fun NotificationView(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = notification.notificationData.postId != null) {
-                navigateToPost(notification.notificationData.postId!!)
+            .clickable(enabled = notification.postId != null) {
+                navigateToPost(notification.postId!!)
             }
     ) {
         Image(
@@ -67,11 +66,21 @@ internal fun NotificationView(
         Spacer(Modifier.width(12.dp))
 
         Column {
-            Text(notification.notificationData.title, style = TraceTheme.typography.bodyXMB, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(
+                notification.title,
+                style = TraceTheme.typography.bodyXMB,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
             Spacer(Modifier.height(6.dp))
 
-            Text(notification.notificationData.body, style = TraceTheme.typography.bodySM, maxLines = 3, overflow = TextOverflow.Ellipsis)
+            Text(
+                notification.body,
+                style = TraceTheme.typography.bodySM,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
 
             Spacer(Modifier.height(5.dp))
             Text(
@@ -91,12 +100,10 @@ private fun NotificationViewPreview() {
             notification = Notification(
                 id = 1,
                 createdAt = LocalDateTime.now(),
-                notificationData = NotificationData(
-                    postId = 1,
-                    title = "새로운 댓글이 달렸습니다.",
-                    body = "정성스러운 글이네요. 잘 읽고 갑니다.",
-                    type = NotificationType.COMMENT,
-                ),
+                postId = 1,
+                title = "새로운 댓글이 달렸습니다.",
+                body = "정성스러운 글이네요. 잘 읽고 갑니다.",
+                type = NotificationType.COMMENT,
             ),
             navigateToPost = {}
         )

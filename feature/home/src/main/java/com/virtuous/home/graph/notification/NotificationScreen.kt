@@ -28,7 +28,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
-import com.virtuous.domain.model.notification.NotificationData
 import com.virtuous.domain.model.notification.NotificationType
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.home.graph.notification.component.NotificationView
@@ -84,7 +83,6 @@ private fun NotificationScreen(
 
                     Spacer(Modifier.height(15.dp))
                 }
-
             }
         }
 
@@ -104,7 +102,7 @@ private fun NotificationScreen(
                 )
             }
 
-            Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(10.dp))
 
             Text("알림", style = TraceTheme.typography.bodyMSB)
         }
@@ -127,43 +125,30 @@ private fun fakeLazyPagingNotifications(): LazyPagingItems<Notification> {
         Notification(
             id = 1,
             createdAt = LocalDateTime.now().minusMinutes(5),
-            title = "새로운 댓글",
-            body = "'깨끗한 공원 만들기' 게시글에 새로운 댓글이 달렸습니다.",
-            notificationData = NotificationData(
-                title = "깨끗한 공원 만들기",
-                body = "공원을 깨끗하게 만드는 봉사활동입니다.",
-                type = NotificationType.EMOTION,
-                postId = 1,
-                emotion = Emotion.GRATEFUL
-            )
+            title = "깨끗한 공원 만들기",
+            body = "공원을 깨끗하게 만드는 봉사활동입니다.",
+            type = NotificationType.EMOTION,
+            postId = 1,
+            emotion = Emotion.GRATEFUL
         ),
         Notification(
             id = 2,
             createdAt = LocalDateTime.now().minusHours(1),
-            title = "게시글 인증",
-            body = "'무료 식사 제공' 게시글이 인증되었습니다.",
-            notificationData = NotificationData(
-                title = "무료 식사 제공",
-                body = "어려운 이웃에게 무료 식사를 제공합니다.",
-                type = NotificationType.COMMENT,
-                postId = 2,
-                emotion = Emotion.LIKEABLE
-            )
+            title = "무료 식사 제공",
+            body = "어려운 이웃에게 무료 식사를 제공합니다.",
+            type = NotificationType.COMMENT,
+            postId = 2,
+            emotion = Emotion.LIKEABLE
         ),
         Notification(
             id = 3,
             createdAt = LocalDateTime.now().minusDays(1),
-            title = "새로운 댓글",
-            body = "'헌혈 참여' 게시글에 새로운 댓글이 달렸습니다.",
-            notificationData = NotificationData(
-                title = "헌혈 참여",
-                body = "생명을 살리는 헌혈에 동참해주세요.",
-                type = NotificationType.MISSION,
-                postId = 3,
-                emotion = Emotion.LIKEABLE
-            )
+            title = "헌혈 참여",
+            body = "생명을 살리는 헌혈에 동참해주세요.",
+            type = NotificationType.MISSION,
+            postId = 3,
+            emotion = Emotion.LIKEABLE
         )
     )
-
     return flowOf(PagingData.from(fakeNotifications)).collectAsLazyPagingItems()
 }

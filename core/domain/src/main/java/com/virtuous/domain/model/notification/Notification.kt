@@ -7,24 +7,24 @@ import java.time.format.DateTimeFormatter
 data class Notification(
     val id: Int,
     val createdAt: LocalDateTime,
-    val title: String? = null,
-    val body: String? = null,
-    val notificationData: NotificationData
+    val title: String,
+    val body: String,
+    val type: NotificationType,
+    val postId: Int? = null,
+    val emotion: Emotion? = null
 ) {
     val formattedCreatedAt: String
         get() = createdAt.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"))
 }
 
-data class NotificationData(
-    val title: String,
-    val body: String,
-    val type: NotificationType,
-    val postId: Int? = null,
-    val emotion: Emotion? = null,
-)
-
 enum class NotificationType {
     COMMENT,
     EMOTION,
-    MISSION
+    MISSION;
+
+    companion object {
+        fun fromString(type: String): NotificationType {
+            return entries.firstOrNull { it.name == type } ?: COMMENT
+        }
+    }
 }

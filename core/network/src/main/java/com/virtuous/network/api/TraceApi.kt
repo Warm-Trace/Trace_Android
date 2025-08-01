@@ -11,6 +11,7 @@ import com.virtuous.network.model.comment.GetCommentsResponse
 import com.virtuous.network.model.mission.DailyMissionResponse
 import com.virtuous.network.model.mission.GetCompletedMissionsRequest
 import com.virtuous.network.model.mission.GetCompletedMissionsResponse
+import com.virtuous.network.model.notification.GetNotificationsResponse
 import com.virtuous.network.model.notification.PostDeviceTokenRequest
 import com.virtuous.network.model.post.GetMyPostsRequest
 import com.virtuous.network.model.post.GetPostsRequest
@@ -26,6 +27,7 @@ import com.virtuous.network.model.token.CheckTokenHealthResponse
 import com.virtuous.network.model.token.RefreshTokenRequest
 import com.virtuous.network.model.user.LoadUserInfoResponse
 import com.virtuous.network.model.user.UpdateNicknameRequest
+import kotlinx.datetime.LocalDateTime
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -37,6 +39,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface TraceApi {
     // 회원 관리
@@ -194,4 +197,20 @@ interface TraceApi {
         @Body postDeviceTokenRequest: PostDeviceTokenRequest
     ): Result<Unit>
 
+    @GET("/api/v1/notifications/all")
+    suspend fun getNotifications(
+        @Query("cursorDateTime") cursorDateTime: LocalDateTime?,
+        @Query("cursorId") cursorId: Int?,
+        @Query("size") size: Int,
+    ): Result<GetNotificationsResponse>
+
+    @PUT("/api/v1/notifications/open/{id}")
+    suspend fun readNotification(
+        @Path("id") id: Int
+    ) : Result<Unit>
+
+    @DELETE("/api/v1/notifications/{id}")
+    suspend fun deleteNotification(
+        @Path("id") id: Int
+    ) : Result<Unit>
 }

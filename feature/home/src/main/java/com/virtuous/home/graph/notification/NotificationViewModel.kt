@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,4 +21,11 @@ class NotificationViewModel @Inject constructor(
         emitAll(notificationRepository.getNotifications())
     }.cachedIn(viewModelScope)
 
+    fun readNotification(notificationId: Int) = viewModelScope.launch {
+        notificationRepository.readNotification(notificationId)
+    }
+
+    fun deleteNotification(notificationId: Int) = viewModelScope.launch {
+        notificationRepository.deleteNotification(notificationId)
+    }
 }
