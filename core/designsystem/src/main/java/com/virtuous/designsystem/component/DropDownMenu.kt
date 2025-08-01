@@ -31,7 +31,7 @@ import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.designsystem.theme.White
 
-data class DropdownMenuItem(
+data class TraceDropdownMenuItem(
     val iconRes: Int? = null,
     val imageVector: ImageVector? = null,
     val labelRes: Int,
@@ -44,7 +44,7 @@ fun TraceDropDownMenu(
     onDismiss: () -> Unit,
     title: String? = null,
     width: Int = 160,
-    items: List<DropdownMenuItem>
+    items: List<TraceDropdownMenuItem>
 ) {
     DropdownMenu(
         expanded = expanded,
@@ -124,17 +124,17 @@ private fun TraceDropDownMenuPreview() {
             expanded = true,
             onDismiss = {},
             items = listOf(
-                DropdownMenuItem(
+                TraceDropdownMenuItem(
                     imageVector = Icons.Outlined.Refresh,
                     labelRes = R.string.refresh,
                     action = {}
                 ),
-                DropdownMenuItem(
+                TraceDropdownMenuItem(
                     imageVector = Icons.Outlined.Refresh,
                     labelRes = R.string.refresh,
                     action = {}
                 ),
-                DropdownMenuItem(
+                TraceDropdownMenuItem(
                     imageVector = Icons.Outlined.Refresh,
                     labelRes = R.string.refresh,
                     action = {}

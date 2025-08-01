@@ -45,6 +45,8 @@ internal fun NotificationRoute(
 
     NotificationScreen(
         notifications = notifications,
+        readNotification = viewModel::readNotification,
+        deleteNotification = viewModel::deleteNotification,
         navigateToPost = navigateToPost,
         navigateBack = navigateBack,
     )
@@ -53,7 +55,9 @@ internal fun NotificationRoute(
 @Composable
 private fun NotificationScreen(
     notifications: LazyPagingItems<Notification>,
-    navigateToPost : (Int) -> Unit,
+    readNotification: (Int) -> Unit,
+    deleteNotification: (Int) -> Unit,
+    navigateToPost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
     Box(
@@ -70,7 +74,12 @@ private fun NotificationScreen(
 
             items(notifications.itemCount) { index ->
                 notifications[index]?.let {
-                    NotificationView(it, navigateToPost)
+                    NotificationView(
+                        notification = it,
+                        navigateToPost = navigateToPost,
+                        readNotification = readNotification,
+                        deleteNotification = deleteNotification
+                    )
 
                     Spacer(Modifier.height(8.dp))
 
@@ -115,7 +124,9 @@ private fun NotificationScreenPreview() {
     NotificationScreen(
         notifications = fakeLazyPagingNotifications(),
         navigateBack = {},
-        navigateToPost = {}
+        navigateToPost = {},
+        readNotification = {},
+        deleteNotification = {}
     )
 }
 

@@ -1,6 +1,7 @@
 package com.virtuous.home.graph.notification.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,15 +11,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.TraceDropDownMenu
+import com.virtuous.designsystem.component.TraceDropdownMenuItem
 import com.virtuous.designsystem.theme.Gray
 import com.virtuous.designsystem.theme.TraceTheme
+import com.virtuous.designsystem.theme.WarmGray
 import com.virtuous.domain.model.notification.Notification
 import com.virtuous.domain.model.notification.NotificationType
 import com.virtuous.domain.model.post.Emotion.GRATEFUL
@@ -32,7 +41,11 @@ import java.time.LocalDateTime
 internal fun NotificationView(
     notification: Notification,
     navigateToPost: (Int) -> Unit,
+    readNotification: (Int) -> Unit,
+    deleteNotification: (Int) -> Unit
 ) {
+    var showNotiMenu by remember { mutableStateOf(false) }
+
     val icon = with(notification) {
         when (type) {
             NotificationType.COMMENT -> R.drawable.comment_ic
@@ -55,6 +68,7 @@ internal fun NotificationView(
             .fillMaxWidth()
             .clickable(enabled = notification.postId != null) {
                 navigateToPost(notification.postId!!)
+                readNotification(notification.id)
             }
     ) {
         Image(
@@ -83,12 +97,43 @@ internal fun NotificationView(
             )
 
             Spacer(Modifier.height(5.dp))
+
             Text(
                 notification.formattedCreatedAt,
                 style = TraceTheme.typography.bodyXSM,
                 color = Gray
             )
         }
+
+        Spacer(Modifier.weight(1f))
+
+        Box() {
+            Image(
+                painter = painterResource(R.drawable.menu_ic),
+                contentDescription = "댓글 메뉴",
+                colorFilter = ColorFilter.tint(WarmGray),
+                modifier = Modifier
+                    .height(15.dp)
+                    .clickable {
+                        showNotiMenu = true
+                    })
+
+            TraceDropDownMenu(
+                expanded = showNotiMenu,
+                onDismiss = { showNotiMenu = false },
+                items = listOf(
+                    TraceDropdownMenuItem(
+                        iconRes = R.drawable.delete_ic,
+                        labelRes = R.string.delete,
+                        action = {
+                            deleteNotification(notification.id)
+                        }
+                    ),
+                )
+            )
+        }
+
+
     }
 }
 
@@ -105,7 +150,9 @@ private fun NotificationViewPreview() {
                 body = "정성스러운 글이네요. 잘 읽고 갑니다.",
                 type = NotificationType.COMMENT,
             ),
-            navigateToPost = {}
+            navigateToPost = {},
+            readNotification = {},
+            deleteNotification = {}
         )
     }
 }
