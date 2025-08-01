@@ -28,12 +28,17 @@ fun NavController.navigateToWebView(url: String, navOptions: NavOptions? = null)
     navigate(MyPageGraph.WebViewRoute(url), navOptions)
 }
 
+fun NavController.navigateToBlockedUser(navOptions: NavOptions? = null) {
+    navigate(MyPageGraph.BlockedUserRoute, navOptions)
+}
+
 fun NavGraphBuilder.myPageNavGraph(
     navigateToLogin: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToUpdateProfile: () -> Unit,
     navigateToSetting: () -> Unit,
     navigateToWebView: (String) -> Unit,
+    navigateToBlockedUser: () -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<MyPageBaseRoute>(startDestination = MyPageGraph.MyPageRoute) {
@@ -73,7 +78,8 @@ fun NavGraphBuilder.myPageNavGraph(
             SettingRoute(
                 navigateToLogin = navigateToLogin,
                 navigateToWebView = navigateToWebView,
-                navigateBack = navigateBack
+                navigateBack = navigateBack,
+                navigateToBlockedUser = navigateToBlockedUser
             )
         }
 

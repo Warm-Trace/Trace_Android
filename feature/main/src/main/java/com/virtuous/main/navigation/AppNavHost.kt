@@ -18,6 +18,7 @@ import com.virtuous.home.navigation.navigateToWritePost
 import com.virtuous.mission.navigation.missionNavGraph
 import com.virtuous.mission.navigation.navigateToVerifyMission
 import com.virtuous.mypage.navigation.myPageNavGraph
+import com.virtuous.mypage.navigation.navigateToBlockedUser
 import com.virtuous.mypage.navigation.navigateToSetting
 import com.virtuous.mypage.navigation.navigateToUpdateProfile
 import com.virtuous.mypage.navigation.navigateToWebView
@@ -49,32 +50,20 @@ fun AppNavHost(
                 )
             },
             navigateBack = { navigateBack(navController) },
-            navigateToEditProfile = { signUpToken, providerId ->
-                navController.navigateToEditProfile(signUpToken, providerId)
-            }
+            navigateToEditProfile = navController::navigateToEditProfile
         )
 
         homeNavGraph(
-            navigateToPost = { postId ->
-                navController.navigateToPost(postId)
-            },
-            navigateToWritePost = {
-                navController.navigateToWritePost()
-            },
-            navigateToUpdatePost = { postId ->
-                navController.navigateToUpdatePost(postId)
-            },
-            navigateToSearch = {
-                navController.navigateToSearch()
-            },
+            navigateToPost = navController::navigateToPost,
+            navigateToWritePost = navController::navigateToWritePost,
+            navigateToUpdatePost = navController::navigateToUpdatePost,
+            navigateToSearch = navController::navigateToSearch,
             navigateToPostReplacing = { postDetail ->
                 navController.navigateToPost(postDetail, navOptions = navOptions {
                     popUpTo<HomeGraph.HomeRoute>()
                 })
             },
-            navigateToUserProfile = { providerId ->
-                navController.navigateToUserProfile(providerId)
-            },
+            navigateToUserProfile = navController::navigateToUserProfile,
             navigateBack = { navigateBack(navController) },
         )
 
@@ -84,25 +73,22 @@ fun AppNavHost(
                     popUpTo(MissionGraph.MissionRoute)
                 })
             },
-            navigateToVerifyMission = { description ->
-                navController.navigateToVerifyMission(description)
-            },
+            navigateToVerifyMission = navController::navigateToVerifyMission,
             navigateBack = { navigateBack(navController) }
         )
 
         myPageNavGraph(
-            navigateToPost = { postFeed -> navController.navigateToPost(postFeed) },
-            navigateToUpdateProfile = { navController.navigateToUpdateProfile() },
-            navigateToSetting = { navController.navigateToSetting() },
+            navigateToPost = navController::navigateToPost,
+            navigateToUpdateProfile = navController::navigateToUpdateProfile,
+            navigateToSetting = navController::navigateToSetting,
             navigateBack = { navigateBack(navController) },
             navigateToLogin = {
                 navController.navigateToLogin(navOptions {
                     popUpTo(0) { inclusive = true }
                 })
             },
-            navigateToWebView = { url ->
-                navController.navigateToWebView(url)
-            }
+            navigateToWebView = navController::navigateToWebView,
+            navigateToBlockedUser = navController::navigateToBlockedUser
         )
 
     }

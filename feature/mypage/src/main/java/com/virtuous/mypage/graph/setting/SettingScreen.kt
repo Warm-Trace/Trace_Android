@@ -41,13 +41,13 @@ import com.virtuous.mypage.graph.setting.SettingViewModel.SettingEvent
 internal fun SettingRoute(
     navigateToWebView: (String) -> Unit,
     navigateToLogin: () -> Unit,
+    navigateToBlockedUser: () -> Unit,
     navigateBack: () -> Unit,
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SettingEvent.NavigateBack -> navigateBack()
                 is SettingEvent.Logout -> navigateToLogin()
                 is SettingEvent.UnregisterUserSuccess -> navigateToLogin()
                 is SettingEvent.UnregisterUserFailure -> {
@@ -58,6 +58,7 @@ internal fun SettingRoute(
     }
 
     SettingScreen(
+        navigateToBlockedUser = navigateToBlockedUser,
         navigateToInquiry = { navigateToWebView(BuildConfig.TRACE_INQUIRY_URL) },
         navigateToPrivacyPolicy = { navigateToWebView(BuildConfig.TRACE_PRIVACY_POLICY_URL) },
         navigateBack = navigateBack,
@@ -68,33 +69,34 @@ internal fun SettingRoute(
 
 @Composable
 private fun SettingScreen(
-    navigateBack: () -> Unit,
+    navigateToBlockedUser: () -> Unit,
     navigateToInquiry: () -> Unit,
     navigateToPrivacyPolicy: () -> Unit,
+    navigateBack: () -> Unit,
     logout: () -> Unit,
     unregisterUser: () -> Unit
 ) {
-    var showLogoutDialog by remember { mutableStateOf(false) }
-    var showUnRegisterUserDialog by remember { mutableStateOf(false) }
+    var showLogoutDg by remember { mutableStateOf(false) }
+    var showUnregisterUserDg by remember { mutableStateOf(false) }
 
-    if (showLogoutDialog) {
+    if (showLogoutDg) {
         CheckCancelDialog(
             onCheck = {
                 logout()
-                showLogoutDialog = false
+                showLogoutDg = false
             },
-            onDismiss = { showLogoutDialog = false },
+            onDismiss = { showLogoutDg = false },
             dialogText = "정말 로그아웃 하시겠습니까?"
         )
     }
 
-    if (showUnRegisterUserDialog) {
+    if (showUnregisterUserDg) {
         CheckCancelDialog(
             onCheck = {
                 unregisterUser()
-                showUnRegisterUserDialog = false
+                showUnregisterUserDg = false
             },
-            onDismiss = { showUnRegisterUserDialog = false },
+            onDismiss = { showUnregisterUserDg = false },
             dialogText = "정말 회원탈퇴 하시겠습니까?"
         )
     }
@@ -182,7 +184,21 @@ private fun SettingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            showLogoutDialog = true
+                            navigateToBlockedUser()
+                        }) {
+                    Text(
+                        "차단된 계정",
+                        style = TraceTheme.typography.bodyMR
+                    )
+                }
+
+                Spacer(Modifier.height(17.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showLogoutDg = true
                         }) {
                     Text(
                         "로그아웃",
@@ -196,7 +212,7 @@ private fun SettingScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            showUnRegisterUserDialog = true
+                            showUnregisterUserDg = true
                         }) {
                     Text(
                         "회원 탈퇴",
@@ -247,6 +263,7 @@ private fun SettingScreen(
 @Composable
 fun SettingScreenPreview() {
     SettingScreen(
+        navigateToBlockedUser = {},
         navigateBack = {},
         navigateToInquiry = {},
         navigateToPrivacyPolicy = {},

@@ -1,5 +1,6 @@
 package com.virtuous.domain.repository
 
+import com.virtuous.domain.model.user.BlockedUser
 import com.virtuous.domain.model.user.UserInfo
 
 interface UserRepository {
@@ -9,4 +10,5 @@ interface UserRepository {
     suspend fun loadUserInfo(providerId : String) : Result<UserInfo>
     suspend fun updateNickname(nickname: String): Result<Unit>
     suspend fun updateProfileImage(profileImageUrl: String?): Result<Unit>
+    suspend fun getBlockedUsers() : Result<List<BlockedUser>>
 }

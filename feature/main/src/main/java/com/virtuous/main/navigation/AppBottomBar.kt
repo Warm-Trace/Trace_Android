@@ -67,7 +67,6 @@ internal fun AppBottomBar(
                 .height(50.dp)
         ) {
             TopLevelDestination.entries.forEach { topLevelRoute ->
-
                 NavigationBarItem(
                     icon = {
                         Column(

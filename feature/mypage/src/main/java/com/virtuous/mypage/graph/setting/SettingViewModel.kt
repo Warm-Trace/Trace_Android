@@ -2,7 +2,6 @@ package com.virtuous.mypage.graph.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -33,7 +32,6 @@ class SettingViewModel @Inject constructor(
     }
 
     sealed class SettingEvent {
-        data object NavigateBack : SettingEvent()
         data object Logout : SettingEvent()
         data object UnregisterUserSuccess : SettingEvent()
         data object UnregisterUserFailure : SettingEvent()
