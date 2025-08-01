@@ -3,6 +3,7 @@ package com.virtuous.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.virtuous.common_ui.event.EventHelper
+import com.virtuous.domain.repository.NotificationRepository
 import com.virtuous.domain.repository.UserRepository
 import com.virtuous.navigation.AuthGraph
 import com.virtuous.navigation.HomeGraph
@@ -14,9 +15,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    val eventHelper: com.virtuous.common_ui.event.EventHelper,
+    val eventHelper: EventHelper,
     val navigationHelper: NavigationHelper,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
     fun checkSession() = viewModelScope.launch {
         userRepository.checkTokenHealth().onSuccess { isExpired ->
@@ -30,5 +32,9 @@ class MainViewModel @Inject constructor(
         }.onFailure {
             navigationHelper.navigate(NavigationEvent.To(AuthGraph.LoginRoute, popUpTo = true))
         }
+    }
+
+    fun readNotification(notificationId : Int) = viewModelScope.launch {
+        notificationRepository.readNotification(notificationId)
     }
 }

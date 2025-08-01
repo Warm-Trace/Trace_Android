@@ -222,8 +222,8 @@ private fun PostScreen(
     navigateToUserProfile: (String) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    var isOwnPostDropDownMenuExpanded by remember { mutableStateOf(false) }
-    var isOtherPostDropDownMenuExpanded by remember { mutableStateOf(false) }
+    var showOwnPostMenu by remember { mutableStateOf(false) }
+    var showOtherPostMenu by remember { mutableStateOf(false) }
 
 
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
@@ -562,23 +562,23 @@ private fun PostScreen(
                     contentDescription = "메뉴",
                     modifier = Modifier.clickable(isRipple = true) {
                         if (postDetail.isOwner) {
-                            isOwnPostDropDownMenuExpanded = true
+                            showOwnPostMenu = true
                         } else {
-                            isOtherPostDropDownMenuExpanded = true
+                            showOtherPostMenu = true
                         }
                     })
 
                 OwnPostDropdownMenu(
-                    expanded = isOwnPostDropDownMenuExpanded,
-                    onDismiss = { isOwnPostDropDownMenuExpanded = false },
+                    expanded = showOwnPostMenu,
+                    onDismiss = { showOwnPostMenu = false },
                     onRefresh = { comments.refresh() },
                     onUpdate = { navigateToUpdatePost(postDetail.postId) },
                     onDelete = onDeletePost,
                 )
 
                 OtherPostDropdownMenu(
-                    expanded = isOtherPostDropDownMenuExpanded,
-                    onDismiss = { isOtherPostDropDownMenuExpanded = false },
+                    expanded = showOtherPostMenu,
+                    onDismiss = { showOtherPostMenu = false },
                     onRefresh = { comments.refresh() },
                     onReport = onReportPost,
                     onBlockUser = { onBlockUser(postDetail.providerId) }
@@ -824,4 +824,3 @@ fun fakeLazyPagingComments(): LazyPagingItems<Comment> {
         )
     ).collectAsLazyPagingItems()
 }
-

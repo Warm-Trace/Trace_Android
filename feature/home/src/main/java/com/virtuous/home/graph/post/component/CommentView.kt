@@ -48,8 +48,8 @@ internal fun CommentView(
     onBlockUser: (String) -> Unit,
     navigateToUserProfile: (String) -> Unit
 ) {
-    var isOwnCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
-    var isOtherCommentDropDownMenuExpanded by remember { mutableStateOf(false) }
+    var showOwnCommentMenu by remember { mutableStateOf(false) }
+    var showOtherCommentMenu by remember { mutableStateOf(false) }
 
     val backgroundColor =
         if (replyTargetId != null && replyTargetId.equals(comment.commentId)) PrimaryDefault.copy(
@@ -101,22 +101,22 @@ internal fun CommentView(
                             .height(15.dp)
                             .clickable {
                                 if (comment.isOwner) {
-                                    isOwnCommentDropDownMenuExpanded = true
+                                    showOwnCommentMenu = true
                                 } else {
-                                    isOtherCommentDropDownMenuExpanded = true
+                                    showOtherCommentMenu = true
                                 }
                             })
 
                     OwnCommentDropdownMenu(
-                        expanded = isOwnCommentDropDownMenuExpanded,
-                        onDismiss = { isOwnCommentDropDownMenuExpanded = false },
+                        expanded = showOwnCommentMenu,
+                        onDismiss = { showOwnCommentMenu = false },
                         onReply = onReply,
                         onDelete = { onDelete(comment.commentId) },
                     )
 
                     OtherCommentDropdownMenu(
-                        expanded = isOtherCommentDropDownMenuExpanded,
-                        onDismiss = { isOtherCommentDropDownMenuExpanded = false },
+                        expanded = showOtherCommentMenu,
+                        onDismiss = { showOtherCommentMenu = false },
                         onReply = onReply,
                         onReport = { reason -> onReport(comment.commentId, reason) },
                         onBlockUser = { onBlockUser(comment.providerId) })
