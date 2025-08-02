@@ -45,10 +45,11 @@ private fun BlockedUserScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(top = 55.dp)
                 .padding(horizontal = 20.dp)
         ) {
             item {
-                Spacer(Modifier.height(68.dp))
+                Spacer(Modifier.height(10.dp))
             }
 
             items(blockedUsers.size) { index ->

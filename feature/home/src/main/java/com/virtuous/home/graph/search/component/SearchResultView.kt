@@ -65,7 +65,7 @@ internal fun SearchResultView(
                 .fillMaxSize()
         ) {
             item {
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(10.dp))
 
                 Box() {
                     Row(

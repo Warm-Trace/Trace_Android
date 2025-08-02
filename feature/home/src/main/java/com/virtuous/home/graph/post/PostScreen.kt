@@ -257,11 +257,11 @@ private fun PostScreen(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
+                .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
 
             item {
-                Spacer(Modifier.height(25.dp))
+                Spacer(Modifier.height(10.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

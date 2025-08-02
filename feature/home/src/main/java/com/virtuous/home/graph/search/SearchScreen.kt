@@ -115,7 +115,7 @@ private fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 50.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 55.dp)
         ) {
             if (!isSearched) {
                 SearchInitialView(
@@ -146,7 +146,7 @@ private fun SearchScreen(
         ) {
             BackButton(navigateBack)
 
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(5.dp))
 
             TraceSearchField(
                 focusRequester = focusRequester,
