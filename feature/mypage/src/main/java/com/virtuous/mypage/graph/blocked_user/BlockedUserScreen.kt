@@ -26,7 +26,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.user.BlockedUser
 import com.virtuous.mypage.graph.blocked_user.component.BlockedUserView
-import java.time.LocalDateTime
 
 @Composable
 fun BlockedUserRoute(
@@ -98,31 +97,26 @@ fun BlockedUserScreenPreview() {
                 providerId = "id_1",
                 name = "사용자1",
                 profileImageUrl = null,
-                blockedAt = LocalDateTime.now()
             ),
             BlockedUser(
                 providerId = "id_2",
                 name = "사용자2",
                 profileImageUrl = "url_2",
-                blockedAt = LocalDateTime.now()
             ),
             BlockedUser(
                 providerId = "id_3",
                 name = "사용자3",
                 profileImageUrl = null,
-                blockedAt = LocalDateTime.now()
             ),
             BlockedUser(
                 providerId = "id_4",
                 name = "사용자4",
                 profileImageUrl = "url_4",
-                blockedAt = LocalDateTime.now()
             ),
             BlockedUser(
                 providerId = "id_5",
                 name = "사용자5",
                 profileImageUrl = null,
-                blockedAt = LocalDateTime.now()
             )
         ),
         navigateBack = {}

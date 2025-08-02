@@ -9,12 +9,14 @@ import androidx.navigation.toRoute
 import com.virtuous.common_ui.ui.defaultSlideFadeIn
 import com.virtuous.common_ui.ui.defaultSlideFadeOut
 import com.virtuous.domain.model.post.PostFeed
+import com.virtuous.mypage.graph.blocked_user.BlockedUserRoute
 import com.virtuous.mypage.graph.mypage.MyPageRoute
 import com.virtuous.mypage.graph.setting.SettingRoute
 import com.virtuous.mypage.graph.updateprofile.UpdateProfileRoute
 import com.virtuous.mypage.graph.webview.WebViewRoute
 import com.virtuous.navigation.MyPageBaseRoute
 import com.virtuous.navigation.MyPageGraph
+import com.virtuous.navigation.containsRoute
 
 fun NavController.navigateToUpdateProfile(navOptions: NavOptions? = null) {
     navigate(MyPageGraph.UpdateProfileRoute, navOptions)
@@ -61,14 +63,14 @@ fun NavGraphBuilder.myPageNavGraph(
 
         composable<MyPageGraph.SettingRoute>(
             enterTransition = {
-                if (initialState.destination.route?.contains(MyPageGraph.WebViewRoute::class.simpleName.toString()) == true) {
+                if (initialState.destination.containsRoute(listOf(MyPageGraph.WebViewRoute::class, MyPageGraph.BlockedUserRoute::class))) {
                     null
                 } else {
                     defaultSlideFadeIn()
                 }
             },
             exitTransition = {
-                if (targetState.destination.route?.contains(MyPageGraph.WebViewRoute::class.simpleName.toString()) == true) {
+                if (targetState.destination.containsRoute(listOf(MyPageGraph.WebViewRoute::class, MyPageGraph.BlockedUserRoute::class))) {
                     null
                 } else {
                     defaultSlideFadeOut()
@@ -83,12 +85,18 @@ fun NavGraphBuilder.myPageNavGraph(
             )
         }
 
+        composable<MyPageGraph.BlockedUserRoute>(
+            enterTransition = { defaultSlideFadeIn() },
+            exitTransition = { defaultSlideFadeOut() }
+        ) {
+            BlockedUserRoute(
+                navigateBack = navigateBack
+            )
+        }
+
         composable<MyPageGraph.WebViewRoute> { backStackEntry ->
             val webView = backStackEntry.toRoute<MyPageGraph.WebViewRoute>()
-            WebViewRoute(
-                url = webView.url,
-
-            )
+            WebViewRoute(url = webView.url)
         }
     }
 }

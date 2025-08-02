@@ -11,4 +11,5 @@ interface UserRepository {
     suspend fun updateNickname(nickname: String): Result<Unit>
     suspend fun updateProfileImage(profileImageUrl: String?): Result<Unit>
     suspend fun getBlockedUsers() : Result<List<BlockedUser>>
+    suspend fun unBlockUser(providerId: String) : Result<Unit>
 }

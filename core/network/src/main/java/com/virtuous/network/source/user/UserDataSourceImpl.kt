@@ -2,6 +2,7 @@ package com.virtuous.network.source.user
 
 import android.os.Build
 import com.virtuous.network.api.TraceApi
+import com.virtuous.network.model.user.GetBlockedUsersResponse
 import com.virtuous.network.model.user.LoadUserInfoResponse
 import com.virtuous.network.model.user.UpdateNicknameRequest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -50,6 +51,12 @@ class UserDataSourceImpl @Inject constructor(
 
         return traceApi.updateProfileImage(requestImage)
     }
+
+    override suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse> =
+        traceApi.getBlockedUsers()
+
+    override suspend fun unBlockUser(providerId: String): Result<Unit> =
+        traceApi.unblockUser(providerId)
 
     companion object {
         private const val WEBP_MEDIA_TYPE = "image/webp"

@@ -25,7 +25,6 @@ import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.user.BlockedUser
-import java.time.LocalDateTime
 
 @Composable
 internal fun BlockedUserView(
@@ -98,7 +97,6 @@ private fun BlockedUserViewPreview() {
                 providerId = "preview_user",
                 name = "차단된 사용자",
                 profileImageUrl = null,
-                blockedAt = LocalDateTime.now()
             ),
             unblockUser = {},
             navigateToUserProfile = {}

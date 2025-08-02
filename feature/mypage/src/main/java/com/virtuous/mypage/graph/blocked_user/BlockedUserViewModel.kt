@@ -22,7 +22,7 @@ class BlockedUserViewModel @Inject constructor(
         getBlockedUsers()
     }
 
-    fun getBlockedUsers() = viewModelScope.launch {
+    private fun getBlockedUsers() = viewModelScope.launch {
         userRepository.getBlockedUsers().onSuccess {
             _blockedUsers.value = it
         }
