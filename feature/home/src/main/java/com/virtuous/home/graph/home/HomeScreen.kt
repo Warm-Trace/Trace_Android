@@ -1,7 +1,6 @@
 package com.virtuous.home.graph.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -127,7 +125,7 @@ private fun HomeScreen(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 105.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 95.dp, start = 20.dp, end = 20.dp)
         ) {
             items(postFeeds.itemCount) { index ->
                 postFeeds[index]?.let {
@@ -163,17 +161,12 @@ private fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        PrimaryDefault
-                    )
-                    .padding(horizontal = 20.dp)
-                    .height(45.dp),
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     "흔적들",
                     style = TraceTheme.typography.headingMB,
-                    color = White,
                     modifier = Modifier.height(24.dp)
                 )
 
@@ -224,8 +217,7 @@ private fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .size(50.dp),
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(

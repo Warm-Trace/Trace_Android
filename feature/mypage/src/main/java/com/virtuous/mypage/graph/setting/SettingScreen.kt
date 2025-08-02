@@ -1,7 +1,5 @@
 package com.virtuous.mypage.graph.setting
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,19 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.util.clickable
-import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.CheckCancelDialog
 import com.virtuous.designsystem.theme.Gray
 import com.virtuous.designsystem.theme.GrayLine
-import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
-import com.virtuous.designsystem.theme.White
 import com.virtuous.mypage.BuildConfig
 import com.virtuous.mypage.graph.setting.SettingViewModel.SettingEvent
 
@@ -108,9 +103,11 @@ private fun SettingScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 80.dp, start = 20.dp, end = 20.dp)
+                .padding(start = 20.dp, end = 20.dp)
         ) {
             item {
+                Spacer(Modifier.height(68.dp))
+
                 Text(
                     "이용 안내",
                     style = TraceTheme.typography.bodyMSB
@@ -230,34 +227,20 @@ private fun SettingScreen(
             }
         }
 
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(PrimaryDefault)
-                .padding(horizontal = 20.dp)
-                .height(50.dp)
-                .align(Alignment.TopCenter),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            BackButton(navigateBack)
 
-            Image(
-                painter = painterResource(R.drawable.arrow_back_white_ic),
-                contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .clickable {
-                        navigateBack()
-                    }
-            )
+            Spacer(Modifier.width(10.dp))
 
-            Spacer(Modifier.width(20.dp))
-
-            Text("설정", style = TraceTheme.typography.headingMB, color = White)
-
+            Text("설정", style = TraceTheme.typography.bodyMSB)
         }
     }
-
-
 }
+
 
 @Preview
 @Composable

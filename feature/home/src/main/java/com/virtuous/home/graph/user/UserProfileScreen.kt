@@ -8,15 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -36,6 +31,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Background
@@ -102,11 +98,11 @@ private fun UserProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    top = 42.dp, start = 20.dp, end = 14.dp
+                    start = 20.dp, end = 14.dp
                 )
         ) {
             item {
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(68.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -213,19 +209,12 @@ private fun UserProfileScreen(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { navigateBack() },
-                modifier = Modifier
-                    .padding(start = 20.dp, top = 4.dp)
-                    .size(36.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
-                    contentDescription = "뒤로가기"
-                )
-            }
+            BackButton(navigateBack)
+
+            Spacer(Modifier.weight(1f))
         }
     }
 }

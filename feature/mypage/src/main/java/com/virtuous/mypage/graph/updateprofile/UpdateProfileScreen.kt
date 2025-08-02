@@ -53,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.theme.PrimaryActive
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.Red
@@ -292,26 +293,15 @@ private fun UpdateProfileScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(PrimaryDefault)
-                .padding(horizontal = 20.dp)
                 .height(50.dp)
                 .align(Alignment.TopCenter),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            BackButton(navigateBack)
 
-            Image(
-                painter = painterResource(R.drawable.arrow_back_white_ic),
-                contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .clickable {
-                        navigateBack()
-                    }
-            )
+            Spacer(Modifier.width(10.dp))
 
-            Spacer(Modifier.width(20.dp))
-
-            Text("프로필 편집", style = TraceTheme.typography.headingMB, color = White)
-
+            Text("프로필 편집", style = TraceTheme.typography.bodyMSB)
         }
     }
 }
