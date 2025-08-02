@@ -41,6 +41,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigateToSetting: () -> Unit,
     navigateToWebView: (String) -> Unit,
     navigateToBlockedUser: () -> Unit,
+    navigateToUserProfile: (String) -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<MyPageBaseRoute>(startDestination = MyPageGraph.MyPageRoute) {
@@ -90,7 +91,8 @@ fun NavGraphBuilder.myPageNavGraph(
             exitTransition = { defaultSlideFadeOut() }
         ) {
             BlockedUserRoute(
-                navigateBack = navigateBack
+                navigateBack = navigateBack,
+                navigateToUserProfile = navigateToUserProfile
             )
         }
 

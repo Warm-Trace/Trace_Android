@@ -55,7 +55,7 @@ class UserDataSourceImpl @Inject constructor(
     override suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse> =
         traceApi.getBlockedUsers()
 
-    override suspend fun unBlockUser(providerId: String): Result<Unit> =
+    override suspend fun unblockUser(providerId: String): Result<Unit> =
         traceApi.unblockUser(providerId)
 
     companion object {

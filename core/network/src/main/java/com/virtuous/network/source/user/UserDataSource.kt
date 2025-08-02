@@ -10,5 +10,5 @@ interface UserDataSource {
     suspend fun updateNickname(nickname: String): Result<LoadUserInfoResponse>
     suspend fun updateProfileImage(profileImage: InputStream?): Result<LoadUserInfoResponse>
     suspend fun getBlockedUsers() : Result<GetBlockedUsersResponse>
-    suspend fun unBlockUser(providerId: String) : Result<Unit>
+    suspend fun unblockUser(providerId: String) : Result<Unit>
 }

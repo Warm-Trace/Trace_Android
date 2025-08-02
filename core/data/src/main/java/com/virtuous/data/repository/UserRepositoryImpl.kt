@@ -72,7 +72,7 @@ class UserRepositoryImpl @Inject constructor(
         response.toDomain()
     }
 
-    override suspend fun unBlockUser(providerId: String): Result<Unit> = suspendRunCatching {
-        userDataSource.unBlockUser(providerId)
+    override suspend fun unblockUser(providerId: String): Result<Unit> = suspendRunCatching {
+        userDataSource.unblockUser(providerId)
     }
 }

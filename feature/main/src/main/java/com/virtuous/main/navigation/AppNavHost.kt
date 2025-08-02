@@ -86,7 +86,8 @@ fun AppNavHost(
                 })
             },
             navigateToWebView = navController::navigateToWebView,
-            navigateToBlockedUser = navController::navigateToBlockedUser
+            navigateToBlockedUser = navController::navigateToBlockedUser,
+            navigateToUserProfile = navController::navigateToUserProfile
         )
 
     }
