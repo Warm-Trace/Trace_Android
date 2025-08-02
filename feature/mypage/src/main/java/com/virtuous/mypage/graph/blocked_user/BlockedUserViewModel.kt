@@ -35,16 +35,17 @@ class BlockedUserViewModel @Inject constructor(
         }
     }
 
-    fun unblockUser(providerId : String) = viewModelScope.launch {
+    fun unblockUser(providerId: String) = viewModelScope.launch {
         userRepository.unblockUser(providerId).onSuccess {
-            _eventChannel.send(BlockedUserEvent.UnblockUserSuccess)
+            _eventChannel.send(BlockedUserEvent.UnblockUserSuccess(providerId))
+            _blockedUsers.value = _blockedUsers.value.filter { it.providerId != providerId }
         }.onFailure {
             _eventChannel.send(BlockedUserEvent.UnblockUserFailure)
         }
     }
 
     sealed class BlockedUserEvent {
-        data object UnblockUserSuccess : BlockedUserEvent()
+        data class UnblockUserSuccess(val providerId: String) : BlockedUserEvent()
         data object UnblockUserFailure : BlockedUserEvent()
     }
 }
