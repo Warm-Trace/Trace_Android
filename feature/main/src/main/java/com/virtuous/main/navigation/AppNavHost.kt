@@ -37,8 +37,6 @@ fun AppNavHost(
         startDestination = SplashRoute,
         modifier = modifier,
     ) {
-        val currentRoute = navController.currentDestination?.route
-
         splashScreen()
 
         authNavGraph(

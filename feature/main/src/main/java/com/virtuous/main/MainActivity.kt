@@ -70,7 +70,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-
             val currentDestination = navController.currentBackStackEntryAsState()
                 .value?.destination
             val snackBarHostState = remember { SnackbarHostState() }

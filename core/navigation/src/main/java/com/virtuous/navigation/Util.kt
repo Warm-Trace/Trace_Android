@@ -29,7 +29,7 @@ fun NavDestination?.shouldHideBottomBar(): Boolean =
 fun NavDestination?.isRouteInHierarchy(route: KClass<*>): Boolean =
     this?.hierarchy?.any { it.hasRoute(route) } == true
 
-fun NavDestination?.containsRoute(routes: List<KClass<*>>): Boolean {
+fun NavDestination?.containsRo(routes: List<KClass<*>>): Boolean {
     val currentRoute = this?.route ?: return false
     return routes.mapNotNull { it.simpleName }.any { currentRoute.contains(it) }
 }
