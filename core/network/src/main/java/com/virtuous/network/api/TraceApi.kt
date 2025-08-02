@@ -24,6 +24,7 @@ import com.virtuous.network.model.search.SearchPostsRequest
 import com.virtuous.network.model.token.CheckTokenHealthRequest
 import com.virtuous.network.model.token.CheckTokenHealthResponse
 import com.virtuous.network.model.token.RefreshTokenRequest
+import com.virtuous.network.model.user.GetBlockedUsersResponse
 import com.virtuous.network.model.user.LoadUserInfoResponse
 import com.virtuous.network.model.user.UpdateNicknameRequest
 import okhttp3.MultipartBody
@@ -183,6 +184,14 @@ interface TraceApi {
     suspend fun blockUser(
         @Path("blockedProviderId") blockedProviderId: String
     ): Result<Unit>
+
+    @GET("/api/v1/reports/blocked-users")
+    suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse>
+
+    @POST("/api/v1/reports/unblock/{blockedProviderId}")
+    suspend fun unblockUser(
+        @Path("blockedProviderId") blockedProviderId: String
+    ) : Result<Unit>
 
     // 마이페이지
     @POST("/api/v1/user/myPosts")

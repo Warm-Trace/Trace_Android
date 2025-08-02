@@ -4,6 +4,7 @@ import com.virtuous.common.util.suspendRunCatching
 import com.virtuous.data.image.ImageResizer
 import com.virtuous.datastore.datasource.token.LocalTokenDataSource
 import com.virtuous.datastore.datasource.user.LocalUserDataSource
+import com.virtuous.domain.model.user.BlockedUser
 import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.domain.repository.UserRepository
 import com.virtuous.network.source.auth.AuthDataSource
@@ -65,4 +66,13 @@ class UserRepositoryImpl @Inject constructor(
             val uploadImageUrl = profileImageUrl?.let { imageResizer.resizeImage(profileImageUrl) }
             userDataSource.updateProfileImage(uploadImageUrl)
         }
+
+    override suspend fun getBlockedUsers(): Result<List<BlockedUser>> = suspendRunCatching {
+        val response = userDataSource.getBlockedUsers().getOrThrow()
+        response.toDomain()
+    }
+
+    override suspend fun unblockUser(providerId: String): Result<Unit> = suspendRunCatching {
+        userDataSource.unblockUser(providerId)
+    }
 }

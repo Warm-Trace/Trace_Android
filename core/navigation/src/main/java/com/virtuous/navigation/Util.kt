@@ -15,7 +15,6 @@ private val HIDDEN_BOTTOM_BAR_ROUTES = setOf(
     HomeGraph.UserProfileRoute::class,
     MissionGraph.VerifyMissionRoute::class,
     MyPageGraph.UpdateProfileRoute::class,
-    MyPageGraph.SettingRoute::class,
     MyPageGraph.WebViewRoute::class,
     SplashRoute::class,
 )
@@ -30,5 +29,7 @@ fun NavDestination?.shouldHideBottomBar(): Boolean =
 fun NavDestination?.isRouteInHierarchy(route: KClass<*>): Boolean =
     this?.hierarchy?.any { it.hasRoute(route) } == true
 
-
-
+fun NavDestination?.containsRoute(routes: List<KClass<*>>): Boolean {
+    val currentRoute = this?.route ?: return false
+    return routes.mapNotNull { it.simpleName }.any { currentRoute.contains(it) }
+}

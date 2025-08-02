@@ -67,14 +67,12 @@ internal fun AppBottomBar(
                 .height(50.dp)
         ) {
             TopLevelDestination.entries.forEach { topLevelRoute ->
-
                 NavigationBarItem(
                     icon = {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.padding(top = 2.dp),
                         ) {
-
                             Icon(
                                 painter = painterResource(topLevelRoute.icon),
                                 contentDescription = topLevelRoute.contentDescription,

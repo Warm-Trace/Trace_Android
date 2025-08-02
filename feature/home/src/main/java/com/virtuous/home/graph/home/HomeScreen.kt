@@ -1,7 +1,6 @@
 package com.virtuous.home.graph.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,15 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -127,8 +122,12 @@ private fun HomeScreen(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 105.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 89.dp, start = 20.dp, end = 20.dp)
         ) {
+            item {
+                Spacer(Modifier.height(15.dp))
+            }
+
             items(postFeeds.itemCount) { index ->
                 postFeeds[index]?.let {
                     PostFeed(
@@ -163,21 +162,24 @@ private fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        PrimaryDefault
-                    )
-                    .padding(horizontal = 20.dp)
-                    .height(45.dp),
+                    .padding(horizontal = 20.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     "흔적들",
                     style = TraceTheme.typography.headingMB,
-                    color = White,
                     modifier = Modifier.height(24.dp)
                 )
 
                 Spacer(Modifier.weight(1f))
+
+                Image(
+                    painter = painterResource(R.drawable.notification_ic),
+                    contentDescription = "알림",
+                    modifier = Modifier.clickable {
+                    })
+
+                Spacer(Modifier.width(18.dp))
 
                 Image(
                     painter = painterResource(R.drawable.search_ic),
@@ -186,7 +188,7 @@ private fun HomeScreen(
                         navigateToSearch()
                     })
 
-                Spacer(Modifier.width(35.dp))
+                Spacer(Modifier.width(18.dp))
 
                 Box() {
                     Image(
@@ -201,7 +203,7 @@ private fun HomeScreen(
                         onDismiss = { isHomeDropDownMenuExpanded = false },
                         items = listOf(
                             DropdownMenuItem(
-                                imageVector = Icons.Outlined.Refresh,
+                                iconRes = R.drawable.refresh_ic,
                                 labelRes = R.string.refresh,
                                 action = {
                                     postFeeds.refresh()
@@ -211,7 +213,7 @@ private fun HomeScreen(
                                 }
                             ),
                             DropdownMenuItem(
-                                imageVector = Icons.Outlined.Edit,
+                                iconRes = R.drawable.pencil_ic,
                                 labelRes = R.string.write_post,
                                 action = { navigateToWritePost() }
                             )
@@ -224,8 +226,7 @@ private fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .size(50.dp),
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(

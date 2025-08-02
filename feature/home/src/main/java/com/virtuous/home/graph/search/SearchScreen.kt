@@ -1,6 +1,5 @@
 package com.virtuous.home.graph.search
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,17 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.virtuous.common_ui.util.clickable
-import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.theme.Background
-import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.search.SearchTab
 import com.virtuous.domain.model.search.SearchType
@@ -119,7 +115,7 @@ private fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 50.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 55.dp)
         ) {
             if (!isSearched) {
                 SearchInitialView(
@@ -144,20 +140,13 @@ private fun SearchScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
-                .background(
-                    PrimaryDefault
-                )
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(end = 20.dp)
+                .padding(top = 10.dp, bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(R.drawable.arrow_back_white_ic),
-                contentDescription = "뒤로 가기",
-                modifier = Modifier.clickable {
-                    navigateBack()
-                })
+            BackButton(navigateBack)
 
-            Spacer(Modifier.width(20.dp))
+            Spacer(Modifier.width(5.dp))
 
             TraceSearchField(
                 focusRequester = focusRequester,
