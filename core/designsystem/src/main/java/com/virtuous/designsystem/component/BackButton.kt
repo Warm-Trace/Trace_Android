@@ -22,7 +22,7 @@ fun BackButton(
         Icon(
             painter = painterResource(R.drawable.arrow_left_ic),
             contentDescription = "뒤로가기",
-            modifier = Modifier.size(28.dp),
+            modifier = Modifier.size(24.dp),
         )
     }
 }

@@ -121,7 +121,7 @@ internal fun PostRoute(
 
                 is PostEvent.ReportPostFailure -> {}
                 is PostEvent.ReportCommentFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "신고 접수에 실패했습니다."
                     )
                 )
@@ -257,9 +257,8 @@ private fun PostScreen(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 55.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
+                .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
-
             item {
                 Spacer(Modifier.height(10.dp))
 
@@ -537,7 +536,6 @@ private fun PostScreen(
 
         Row(
             modifier = Modifier
-                .align(Alignment.TopCenter)
                 .fillMaxWidth()
                 .padding(end = 20.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -627,7 +625,7 @@ private fun PostScreen(
                 clearReplyTargetId = clearReplayTargetId
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(10.dp))
         }
 
         if (isRefreshing || isAppending) {

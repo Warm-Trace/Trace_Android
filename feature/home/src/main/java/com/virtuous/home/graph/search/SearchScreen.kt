@@ -141,7 +141,7 @@ private fun SearchScreen(
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
                 .padding(end = 20.dp)
-                .padding(vertical = 10.dp),
+                .padding(top = 10.dp, bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             BackButton(navigateBack)

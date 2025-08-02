@@ -14,9 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -177,13 +174,21 @@ private fun HomeScreen(
                 Spacer(Modifier.weight(1f))
 
                 Image(
+                    painter = painterResource(R.drawable.notification_ic),
+                    contentDescription = "알림",
+                    modifier = Modifier.clickable {
+                    })
+
+                Spacer(Modifier.width(18.dp))
+
+                Image(
                     painter = painterResource(R.drawable.search_ic),
                     contentDescription = "검색",
                     modifier = Modifier.clickable {
                         navigateToSearch()
                     })
 
-                Spacer(Modifier.width(35.dp))
+                Spacer(Modifier.width(18.dp))
 
                 Box() {
                     Image(
@@ -198,7 +203,7 @@ private fun HomeScreen(
                         onDismiss = { isHomeDropDownMenuExpanded = false },
                         items = listOf(
                             DropdownMenuItem(
-                                imageVector = Icons.Outlined.Refresh,
+                                iconRes = R.drawable.refresh_ic,
                                 labelRes = R.string.refresh,
                                 action = {
                                     postFeeds.refresh()
@@ -208,7 +213,7 @@ private fun HomeScreen(
                                 }
                             ),
                             DropdownMenuItem(
-                                imageVector = Icons.Outlined.Edit,
+                                iconRes = R.drawable.pencil_ic,
                                 labelRes = R.string.write_post,
                                 action = { navigateToWritePost() }
                             )
