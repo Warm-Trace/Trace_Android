@@ -37,7 +37,9 @@ class BlockedUserViewModel @Inject constructor(
 
     fun unblockUser(providerId : String) = viewModelScope.launch {
         userRepository.unblockUser(providerId).onSuccess {
-
+            _eventChannel.send(BlockedUserEvent.UnblockUserSuccess)
+        }.onFailure {
+            _eventChannel.send(BlockedUserEvent.UnblockUserFailure)
         }
     }
 
