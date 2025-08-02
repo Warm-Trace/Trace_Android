@@ -125,8 +125,12 @@ private fun HomeScreen(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 95.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 89.dp, start = 20.dp, end = 20.dp)
         ) {
+            item {
+                Spacer(Modifier.height(15.dp))
+            }
+
             items(postFeeds.itemCount) { index ->
                 postFeeds[index]?.let {
                     PostFeed(
