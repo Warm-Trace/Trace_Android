@@ -20,6 +20,7 @@ import com.virtuous.home.graph.user.UserProfileRoute
 import com.virtuous.home.graph.writepost.WritePostRoute
 import com.virtuous.navigation.HomeBaseRoute
 import com.virtuous.navigation.HomeGraph
+import com.virtuous.navigation.containsRoute
 import java.time.format.DateTimeFormatter
 
 fun NavController.navigateToHome(navOptions: NavOptions? = null) {
@@ -145,18 +146,19 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.PostRoute>(
             enterTransition = {
-                val initialRoute = initialState.destination.route
-                val targetRoute = targetState.destination.route
-                if (initialRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true) {
+                if (initialState.destination.containsRoute(listOf(HomeGraph.UpdatePostRoute::class))) {
                     null
                 } else {
                     defaultSlideFadeIn()
                 }
             },
             exitTransition = {
-                val targetRoute = targetState.destination.route
-                if (targetRoute?.contains(HomeGraph.UpdatePostRoute::class.simpleName.toString()) == true ||
-                    targetRoute?.contains(HomeGraph.UserProfileRoute::class.simpleName.toString()) == true
+                if (targetState.destination.containsRoute(
+                        listOf(
+                            HomeGraph.UpdatePostRoute::class,
+                            HomeGraph.UserProfileRoute::class
+                        )
+                    )
                 ) {
                     null
                 } else {
@@ -190,8 +192,7 @@ fun NavGraphBuilder.homeNavGraph(
         composable<HomeGraph.UserProfileRoute>(
             enterTransition = { defaultSlideFadeIn() },
             exitTransition = {
-                val targetRoute = targetState.destination.route
-                if (targetRoute?.contains(HomeGraph.PostRoute::class.simpleName.toString()) == true) {
+                if (targetState.destination.containsRoute(listOf(HomeGraph.PostRoute::class))) {
                     null
                 } else {
                     defaultSlideFadeOut()
@@ -218,4 +219,3 @@ fun NavGraphBuilder.homeNavGraph(
 
     }
 }
-

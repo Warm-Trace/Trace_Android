@@ -58,6 +58,7 @@ import com.virtuous.common.util.formatCount
 import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
@@ -69,7 +70,6 @@ import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.Red
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.designsystem.theme.WarmGray
-import com.virtuous.designsystem.theme.White
 import com.virtuous.domain.model.post.Comment
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.EmotionCount
@@ -121,7 +121,7 @@ internal fun PostRoute(
 
                 is PostEvent.ReportPostFailure -> {}
                 is PostEvent.ReportCommentFailure -> viewModel.eventHelper.sendEvent(
-                    com.virtuous.common_ui.event.TraceEvent.ShowSnackBar(
+                    TraceEvent.ShowSnackBar(
                         "신고 접수에 실패했습니다."
                     )
                 )
@@ -259,9 +259,8 @@ private fun PostScreen(
                 .fillMaxSize()
                 .padding(top = 45.dp, start = 20.dp, end = 20.dp, bottom = 50.dp)
         ) {
-
             item {
-                Spacer(Modifier.height(25.dp))
+                Spacer(Modifier.height(10.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -299,9 +298,12 @@ private fun PostScreen(
                     Column(
                         modifier = Modifier.fillMaxHeight()
                     ) {
-                        Text(postDetail.nickname, style = TraceTheme.typography.bodySSB, modifier = Modifier.clickable {
-                            navigateToUserProfile(postDetail.providerId)
-                        })
+                        Text(
+                            postDetail.nickname,
+                            style = TraceTheme.typography.bodySSB,
+                            modifier = Modifier.clickable {
+                                navigateToUserProfile(postDetail.providerId)
+                            })
 
                         Spacer(Modifier.height(3.dp))
 
@@ -533,25 +535,15 @@ private fun PostScreen(
 
         Row(
             modifier = Modifier
-                .align(Alignment.TopCenter)
                 .fillMaxWidth()
-                .background(
-                    PrimaryDefault
-                )
-                .padding(horizontal = 20.dp)
-                .height(45.dp),
+                .padding(end = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(R.drawable.arrow_back_white_ic),
-                contentDescription = "뒤로 가기",
-                modifier = Modifier.clickable {
-                    navigateBack()
-                })
+            BackButton(navigateBack)
 
-            Spacer(Modifier.width(20.dp))
+            Spacer(Modifier.width(10.dp))
 
-            Text(postDetail.postType.label, style = TraceTheme.typography.headingMB, color = White)
+            Text(postDetail.postType.label, style = TraceTheme.typography.bodyMSB)
 
             Spacer(Modifier.weight(1f))
 
@@ -632,7 +624,7 @@ private fun PostScreen(
                 clearReplyTargetId = clearReplayTargetId
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(Modifier.height(10.dp))
         }
 
         if (isRefreshing || isAppending) {

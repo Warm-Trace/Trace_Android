@@ -34,7 +34,7 @@ internal fun OwnCommentDropdownMenu(
         onDismiss = onDismiss,
         items = listOf(
             TraceDropdownMenuItem(
-                iconRes = R.drawable.reply,
+                iconRes = R.drawable.reply_ic,
                 labelRes = R.string.reply,
                 action = onReply,
             ),
@@ -80,7 +80,7 @@ internal fun OtherCommentDropdownMenu(
         onDismiss = onDismiss,
         items = listOf(
             TraceDropdownMenuItem(
-                iconRes = R.drawable.reply,
+                iconRes = R.drawable.reply_ic,
                 labelRes = R.string.reply,
                 action = onReply,
             ),

@@ -1,7 +1,5 @@
 package com.virtuous.home.graph.post.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,12 +35,12 @@ internal fun OwnPostDropdownMenu(
         onDismiss = onDismiss,
         items = listOf(
             TraceDropdownMenuItem(
-                imageVector = Icons.Outlined.Refresh,
+                iconRes = R.drawable.refresh_ic,
                 labelRes = R.string.refresh,
                 action = onRefresh,
             ),
             TraceDropdownMenuItem(
-                iconRes = R.drawable.edit_ic,
+                iconRes = R.drawable.pencil_ic,
                 labelRes = R.string.edit,
                 action = onUpdate,
             ),
@@ -88,7 +86,7 @@ internal fun OtherPostDropdownMenu(
         onDismiss = onDismiss,
         items = listOf(
             TraceDropdownMenuItem(
-                imageVector = Icons.Outlined.Refresh,
+                iconRes = R.drawable.refresh_ic,
                 labelRes = R.string.refresh,
                 action = onRefresh,
             ),

@@ -13,7 +13,6 @@ import com.virtuous.domain.repository.CommentRepository
 import com.virtuous.domain.repository.PostRepository
 import com.virtuous.navigation.HomeGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,7 +67,6 @@ class PostViewModel @Inject constructor(
     )
     val postDetail = _postDetail.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val commentPagingFlow = _refreshTrigger
         .flatMapLatest {
             commentRepository.getCommentPagingFlow(postId)

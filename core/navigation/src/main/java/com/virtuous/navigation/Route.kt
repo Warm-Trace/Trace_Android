@@ -86,6 +86,9 @@ sealed class MyPageGraph : Route {
     data object SettingRoute : MyPageGraph()
 
     @Serializable
+    data object BlockedUserRoute : MyPageGraph()
+
+    @Serializable
     data class WebViewRoute(val url: String) : MyPageGraph()
 }
 
