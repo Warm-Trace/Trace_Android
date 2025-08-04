@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,10 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.designsystem.theme.GrayLine
+import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
 import com.virtuous.domain.model.notification.NotificationType
@@ -52,6 +59,7 @@ internal fun NotificationRoute(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun NotificationScreen(
     notifications: LazyPagingItems<Notification>,
@@ -60,8 +68,18 @@ private fun NotificationScreen(
     navigateToPost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
+    val isRefreshing = notifications.loadState.refresh is LoadState.Loading
+    val isAppending = notifications.loadState.append is LoadState.Loading
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = { notifications.refresh() }
+    )
+
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
             modifier = Modifier
@@ -114,6 +132,21 @@ private fun NotificationScreen(
             Spacer(Modifier.width(10.dp))
 
             Text("알림", style = TraceTheme.typography.bodyMSB)
+        }
+
+        PullRefreshIndicator(
+            refreshing = isRefreshing,
+            state = pullRefreshState,
+            contentColor = PrimaryDefault,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                )
+            )
         }
     }
 }
