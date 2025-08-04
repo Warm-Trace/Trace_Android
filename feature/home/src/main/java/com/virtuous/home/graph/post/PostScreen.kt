@@ -307,7 +307,7 @@ private fun PostScreen(
 
                         Row() {
                             Text(
-                                postDetail.getFormattedDate(),
+                                postDetail.formattedTime,
                                 style = TraceTheme.typography.bodyXSM,
                                 color = DarkGray
                             )

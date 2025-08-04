@@ -13,8 +13,13 @@ data class Notification(
     val postId: Int? = null,
     val emotion: Emotion? = null
 ) {
-    val formattedCreatedAt: String
-        get() = createdAt.format(DateTimeFormatter.ofPattern("MM/dd HH:mm"))
+    val formattedCreatedAt: String by lazy {
+        createdAt.format(formatter)
+    }
+
+    companion object {
+        private val formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm")
+    }
 }
 
 enum class NotificationType {

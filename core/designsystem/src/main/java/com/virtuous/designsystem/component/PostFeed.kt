@@ -121,7 +121,7 @@ fun PostFeed(
                 Spacer(Modifier.width(8.dp))
 
                 Text(
-                    postFeed.getFormattedTime(),
+                    postFeed.formattedTime,
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
