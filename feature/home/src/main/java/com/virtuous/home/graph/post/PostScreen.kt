@@ -288,11 +288,10 @@ private fun PostScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ProfileImage(
-                        providerId = postDetail.providerId,
                         profileImageUrl = postDetail.profileImageUrl,
                         imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
                         paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp,
-                        navigateToUserProfile = navigateToUserProfile
+                        navigateToUserProfile = { navigateToUserProfile(postDetail.providerId) }
                     )
 
                     Spacer(Modifier.width(10.dp))

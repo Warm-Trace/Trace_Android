@@ -48,9 +48,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
-import com.virtuous.designsystem.component.DropdownMenuItem
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.TraceDropDownMenu
+import com.virtuous.designsystem.component.TraceDropdownMenuItem
 import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
@@ -213,7 +213,7 @@ private fun HomeScreen(
                         expanded = isHomeDropDownMenuExpanded,
                         onDismiss = { isHomeDropDownMenuExpanded = false },
                         items = listOf(
-                            DropdownMenuItem(
+                            TraceDropdownMenuItem(
                                 imageVector = Icons.Outlined.Refresh,
                                 labelRes = R.string.refresh,
                                 action = {
@@ -223,7 +223,7 @@ private fun HomeScreen(
                                     }
                                 }
                             ),
-                            DropdownMenuItem(
+                            TraceDropdownMenuItem(
                                 imageVector = Icons.Outlined.Edit,
                                 labelRes = R.string.write_post,
                                 action = { navigateToWritePost() }

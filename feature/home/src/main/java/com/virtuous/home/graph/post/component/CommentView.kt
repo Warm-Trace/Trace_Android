@@ -66,11 +66,10 @@ internal fun CommentView(
                 modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 ProfileImage(
-                    providerId = comment.providerId,
                     profileImageUrl = comment.profileImageUrl,
                     imageSize = if (comment.profileImageUrl != null) 23.dp else 21.dp,
                     paddingValue = if (comment.profileImageUrl != null) 1.dp else 2.dp,
-                    navigateToUserProfile = navigateToUserProfile
+                    navigateToUserProfile = { navigateToUserProfile(comment.providerId) }
                 )
 
                 Spacer(Modifier.width(6.dp))
@@ -178,11 +177,10 @@ private fun ChildCommentView(
             modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
         ) {
             ProfileImage(
-                providerId = comment.providerId,
                 profileImageUrl = comment.profileImageUrl,
                 imageSize = if (comment.profileImageUrl != null) 23.dp else 19.dp,
                 paddingValue = if (comment.profileImageUrl != null) 1.dp else 3.dp,
-                navigateToUserProfile = navigateToUserProfile
+                navigateToUserProfile = { navigateToUserProfile(comment.providerId) }
             )
 
             Spacer(Modifier.width(6.dp))

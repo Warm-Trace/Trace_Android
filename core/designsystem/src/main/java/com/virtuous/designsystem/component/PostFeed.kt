@@ -105,11 +105,9 @@ fun PostFeed(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ProfileImage(
-                    providerId = postFeed.providerId,
                     profileImageUrl = postFeed.profileImageUrl,
                     imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
                     paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp,
-                    navigateToUserProfile = {}
                 )
 
                 Spacer(Modifier.width(6.dp))

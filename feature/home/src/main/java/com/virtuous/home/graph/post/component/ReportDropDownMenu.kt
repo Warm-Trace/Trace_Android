@@ -12,8 +12,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.CheckCancelDialog
-import com.virtuous.designsystem.component.DropdownMenuItem
 import com.virtuous.designsystem.component.TraceDropDownMenu
+import com.virtuous.designsystem.component.TraceDropdownMenuItem
 
 @Composable
 internal fun ReportDropDownMenu(
@@ -55,7 +55,7 @@ internal fun ReportDropDownMenu(
     }
 
     val items = reportReasons.map { (reasonResId, _) ->
-        DropdownMenuItem(
+        TraceDropdownMenuItem(
             labelRes = reasonResId,
             action = {
                 selectedReason = reasonResId to reportReasons.getValue(reasonResId)

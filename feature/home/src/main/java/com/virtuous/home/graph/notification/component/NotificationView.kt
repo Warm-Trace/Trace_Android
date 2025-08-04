@@ -110,7 +110,7 @@ internal fun NotificationView(
         Box() {
             Image(
                 painter = painterResource(R.drawable.menu_ic),
-                contentDescription = "댓글 메뉴",
+                contentDescription = "알림 메뉴",
                 colorFilter = ColorFilter.tint(WarmGray),
                 modifier = Modifier
                     .height(15.dp)
