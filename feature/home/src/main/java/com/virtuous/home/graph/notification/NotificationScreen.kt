@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 internal fun NotificationRoute(
     navigateBack: () -> Unit,
@@ -52,6 +53,7 @@ internal fun NotificationRoute(
 
     NotificationScreen(
         notifications = notifications,
+        onRefresh = viewModel::onRefresh,
         readNotification = viewModel::readNotification,
         deleteNotification = viewModel::deleteNotification,
         navigateToPost = navigateToPost,
@@ -63,6 +65,7 @@ internal fun NotificationRoute(
 @Composable
 private fun NotificationScreen(
     notifications: LazyPagingItems<Notification>,
+    onRefresh: () -> Unit,
     readNotification: (String) -> Unit,
     deleteNotification: (String) -> Unit,
     navigateToPost: (Int) -> Unit,
@@ -163,7 +166,8 @@ private fun NotificationScreenPreview() {
         navigateBack = {},
         navigateToPost = {},
         readNotification = {},
-        deleteNotification = {}
+        deleteNotification = {},
+        onRefresh = {}
     )
 }
 

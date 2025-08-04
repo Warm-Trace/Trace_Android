@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.map
 import com.virtuous.domain.model.notification.Notification
 import com.virtuous.domain.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ class NotificationViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
 ) : ViewModel() {
     private val _deletedNotificationIds = MutableStateFlow<Set<String>>(emptySet())
+    private val _readNotificationIds = MutableStateFlow<Set<String>>(emptySet())
 
     private val cachedNotifications: Flow<PagingData<Notification>> by lazy {
         notificationRepository.getNotifications().cachedIn(viewModelScope)
@@ -27,10 +29,17 @@ class NotificationViewModel @Inject constructor(
     val notifications: Flow<PagingData<Notification>> =
         combine(
             cachedNotifications,
-            _deletedNotificationIds
-        ) { pagingData, deletedIds ->
-            pagingData.filter { notification ->
-                notification.id !in deletedIds
+            _deletedNotificationIds,
+            _readNotificationIds
+        ) { pagingData, deletedIds, readIds ->
+            pagingData.filter {
+                it.id !in deletedIds
+            }.map {
+                if (it.id in readIds) {
+                    it.copy(isRead = true)
+                } else {
+                    it
+                }
             }
         }
 
@@ -41,5 +50,10 @@ class NotificationViewModel @Inject constructor(
     fun deleteNotification(notificationId: String) = viewModelScope.launch {
         notificationRepository.deleteNotification(notificationId)
         _deletedNotificationIds.value += notificationId
+    }
+
+    fun onRefresh() {
+        _deletedNotificationIds.value = emptySet()
+        _readNotificationIds.value = emptySet()
     }
 }
