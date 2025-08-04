@@ -67,8 +67,10 @@ internal fun NotificationView(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(enabled = notification.postId != null) {
-                navigateToPost(notification.postId!!)
-                readNotification(notification.id)
+                notification.postId?.let {
+                    navigateToPost(notification.postId!!)
+                    readNotification(notification.id)
+                }
             }
     ) {
         Image(
