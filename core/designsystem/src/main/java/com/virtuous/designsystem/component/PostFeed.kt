@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,24 +46,6 @@ fun PostFeed(
     postFeed: PostFeed,
     navigateToPost: (PostFeed) -> Unit
 ) {
-    val typography = TraceTheme.typography
-    val titleFontSize = 16.sp
-    val contentFontSize = 13.sp
-    val metadataFontSize = 11.sp
-
-    val titleTextStyle =
-        remember(typography, titleFontSize) { typography.bodyMSB.copy(fontSize = titleFontSize) }
-    val contentTextStyle =
-        remember(
-            typography,
-            contentFontSize
-        ) { typography.bodySSB.copy(fontSize = contentFontSize) }
-    val metadataTextStyle =
-        remember(
-            typography,
-            metadataFontSize
-        ) { typography.bodySSB.copy(fontSize = metadataFontSize) }
-
     val painter = postFeed.imageUrl?.let {
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
@@ -91,7 +72,7 @@ fun PostFeed(
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     postFeed.title,
-                    style = titleTextStyle,
+                    style = TraceTheme.typography.bodyMSB.copy(fontSize = 16.sp),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -110,7 +91,7 @@ fun PostFeed(
 
             Text(
                 postFeed.content,
-                style = contentTextStyle,
+                style = TraceTheme.typography.bodySSB.copy(fontSize = 13.sp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 color = DarkGray
@@ -132,7 +113,7 @@ fun PostFeed(
 
                 Text(
                     postFeed.nickname,
-                    style = metadataTextStyle,
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
 
@@ -140,7 +121,7 @@ fun PostFeed(
 
                 Text(
                     postFeed.formattedTime,
-                    style = metadataTextStyle,
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
 
@@ -148,7 +129,7 @@ fun PostFeed(
 
                 Text(
                     "${postFeed.viewCount} 읽음",
-                    style = metadataTextStyle,
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
 
@@ -166,7 +147,7 @@ fun PostFeed(
 
                 Text(
                     "${postFeed.commentCount}",
-                    style = metadataTextStyle,
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = PrimaryDefault
                 )
 
@@ -183,7 +164,7 @@ fun PostFeed(
 
                 Text(
                     postFeed.totalEmotionCount.toString(),
-                    style = metadataTextStyle,
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
             }
@@ -218,20 +199,15 @@ private fun PostFeedPreview() {
             .padding(horizontal = 20.dp, vertical = 15.dp)
     ) {
         PostFeed(
-            postFeed = PostFeed(
-                postId = 1,
-                providerId = "1234",
-                postType = PostType.GOOD_DEED,
-                title = "깨끗한 공원 만들기",
-                content = "오늘 공원에서 쓰레기를 줍고 깨끗한 환경을 만들었습니다. 주변 사람들이 함께 참여해주셨습니다.",
-                nickname = "선행자1",
-                createdAt = LocalDateTime.now(),
-                viewCount = 150,
-                commentCount = 5,
-                isVerified = true,
-                updatedAt = LocalDateTime.now(),
-            ),
-            navigateToPost = {}
+            postType = PostType.GOOD_DEED,
+            title = "깨끗한 공원 만들기",
+            content = "오늘 공원에서 쓰레기를 줍고 깨끗한 환경을 만들었습니다. 주변 사람들이 함께 참여해주셨습니다.",
+            nickname = "선행자1",
+            createdAt = LocalDateTime.now(),
+            viewCount = 150,
+            commentCount = 5,
+            isVerified = true,
+            postId = 1, providerId = "1234", updatedAt = LocalDateTime.now(),
         )
     }
 }
