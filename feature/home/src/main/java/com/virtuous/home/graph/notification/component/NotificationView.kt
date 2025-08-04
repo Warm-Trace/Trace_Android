@@ -45,7 +45,8 @@ internal fun NotificationView(
     notification: Notification,
     navigateToPost: (Int) -> Unit,
     readNotification: (String) -> Unit,
-    deleteNotification: (String) -> Unit
+    deleteNotification: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var showNotiMenu by remember { mutableStateOf(false) }
 
@@ -67,7 +68,7 @@ internal fun NotificationView(
     }
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable(enabled = notification.postId != null) {
                 notification.postId?.let {
@@ -77,18 +78,16 @@ internal fun NotificationView(
             }
     ) {
         if (!notification.isRead) {
-            Spacer(Modifier.width(4.dp))
-
-            Canvas(modifier = Modifier.padding(top = 12.dp,).size(6.dp)) {
+            Canvas(modifier = Modifier.padding(top = 12.dp).size(6.dp)) {
                 drawCircle(
                     color = PrimaryDefault
                 )
             }
 
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(10.dp))
         }
         else {
-            Spacer(Modifier.width(18.dp))
+            Spacer(Modifier.width(16.dp))
         }
 
         Image(

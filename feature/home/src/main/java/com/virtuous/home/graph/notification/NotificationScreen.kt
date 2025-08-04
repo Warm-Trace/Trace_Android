@@ -1,5 +1,7 @@
 package com.virtuous.home.graph.notification
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +19,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -31,7 +32,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
@@ -84,32 +84,36 @@ private fun NotificationScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(end = 20.dp)
+                .padding(top = 52.dp, start = 10.dp, end = 20.dp)
         ) {
             item {
-                Spacer(Modifier.height(68.dp))
+                Spacer(Modifier.height(10.dp))
             }
 
-            items(notifications.itemCount) { index ->
+            items(
+                count = notifications.itemCount,
+                key = { index -> notifications[index]?.id ?: "-1" }
+            ) { index ->
                 notifications[index]?.let {
                     NotificationView(
                         notification = it,
                         navigateToPost = navigateToPost,
                         readNotification = readNotification,
-                        deleteNotification = deleteNotification
+                        deleteNotification = deleteNotification,
+                        modifier = Modifier.animateItem(
+                            fadeOutSpec = spring(
+                                dampingRatio = Spring.DampingRatioNoBouncy,
+                                stiffness = Spring.StiffnessVeryLow
+                            )
+                        )
                     )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        thickness = 1.dp,
-                        color = GrayLine
-                    )
-
-                    Spacer(Modifier.height(15.dp))
                 }
+
+                Spacer(Modifier.height(15.dp))
+            }
+
+            item {
+                Spacer(Modifier.height(50.dp))
             }
         }
 

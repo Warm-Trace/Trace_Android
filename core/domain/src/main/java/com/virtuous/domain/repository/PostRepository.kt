@@ -9,9 +9,15 @@ import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.post.WritePostType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
+sealed class PostUpdateEvent {
+    data class PostDeleted(val postId: Int) : PostUpdateEvent()
+    data class PostEdited(val postId: Int) : PostUpdateEvent()
+}
 
 interface PostRepository {
+    val postUpdateEvents: SharedFlow<PostUpdateEvent>
     fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>>
 
     fun getMyPosts(tabType: MyPageTab) : Flow<PagingData<PostFeed>>

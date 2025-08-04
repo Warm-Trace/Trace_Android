@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetNotificationsResponse(
     val hasNext: Boolean,
-    val cursor: Cursor?,
+    val cursor: Cursor<String>?,
     val content: List<NotificationContent>
 ) {
     fun toDomain(): List<Notification> = content.map { it.toDomain() }

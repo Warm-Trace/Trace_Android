@@ -9,7 +9,7 @@ interface NotificationDataSource {
     suspend fun getDeviceToken(): String
     suspend fun getNotifications(
         cursorDateTime: LocalDateTime?,
-        cursorId: Int?,
+        cursorId: String?,
         size: Int,
     ): Result<GetNotificationsResponse>
 

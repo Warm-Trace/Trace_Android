@@ -181,9 +181,10 @@ private fun HomeScreen(
                     painter = painterResource(R.drawable.notification_ic),
                     contentDescription = "알림",
                     modifier = Modifier.clickable {
+                        navigateToNotification()
                     })
 
-                Spacer(Modifier.width(20.dp))
+                Spacer(Modifier.width(25.dp))
 
                 Image(
                     painter = painterResource(R.drawable.search_ic),
@@ -192,7 +193,7 @@ private fun HomeScreen(
                         navigateToSearch()
                     })
 
-                Spacer(Modifier.width(22.dp))
+                Spacer(Modifier.width(25.dp))
 
                 Box() {
                     Image(

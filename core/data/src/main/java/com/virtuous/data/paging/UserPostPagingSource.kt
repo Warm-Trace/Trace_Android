@@ -12,8 +12,8 @@ class UserPostPagingSource(
     private val providerId : String,
     private val tabType: UserProfileTab,
     private val pageSize: Int = 20
-) : PagingSource<Cursor, PostFeed>() {
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostFeed> {
+) : PagingSource<Cursor<Int>, PostFeed>() {
+    override suspend fun load(params: LoadParams<Cursor<Int>>): LoadResult<Cursor<Int>, PostFeed> {
         return try {
             val cursor = params.key
 
@@ -27,7 +27,7 @@ class UserPostPagingSource(
 
             val postFeeds = response.toDomain()
 
-            val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
+            val nextCursor = if (response.hasNext && response.cursor != null) Cursor<Int>(
                 id = response.cursor?.id
                     ?: throw IllegalStateException("Cursor must be present when hasNext is true"),
                 dateTime = response.cursor?.dateTime
@@ -48,5 +48,5 @@ class UserPostPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor, PostFeed>): Cursor? = null
+    override fun getRefreshKey(state: PagingState<Cursor<Int>, PostFeed>): Cursor<Int>? = null
 }

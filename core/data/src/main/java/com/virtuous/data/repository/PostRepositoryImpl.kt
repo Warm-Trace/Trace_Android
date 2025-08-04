@@ -16,14 +16,26 @@ import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.domain.repository.PostRepository
+import com.virtuous.domain.repository.PostUpdateEvent
 import com.virtuous.network.source.post.PostDataSource
 import jakarta.inject.Inject
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
 ) : PostRepository {
+    private val _postUpdateEvents =
+        MutableSharedFlow<PostUpdateEvent>(
+            replay = 0,
+            extraBufferCapacity = 1,
+            onBufferOverflow = BufferOverflow.DROP_OLDEST
+        )
+    override val postUpdateEvents = _postUpdateEvents.asSharedFlow()
+
     override fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>> {
         return Pager(
             config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
@@ -110,7 +122,9 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deletePost(postId: Int): Result<Unit> = suspendRunCatching {
-        postDataSource.deletePost(postId)
+        postDataSource.deletePost(postId).getOrThrow().also {
+            _postUpdateEvents.tryEmit(PostUpdateEvent.PostDeleted(postId))
+        }
     }
 
     override suspend fun reportPost(postId: Int, reason: String): Result<Unit> =
