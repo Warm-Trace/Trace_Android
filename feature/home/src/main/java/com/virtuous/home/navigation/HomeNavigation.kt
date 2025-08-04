@@ -12,6 +12,7 @@ import com.virtuous.common_ui.ui.defaultSlideUpFadeIn
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.home.graph.home.HomeRoute
+import com.virtuous.home.graph.notification.NotificationRoute
 import com.virtuous.home.graph.post.PostRoute
 import com.virtuous.home.graph.search.SearchRoute
 import com.virtuous.home.graph.updatepost.UpdatePostRoute
@@ -90,13 +91,19 @@ fun NavController.navigateToUserProfile(providerId: String, navOptions: NavOptio
     navigate(HomeGraph.UserProfileRoute(providerId), navOptions)
 }
 
+fun NavController.navigateToNotification(navOptions: NavOptions? = null) {
+    navigate(HomeGraph.NotificationRoute, navOptions)
+}
+
 fun NavGraphBuilder.homeNavGraph(
     navigateToSearch: () -> Unit,
+    navigateToPostById: (Int) -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToPostReplacing: (PostDetail) -> Unit,
     navigateToWritePost: () -> Unit,
     navigateToUpdatePost: (Int) -> Unit,
     navigateToUserProfile: (String) -> Unit,
+    navigateToNotification: () -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
@@ -104,7 +111,8 @@ fun NavGraphBuilder.homeNavGraph(
             HomeRoute(
                 navigateToPost = { postFeed -> navigateToPost(postFeed) },
                 navigateToWritePost = navigateToWritePost,
-                navigateToSearch = navigateToSearch
+                navigateToSearch = navigateToSearch,
+                navigateToNotification = navigateToNotification
             )
         }
 
@@ -196,6 +204,16 @@ fun NavGraphBuilder.homeNavGraph(
             UserProfileRoute(
                 navigateBack = navigateBack,
                 navigateToPost = { postFeed -> navigateToPost(postFeed) }
+            )
+        }
+
+        composable<HomeGraph.NotificationRoute>(
+            enterTransition = { defaultSlideFadeIn() },
+            exitTransition = { defaultSlideFadeOut() }
+        ) {
+            NotificationRoute(
+                navigateToPost = navigateToPostById,
+                navigateBack = navigateBack
             )
         }
 

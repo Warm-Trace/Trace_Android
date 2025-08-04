@@ -10,6 +10,7 @@ import com.virtuous.auth.navigation.navigateToEditProfile
 import com.virtuous.auth.navigation.navigateToLogin
 import com.virtuous.home.navigation.homeNavGraph
 import com.virtuous.home.navigation.navigateToHome
+import com.virtuous.home.navigation.navigateToNotification
 import com.virtuous.home.navigation.navigateToPost
 import com.virtuous.home.navigation.navigateToSearch
 import com.virtuous.home.navigation.navigateToUpdatePost
@@ -62,6 +63,10 @@ fun AppNavHost(
                 })
             },
             navigateToUserProfile = navController::navigateToUserProfile,
+            navigateToNotification = navController::navigateToNotification,
+            navigateToPostById = { postId ->
+                navController.navigateToPost(postId)
+            },
             navigateBack = { navigateBack(navController) },
         )
 

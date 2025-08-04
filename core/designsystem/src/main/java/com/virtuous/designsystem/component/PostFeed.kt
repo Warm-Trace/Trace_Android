@@ -46,7 +46,6 @@ fun PostFeed(
     postFeed: PostFeed,
     navigateToPost: (PostFeed) -> Unit
 ) {
-
     val painter = postFeed.imageUrl?.let {
         rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)
@@ -105,11 +104,9 @@ fun PostFeed(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ProfileImage(
-                    providerId = postFeed.providerId,
                     profileImageUrl = postFeed.profileImageUrl,
                     imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
                     paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp,
-
                 )
 
                 Spacer(Modifier.width(6.dp))
@@ -123,7 +120,7 @@ fun PostFeed(
                 Spacer(Modifier.width(8.dp))
 
                 Text(
-                    postFeed.getFormattedTime(),
+                    postFeed.formattedTime,
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )

@@ -21,32 +21,35 @@ data class PostFeed(
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
 ) {
-    fun getFormattedTime(): String {
+    val formattedTime: String by lazy {
         val now = LocalDateTime.now()
         val duration = Duration.between(createdAt, now)
 
         // 1일 이상일 경우
         if (duration.toDays() >= 1) {
-            return if (duration.toDays() <= 7) {
+            return@lazy if (duration.toDays() <= 7) {
                 "${duration.toDays()}일 전"
             } else {
-                val formatter = DateTimeFormatter.ofPattern("M/d")
                 createdAt.format(formatter)
             }
         }
 
         // 1시간 이상일 경우
         if (duration.toHours() >= 1) {
-            return "${duration.toHours()}시간 전"
+            return@lazy "${duration.toHours()}시간 전"
         }
 
         // 1분 이상일 경우
         if (duration.toMinutes() >= 1) {
-            return "${duration.toMinutes()}분 전"
+            return@lazy "${duration.toMinutes()}분 전"
         }
 
         // 1분 미만일 경우
-        return "방금 전"
+        "방금 전"
+    }
+
+    companion object {
+        private val formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm")
     }
 }
 
@@ -68,9 +71,12 @@ data class PostDetail(
     val isOwner: Boolean = true,
     val isVerified: Boolean = false,
 ) {
-    fun getFormattedDate(): String {
-        val formatter = DateTimeFormatter.ofPattern("M/d HH:mm")
-        return createdAt.format(formatter)
+    val formattedTime: String by lazy {
+        createdAt.format(formatter)
+    }
+
+    companion object {
+        private val formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm")
     }
 }
 

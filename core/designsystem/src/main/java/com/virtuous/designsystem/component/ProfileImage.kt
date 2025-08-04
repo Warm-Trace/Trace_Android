@@ -22,12 +22,11 @@ import com.virtuous.designsystem.theme.PrimaryDefault
 
 @Composable
 fun ProfileImage(
-    providerId: String = "",
     profileImageUrl: String?,
     imageSize: Dp,
     paddingValue: Dp,
     strokeWidth: Float = 4f,
-    navigateToUserProfile: (String) -> Unit = {}
+    navigateToUserProfile: () -> Unit = {}
 ) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
@@ -35,7 +34,7 @@ fun ProfileImage(
     )
 
     Box(contentAlignment = Alignment.Center, modifier = Modifier.clickable {
-        navigateToUserProfile(providerId)
+        navigateToUserProfile()
     }) {
         Canvas(modifier = Modifier.size(imageSize + paddingValue)) {
             val canvasWidth = size.width
@@ -59,5 +58,4 @@ fun ProfileImage(
             contentScale = ContentScale.Crop
         )
     }
-
 }

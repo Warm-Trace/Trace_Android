@@ -192,14 +192,6 @@ private fun UserProfileScreen(
                             Spacer(Modifier.height(15.dp))
                         }
                     }
-
-                    if (isRefreshing || isAppending) {
-                        CircularProgressIndicator(
-                            color = PrimaryDefault, modifier = Modifier.align(
-                                if (isRefreshing) Alignment.Center else Alignment.BottomCenter
-                            )
-                        )
-                    }
                 }
             }
 
@@ -215,6 +207,14 @@ private fun UserProfileScreen(
             BackButton(navigateBack)
 
             Spacer(Modifier.weight(1f))
+        }
+
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                )
+            )
         }
     }
 }

@@ -3,15 +3,12 @@ package com.virtuous.home.graph.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.virtuous.common_ui.event.EventHelper
-import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.search.SearchCondition
 import com.virtuous.domain.model.search.SearchTab
 import com.virtuous.domain.model.search.SearchType
 import com.virtuous.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,7 +47,6 @@ class SearchViewModel @Inject constructor(
     private val _tabType = MutableStateFlow(SearchTab.ALL)
     val tabType = _tabType.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val postFeeds = combine(
         _keywordInput,
         _tabType,

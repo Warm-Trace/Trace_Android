@@ -7,8 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.CheckCancelDialog
-import com.virtuous.designsystem.component.DropdownMenuItem
 import com.virtuous.designsystem.component.TraceDropDownMenu
+import com.virtuous.designsystem.component.TraceDropdownMenuItem
 
 @Composable
 internal fun OwnPostDropdownMenu(
@@ -34,17 +34,17 @@ internal fun OwnPostDropdownMenu(
         expanded = expanded,
         onDismiss = onDismiss,
         items = listOf(
-            DropdownMenuItem(
+            TraceDropdownMenuItem(
                 iconRes = R.drawable.refresh_ic,
                 labelRes = R.string.refresh,
                 action = onRefresh,
             ),
-            DropdownMenuItem(
+            TraceDropdownMenuItem(
                 iconRes = R.drawable.pencil_ic,
                 labelRes = R.string.edit,
                 action = onUpdate,
             ),
-            DropdownMenuItem(
+            TraceDropdownMenuItem(
                 iconRes = R.drawable.delete_ic,
                 labelRes = R.string.delete,
                 action = { showDeleteDialog = true },
@@ -85,17 +85,17 @@ internal fun OtherPostDropdownMenu(
         expanded = expanded,
         onDismiss = onDismiss,
         items = listOf(
-            DropdownMenuItem(
+            TraceDropdownMenuItem(
                 iconRes = R.drawable.refresh_ic,
                 labelRes = R.string.refresh,
                 action = onRefresh,
             ),
-            DropdownMenuItem(
+            TraceDropdownMenuItem(
                 iconRes = R.drawable.report_ic,
                 labelRes = R.string.report,
                 action = { isReportDropdownMenuExpanded = true },
             ),
-            DropdownMenuItem(
+            TraceDropdownMenuItem(
                 iconRes = R.drawable.block_ic ,
                 labelRes = R.string.block,
                 action = { showBlockUserDialog = true },

@@ -51,6 +51,7 @@ class NotificationService : FirebaseMessagingService() {
         val title = data["title"] ?: "흔적"
         val body = data["body"] ?: ""
         val type = data["type"]
+        val postId = data["postId"]
 
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
@@ -77,9 +78,16 @@ class NotificationService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
+        val systemNotificationId = if ((type == "comment" || type == "emotion") && postId != null) {
+            "${type}_${postId}".hashCode()
+        } else {
+            System.currentTimeMillis().toInt()
+        }
+
         val notificationManager: NotificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
+
+        notificationManager.notify(systemNotificationId, builder.build())
     }
 
     override fun onDestroy() {

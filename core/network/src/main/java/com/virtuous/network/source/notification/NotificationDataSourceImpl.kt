@@ -3,9 +3,11 @@ package com.virtuous.network.source.notification
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.messaging.FirebaseMessaging
 import com.virtuous.network.api.TraceApi
+import com.virtuous.network.model.notification.GetNotificationsResponse
 import com.virtuous.network.model.notification.PostDeviceTokenRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.LocalDateTime
 import javax.inject.Inject
 
 class NotificationDataSourceImpl @Inject constructor(
@@ -27,4 +29,20 @@ class NotificationDataSourceImpl @Inject constructor(
             throw Exception("Failed to get FCM token", e)
         }
     }
+
+    override suspend fun getNotifications(
+        cursorDateTime: LocalDateTime?,
+        cursorId: Int?,
+        size: Int
+    ): Result<GetNotificationsResponse> = traceApi.getNotifications(
+        cursorDateTime = cursorDateTime,
+        cursorId = cursorId,
+        size = size
+    )
+
+    override suspend fun readNotification(notificationId: String): Result<Unit> =
+        traceApi.readNotification(notificationId)
+
+    override suspend fun deleteNotification(notificationId: String): Result<Unit> =
+        traceApi.deleteNotification(id = notificationId)
 }

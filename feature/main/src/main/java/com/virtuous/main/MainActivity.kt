@@ -3,6 +3,7 @@ package com.virtuous.main
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +35,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.ui.TraceBottomBarAnimation
 import com.virtuous.designsystem.component.TraceSnackBar
 import com.virtuous.designsystem.component.TraceSnackBarHost
@@ -89,7 +92,7 @@ class MainActivity : ComponentActivity() {
                         launch {
                             viewModel.eventHelper.eventChannel.collect { event ->
                                 when (event) {
-                                    is com.virtuous.common_ui.event.TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
+                                    is TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
                                         event.message
                                     )
                                 }
@@ -189,7 +192,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleNotificationIntent(intent: Intent, navigationHelper: NavigationHelper) {
+        val notificationId = intent.getStringExtra("id") ?: ""
         val type = intent.getStringExtra("type") ?: return
+
+        viewModel.readNotification(notificationId)
 
         when (type) {
             "mission" -> {
@@ -211,14 +217,23 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun requestNotificationPermission(activity: Activity) {
+    private fun requestNotificationPermission(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = Manifest.permission.POST_NOTIFICATIONS
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+            val permissionGranted = ContextCompat.checkSelfPermission(
+                activity,
+                permission
+            ) == PERMISSION_GRANTED
+
+            // 권한이 없고, 이전에 거절한 적이 없는 경우(최초 요청)에만 권한을 요청
+            if (!permissionGranted && !ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    permission
+                )
+            ) {
                 ActivityCompat.requestPermissions(activity, arrayOf(permission), 1001)
             }
-
         }
     }
 }

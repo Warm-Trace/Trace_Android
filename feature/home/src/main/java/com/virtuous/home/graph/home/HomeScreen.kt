@@ -43,9 +43,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
-import com.virtuous.designsystem.component.DropdownMenuItem
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.TraceDropDownMenu
+import com.virtuous.designsystem.component.TraceDropdownMenuItem
 import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
@@ -65,6 +65,7 @@ internal fun HomeRoute(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
+    navigateToNotification: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val postFeeds = viewModel.postFeeds.collectAsLazyPagingItems()
@@ -76,6 +77,7 @@ internal fun HomeRoute(
                 is HomeEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is HomeEvent.NavigateToWritePost -> navigateToWritePost()
                 is HomeEvent.NavigateToSearch -> navigateToSearch()
+                is HomeEvent.NavigateToNotification -> navigateToNotification()
             }
         }
     }
@@ -86,7 +88,8 @@ internal fun HomeRoute(
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postFeed -> viewModel.onEvent(HomeEvent.NavigateToPost(postFeed)) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
-        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) }
+        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) },
+        navigateToNotification = { viewModel.onEvent(HomeEvent.NavigateToNotification) }
     )
 }
 
@@ -100,6 +103,7 @@ private fun HomeScreen(
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
+    navigateToNotification: () -> Unit,
 ) {
     var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
@@ -179,7 +183,7 @@ private fun HomeScreen(
                     modifier = Modifier.clickable {
                     })
 
-                Spacer(Modifier.width(18.dp))
+                Spacer(Modifier.width(20.dp))
 
                 Image(
                     painter = painterResource(R.drawable.search_ic),
@@ -188,7 +192,7 @@ private fun HomeScreen(
                         navigateToSearch()
                     })
 
-                Spacer(Modifier.width(18.dp))
+                Spacer(Modifier.width(22.dp))
 
                 Box() {
                     Image(
@@ -202,7 +206,7 @@ private fun HomeScreen(
                         expanded = isHomeDropDownMenuExpanded,
                         onDismiss = { isHomeDropDownMenuExpanded = false },
                         items = listOf(
-                            DropdownMenuItem(
+                            TraceDropdownMenuItem(
                                 iconRes = R.drawable.refresh_ic,
                                 labelRes = R.string.refresh,
                                 action = {
@@ -212,7 +216,7 @@ private fun HomeScreen(
                                     }
                                 }
                             ),
-                            DropdownMenuItem(
+                            TraceDropdownMenuItem(
                                 iconRes = R.drawable.pencil_ic,
                                 labelRes = R.string.write_post,
                                 action = { navigateToWritePost() }
@@ -281,6 +285,7 @@ fun HomeScreenPreview() {
         navigateToPost = {},
         navigateToWritePost = {},
         navigateToSearch = {},
+        navigateToNotification = {},
         postFeeds = fakeLazyPagingPosts()
     )
 }

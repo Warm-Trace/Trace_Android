@@ -17,11 +17,23 @@ class TraceApplication : Application() {
         KakaoSdk.init(this, com.virtuous.trace.BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 
+//    private fun initFcm() {
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.w("TraceApplication", "Fetching FCM registration token failed", task.exception)
+//                return@addOnCompleteListener
+//            }
+//
+//            val token = task.result
+//            Log.d("FCM_TOKEN", token)
+//        }
+//    }
+
     private fun initNotification() {
         val channel = android.app.NotificationChannel(
             BACKGROUND_CHANNEL_ID,
             BACKGROUND_CHANNEL,
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = BACKGROUND_CHANNEL_DESCRIPTION
         }

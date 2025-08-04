@@ -246,20 +246,20 @@ private fun MyPageScreen(
                             Spacer(Modifier.height(15.dp))
                         }
                     }
-
-                    if (isRefreshing || isAppending) {
-                        CircularProgressIndicator(
-                            color = PrimaryDefault, modifier = Modifier.align(
-                                if (isRefreshing) Alignment.Center else Alignment.BottomCenter
-                            )
-                        )
-                    }
                 }
             }
 
             item {
                 Spacer(Modifier.height(50.dp))
             }
+        }
+
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
+                )
+            )
         }
     }
 
