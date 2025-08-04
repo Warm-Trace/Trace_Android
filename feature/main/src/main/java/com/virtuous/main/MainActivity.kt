@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.ui.TraceBottomBarAnimation
 import com.virtuous.designsystem.component.TraceSnackBar
 import com.virtuous.designsystem.component.TraceSnackBarHost
@@ -72,7 +73,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-
             val currentDestination = navController.currentBackStackEntryAsState()
                 .value?.destination
             val snackBarHostState = remember { SnackbarHostState() }
@@ -92,7 +92,7 @@ class MainActivity : ComponentActivity() {
                         launch {
                             viewModel.eventHelper.eventChannel.collect { event ->
                                 when (event) {
-                                    is com.virtuous.common_ui.event.TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
+                                    is TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
                                         event.message
                                     )
                                 }
