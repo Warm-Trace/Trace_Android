@@ -13,6 +13,6 @@ interface NotificationDataSource {
         size: Int,
     ): Result<GetNotificationsResponse>
 
-    suspend fun readNotification(notificationId: Int): Result<Unit>
-    suspend fun deleteNotification(notificationId: Int): Result<Unit>
+    suspend fun readNotification(notificationId: String): Result<Unit>
+    suspend fun deleteNotification(notificationId: String): Result<Unit>
 }

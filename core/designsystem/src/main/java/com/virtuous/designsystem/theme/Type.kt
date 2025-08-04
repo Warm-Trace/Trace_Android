@@ -131,8 +131,8 @@ data class TraceTypography(
     ),
     val bodyXMB: TextStyle = TextStyle(
         fontFamily = PretendardBold,
-        fontSize = 18.sp,
-        lineHeight = 22.sp
+        fontSize = 16.sp,
+        lineHeight = 20.sp
     ),
     val bodyLM: TextStyle = TextStyle(
         fontFamily = PretendardMedium,

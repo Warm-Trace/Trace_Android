@@ -31,13 +31,13 @@ class NotificationViewModel @Inject constructor(
         )
     }.cachedIn(viewModelScope)
 
-    private val _deletedNotificationIds = MutableStateFlow<Set<Int>>(emptySet())
+    private val _deletedNotificationIds = MutableStateFlow<Set<String>>(emptySet())
 
-    fun readNotification(notificationId: Int) = viewModelScope.launch {
+    fun readNotification(notificationId: String) = viewModelScope.launch {
         notificationRepository.readNotification(notificationId)
     }
 
-    fun deleteNotification(notificationId: Int) = viewModelScope.launch {
+    fun deleteNotification(notificationId: String) = viewModelScope.launch {
         notificationRepository.deleteNotification(notificationId)
         _deletedNotificationIds.value += notificationId
     }

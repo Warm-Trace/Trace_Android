@@ -19,15 +19,15 @@ data class GetNotificationsResponse(
 
 @Serializable
 data class NotificationContent(
-    val id: Int,
+    val id: String,
     val createdAt: LocalDateTime,
-    val title: String?,
-    val body: String?,
+    val isRead : Boolean,
     val data: NotificationData
 ) {
     fun toDomain(): Notification {
         return Notification(
             id = id,
+            isRead = isRead,
             createdAt = createdAt.toJavaLocalDateTime(),
             title = data.title,
             body = data.body,

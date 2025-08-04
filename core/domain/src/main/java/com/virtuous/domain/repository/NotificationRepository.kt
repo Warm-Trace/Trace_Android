@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface NotificationRepository {
     suspend fun updateDeviceToken(token: String): Result<Unit>
-    suspend fun getNotifications(): Flow<PagingData<Notification>>
-    suspend fun readNotification(notificationId: Int): Result<Unit>
-    suspend fun deleteNotification(notificationId: Int): Result<Unit>
+    fun getNotifications(): Flow<PagingData<Notification>>
+    suspend fun readNotification(notificationId: String): Result<Unit>
+    suspend fun deleteNotification(notificationId: String): Result<Unit>
 }

@@ -1,5 +1,6 @@
 package com.virtuous.home.graph.notification.component
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -26,6 +28,7 @@ import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.TraceDropDownMenu
 import com.virtuous.designsystem.component.TraceDropdownMenuItem
 import com.virtuous.designsystem.theme.Gray
+import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.designsystem.theme.WarmGray
 import com.virtuous.domain.model.notification.Notification
@@ -41,8 +44,8 @@ import java.time.LocalDateTime
 internal fun NotificationView(
     notification: Notification,
     navigateToPost: (Int) -> Unit,
-    readNotification: (Int) -> Unit,
-    deleteNotification: (Int) -> Unit
+    readNotification: (String) -> Unit,
+    deleteNotification: (String) -> Unit
 ) {
     var showNotiMenu by remember { mutableStateOf(false) }
 
@@ -73,6 +76,21 @@ internal fun NotificationView(
                 }
             }
     ) {
+        if (!notification.isRead) {
+            Spacer(Modifier.width(4.dp))
+
+            Canvas(modifier = Modifier.padding(top = 12.dp,).size(6.dp)) {
+                drawCircle(
+                    color = PrimaryDefault
+                )
+            }
+
+            Spacer(Modifier.width(8.dp))
+        }
+        else {
+            Spacer(Modifier.width(18.dp))
+        }
+
         Image(
             painter = painterResource(icon),
             contentDescription = "알림 아이콘",
@@ -145,7 +163,8 @@ private fun NotificationViewPreview() {
     TraceTheme {
         NotificationView(
             notification = Notification(
-                id = 1,
+                id = "",
+                isRead = false,
                 createdAt = LocalDateTime.now(),
                 postId = 1,
                 title = "새로운 댓글이 달렸습니다.",

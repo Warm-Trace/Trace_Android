@@ -40,9 +40,9 @@ class NotificationDataSourceImpl @Inject constructor(
         size = size
     )
 
-    override suspend fun readNotification(notificationId: Int): Result<Unit> =
+    override suspend fun readNotification(notificationId: String): Result<Unit> =
         traceApi.readNotification(notificationId)
 
-    override suspend fun deleteNotification(notificationId: Int): Result<Unit> =
+    override suspend fun deleteNotification(notificationId: String): Result<Unit> =
         traceApi.deleteNotification(id = notificationId)
 }

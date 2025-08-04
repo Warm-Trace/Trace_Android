@@ -5,7 +5,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 data class Notification(
-    val id: Int,
+    val id: String,
+    val isRead : Boolean,
     val createdAt: LocalDateTime,
     val title: String,
     val body: String,

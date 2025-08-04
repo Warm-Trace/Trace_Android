@@ -190,9 +190,10 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleNotificationIntent(intent: Intent, navigationHelper: NavigationHelper) {
-        val notificationId = intent.getStringExtra("id") ?: "-1"
+        val notificationId = intent.getStringExtra("id") ?: ""
         val type = intent.getStringExtra("type") ?: return
-        viewModel.readNotification(notificationId.toInt())
+
+        viewModel.readNotification(notificationId)
 
         when (type) {
             "mission" -> {

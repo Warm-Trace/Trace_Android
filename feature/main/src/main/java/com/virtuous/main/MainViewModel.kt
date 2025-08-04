@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun readNotification(notificationId : Int) = viewModelScope.launch {
+    fun readNotification(notificationId : String) = viewModelScope.launch {
         notificationRepository.readNotification(notificationId)
     }
 }

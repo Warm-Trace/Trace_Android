@@ -206,11 +206,11 @@ interface TraceApi {
 
     @PUT("/api/v1/notifications/open/{id}")
     suspend fun readNotification(
-        @Path("id") id: Int
+        @Path("id") id: String
     ) : Result<Unit>
 
     @DELETE("/api/v1/notifications/{id}")
     suspend fun deleteNotification(
-        @Path("id") id: Int
+        @Path("id") id: String
     ) : Result<Unit>
 }

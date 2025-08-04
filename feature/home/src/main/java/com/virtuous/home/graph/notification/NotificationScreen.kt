@@ -55,8 +55,8 @@ internal fun NotificationRoute(
 @Composable
 private fun NotificationScreen(
     notifications: LazyPagingItems<Notification>,
-    readNotification: (Int) -> Unit,
-    deleteNotification: (Int) -> Unit,
+    readNotification: (String) -> Unit,
+    deleteNotification: (String) -> Unit,
     navigateToPost: (Int) -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -66,7 +66,7 @@ private fun NotificationScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(end = 20.dp)
         ) {
             item {
                 Spacer(Modifier.height(68.dp))
@@ -134,7 +134,8 @@ private fun NotificationScreenPreview() {
 private fun fakeLazyPagingNotifications(): LazyPagingItems<Notification> {
     val fakeNotifications = listOf(
         Notification(
-            id = 1,
+            id = "",
+            isRead = false,
             createdAt = LocalDateTime.now().minusMinutes(5),
             title = "깨끗한 공원 만들기",
             body = "공원을 깨끗하게 만드는 봉사활동입니다.",
@@ -143,7 +144,8 @@ private fun fakeLazyPagingNotifications(): LazyPagingItems<Notification> {
             emotion = Emotion.GRATEFUL
         ),
         Notification(
-            id = 2,
+            id = "",
+            isRead = false,
             createdAt = LocalDateTime.now().minusHours(1),
             title = "무료 식사 제공",
             body = "어려운 이웃에게 무료 식사를 제공합니다.",
@@ -152,7 +154,8 @@ private fun fakeLazyPagingNotifications(): LazyPagingItems<Notification> {
             emotion = Emotion.LIKEABLE
         ),
         Notification(
-            id = 3,
+            id = "",
+            isRead = true,
             createdAt = LocalDateTime.now().minusDays(1),
             title = "헌혈 참여",
             body = "생명을 살리는 헌혈에 동참해주세요.",

@@ -18,7 +18,7 @@ class NotificationRepositoryImpl @Inject constructor(
         notificationDataSource.updateDeviceToken(token)
     }
 
-    override suspend fun getNotifications(): Flow<PagingData<Notification>> {
+    override fun getNotifications(): Flow<PagingData<Notification>> {
         return Pager(
             config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
             pagingSourceFactory = {
@@ -27,13 +27,15 @@ class NotificationRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun readNotification(notificationId: Int): Result<Unit> = suspendRunCatching {
-        notificationDataSource.readNotification(notificationId)
-    }
+    override suspend fun readNotification(notificationId: String): Result<Unit> =
+        suspendRunCatching {
+            notificationDataSource.readNotification(notificationId)
+        }
 
-    override suspend fun deleteNotification(notificationId: Int): Result<Unit> = suspendRunCatching {
-        notificationDataSource.deleteNotification(notificationId)
-    }
+    override suspend fun deleteNotification(notificationId: String): Result<Unit> =
+        suspendRunCatching {
+            notificationDataSource.deleteNotification(notificationId)
+        }
 
     companion object {
         private const val DEFAULT_PAGE_SIZE = 20
