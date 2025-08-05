@@ -22,19 +22,19 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 
 class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
 ) : PostRepository {
-    private val _postUpdateEvents =
-        MutableSharedFlow<PostUpdateEvent>(
-            replay = 0,
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
-    override val postUpdateEvents = _postUpdateEvents.asSharedFlow()
+    private val _postUpdateEvents = MutableSharedFlow<PostUpdateEvent>(
+        replay = 1,
+        extraBufferCapacity = 32,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    override val postUpdateEvents: SharedFlow<PostUpdateEvent> = _postUpdateEvents.asSharedFlow()
 
     override fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>> {
         return Pager(
@@ -140,7 +140,9 @@ class PostRepositoryImpl @Inject constructor(
         }
 
     override suspend fun blockUser(providerId: String): Result<Unit> = suspendRunCatching {
-        postDataSource.blockUser(providerId)
+        postDataSource.blockUser(providerId).also {
+            _postUpdateEvents.tryEmit(PostUpdateEvent.UserBlocked(providerId))
+        }
     }
 
     companion object {

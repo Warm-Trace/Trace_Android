@@ -11,12 +11,11 @@ import com.virtuous.domain.repository.PostRepository
 import com.virtuous.domain.repository.PostUpdateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,41 +27,56 @@ class HomeViewModel @Inject constructor(
     private val _eventChannel = Channel<HomeEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
 
-    init {
-        postRepository.postUpdateEvents
-            .onEach { event ->
-                when (event) {
-                    is PostUpdateEvent.PostDeleted -> {
-                        _deletedPostIds.value = _deletedPostIds.value + event.postId
-                    }
-
-                    is PostUpdateEvent.PostEdited -> {
-                        // TODO : 수정 이벤트 처리
-                    }
-                }
-            }.launchIn(viewModelScope)
-    }
-
     internal fun onEvent(event: HomeEvent) = viewModelScope.launch {
         _eventChannel.send(event)
     }
+
+    init {
+        viewModelScope.launch {
+            postRepository.postUpdateEvents.collect { event ->
+                when (event) {
+                    is PostUpdateEvent.PostDeleted -> {
+                        _deletedPostIds.value += event.postId
+                    }
+
+                    is PostUpdateEvent.UserBlocked -> {
+                        _blockedProviderIds.value += event.providerId
+                    }
+
+                    is PostUpdateEvent.PostUpdated -> {
+
+                    }
+                }
+            }
+        }
+    }
+
 
     private val _tabType: MutableStateFlow<HomeTab> = MutableStateFlow(HomeTab.ALL)
     val tabType = _tabType.asStateFlow()
 
     private val _deletedPostIds = MutableStateFlow<Set<Int>>(emptySet())
+    private val _blockedProviderIds = MutableStateFlow<Set<String>>(emptySet())
 
-    val postFeeds: kotlinx.coroutines.flow.Flow<PagingData<PostFeed>> =
+    private val _cachedPostFeeds = tabType.flatMapLatest { tab ->
+        postRepository.getPosts(tab)
+    }.cachedIn(viewModelScope)
+
+    val postFeeds: Flow<PagingData<PostFeed>> =
         combine(
-            tabType.flatMapLatest { tab ->
-                postRepository.getPosts(tab)
-            },
-            _deletedPostIds
-        ) { pagingData, deletedIds ->
-            pagingData.filter { postFeed ->
-                postFeed.postId !in deletedIds
-            }
-        }.cachedIn(viewModelScope)
+            _cachedPostFeeds,
+            _deletedPostIds,
+            _blockedProviderIds
+        ) { pagingData, deletedIds, blockedIds ->
+            pagingData
+                .filter { it.providerId !in blockedIds }
+                .filter { it.postId !in deletedIds }
+        }
+
+    fun onRefresh() {
+        _deletedPostIds.value = emptySet()
+        _blockedProviderIds.value = emptySet()
+    }
 
     fun setTabType(tabType: HomeTab) {
         _tabType.value = tabType

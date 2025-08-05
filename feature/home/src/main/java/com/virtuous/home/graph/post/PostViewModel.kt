@@ -17,7 +17,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -39,8 +40,6 @@ class PostViewModel @Inject constructor(
     init {
         getPost()
     }
-
-    private val _refreshTrigger = MutableStateFlow(false)
 
     private val _postDetail = MutableStateFlow(
         PostDetail(
@@ -67,10 +66,9 @@ class PostViewModel @Inject constructor(
     )
     val postDetail = _postDetail.asStateFlow()
 
-    val commentPagingFlow = _refreshTrigger
-        .flatMapLatest {
-            commentRepository.getCommentPagingFlow(postId)
-        }
+    val commentPagingFlow = flow {
+        emitAll(commentRepository.getCommentPagingFlow(postId))
+    }
         .cachedIn(viewModelScope)
 
     private val _commentInput = MutableStateFlow("")
@@ -110,6 +108,7 @@ class PostViewModel @Inject constructor(
             .onSuccess { _eventChannel.send(PostEvent.BlockUserSuccess) }
             .onFailure { _eventChannel.send(PostEvent.BlockUserFailure) }
     }
+
     fun deletePost() = viewModelScope.launch {
         postRepository.deletePost(postId = postId)
             .onSuccess { _eventChannel.send(PostEvent.DeletePostSuccess) }
@@ -153,10 +152,6 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    private fun refreshComments() = viewModelScope.launch {
-        _refreshTrigger.value = !_refreshTrigger.value
-    }
-
     fun addComment() = viewModelScope.launch {
         if (_commentInput.value.isEmpty()) {
             _eventChannel.send(PostEvent.ShowSnackBar("내용을 입력해주세요."))
@@ -166,7 +161,6 @@ class PostViewModel @Inject constructor(
         commentRepository.addComment(postId = postId, content = _commentInput.value)
             .onSuccess {
                 _commentInput.value = ""
-                refreshComments()
                 _eventChannel.send(PostEvent.AddCommentSuccess)
             }.onFailure {
                 _eventChannel.send(PostEvent.AddCommentFailure)
@@ -188,7 +182,6 @@ class PostViewModel @Inject constructor(
                 content = _commentInput.value
             ).onSuccess {
                 clearReplyTargetId()
-                refreshComments()
                 _commentInput.value = ""
 
                 onSuccess(parentId)
@@ -202,7 +195,6 @@ class PostViewModel @Inject constructor(
     fun deleteComment(commentId: Int) = viewModelScope.launch {
         commentRepository.deleteComment(commentId)
             .onSuccess {
-                refreshComments()
                 _eventChannel.send(PostEvent.DeleteCommentSuccess)
             }
             .onFailure { _eventChannel.send(PostEvent.DeleteCommentFailure) }

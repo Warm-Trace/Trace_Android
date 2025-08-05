@@ -22,13 +22,13 @@ class NotificationViewModel @Inject constructor(
     private val _deletedNotificationIds = MutableStateFlow<Set<String>>(emptySet())
     private val _readNotificationIds = MutableStateFlow<Set<String>>(emptySet())
 
-    private val cachedNotifications: Flow<PagingData<Notification>> by lazy {
+    private val _cachedNotifications: Flow<PagingData<Notification>> by lazy {
         notificationRepository.getNotifications().cachedIn(viewModelScope)
     }
 
     val notifications: Flow<PagingData<Notification>> =
         combine(
-            cachedNotifications,
+            _cachedNotifications,
             _deletedNotificationIds,
             _readNotificationIds
         ) { pagingData, deletedIds, readIds ->

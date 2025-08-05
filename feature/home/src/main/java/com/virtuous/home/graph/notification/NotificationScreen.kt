@@ -95,7 +95,7 @@ private fun NotificationScreen(
                 .padding(top = 52.dp, start = 10.dp, end = 20.dp)
         ) {
             item {
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(15.dp))
             }
 
             items(
@@ -118,7 +118,7 @@ private fun NotificationScreen(
                     )
                 }
 
-                Spacer(Modifier.height(15.dp))
+                Spacer(Modifier.height(20.dp))
             }
 
             item {
