@@ -20,6 +20,9 @@ data class EmotionCount(
     val impressiveCount: Int = 0,
     val gratefulCount: Int = 0
 ) {
+    val totalCount: Int =
+        heartWarmingCount + likeableCount + touchingCount + impressiveCount + gratefulCount
+
     companion object {
         fun fromMap(map: Map<String, Int>): EmotionCount {
             return EmotionCount(

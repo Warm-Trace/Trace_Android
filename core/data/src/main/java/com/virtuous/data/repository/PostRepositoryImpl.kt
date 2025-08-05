@@ -80,7 +80,15 @@ class PostRepositoryImpl @Inject constructor(
             imageResizer.resizeImage(imageUrl)
         }
 
-        val response = postDataSource.addPost(postType, title, content, imageStreams).getOrThrow()
+        val response =
+            postDataSource.addPost(postType, title, content, imageStreams).getOrThrow().also {
+                val postDetail = it.toDomain()
+                _postUpdateEvents.tryEmit(
+                    PostUpdateEvent.PostAdded(
+                        postDetail.toPostFeed()
+                    )
+                )
+            }
 
         response.toDomain()
     }

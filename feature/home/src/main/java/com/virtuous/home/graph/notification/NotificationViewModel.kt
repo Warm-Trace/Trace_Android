@@ -45,6 +45,7 @@ class NotificationViewModel @Inject constructor(
 
     fun readNotification(notificationId: String) = viewModelScope.launch {
         notificationRepository.readNotification(notificationId)
+        _readNotificationIds.value += notificationId
     }
 
     fun deleteNotification(notificationId: String) = viewModelScope.launch {

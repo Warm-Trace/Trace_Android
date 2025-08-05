@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.insertHeaderItem
 import com.virtuous.domain.model.post.HomeTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.repository.PostRepository
@@ -46,6 +47,10 @@ class HomeViewModel @Inject constructor(
                     is PostUpdateEvent.PostUpdated -> {
 
                     }
+
+                    is PostUpdateEvent.PostAdded -> {
+                        _addedPostFeeds.value += event.postFeed
+                    }
                 }
             }
         }
@@ -57,6 +62,7 @@ class HomeViewModel @Inject constructor(
 
     private val _deletedPostIds = MutableStateFlow<Set<Int>>(emptySet())
     private val _blockedProviderIds = MutableStateFlow<Set<String>>(emptySet())
+    private val _addedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
 
     private val _cachedPostFeeds = tabType.flatMapLatest { tab ->
         postRepository.getPosts(tab)
@@ -66,16 +72,23 @@ class HomeViewModel @Inject constructor(
         combine(
             _cachedPostFeeds,
             _deletedPostIds,
-            _blockedProviderIds
-        ) { pagingData, deletedIds, blockedIds ->
-            pagingData
-                .filter { it.providerId !in blockedIds }
-                .filter { it.postId !in deletedIds }
+            _blockedProviderIds,
+            _addedPostFeeds
+        ) { pagingData, deletedIds, blockedIds, addedPostFeeds ->
+            var result = pagingData
+                .filter { it.providerId !in blockedIds && it.postId !in deletedIds }
+
+            addedPostFeeds.reversed().forEach {
+                result = result.insertHeaderItem(item = it)
+            }
+
+            result
         }
 
     fun onRefresh() {
         _deletedPostIds.value = emptySet()
         _blockedProviderIds.value = emptySet()
+        _addedPostFeeds.value = emptyList()
     }
 
     fun setTabType(tabType: HomeTab) {
