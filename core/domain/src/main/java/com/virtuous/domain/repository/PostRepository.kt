@@ -57,6 +57,6 @@ interface PostRepository {
 sealed class PostUpdateEvent {
     data class PostAdded(val postFeed: PostFeed) : PostUpdateEvent()
     data class PostDeleted(val postId: Int) : PostUpdateEvent()
-    data class PostUpdated(val postId: Int, val postDetail: PostDetail) : PostUpdateEvent()
+    data class PostUpdated(val postFeed: PostFeed) : PostUpdateEvent()
     data class UserBlocked(val providerId: String) : PostUpdateEvent()
 }

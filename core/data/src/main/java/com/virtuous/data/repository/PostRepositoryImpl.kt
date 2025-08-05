@@ -82,11 +82,8 @@ class PostRepositoryImpl @Inject constructor(
 
         val response =
             postDataSource.addPost(postType, title, content, imageStreams).getOrThrow().also {
-                val postDetail = it.toDomain()
                 _postUpdateEvents.tryEmit(
-                    PostUpdateEvent.PostAdded(
-                        postDetail.toPostFeed()
-                    )
+                    PostUpdateEvent.PostAdded(it.toDomain().toPostFeed())
                 )
             }
 
@@ -102,7 +99,12 @@ class PostRepositoryImpl @Inject constructor(
             imageResizer.resizeImage(imageUrl)
         }
 
-        val response = postDataSource.verifyAndAddPost(title, content, imageStreams).getOrThrow()
+        val response =
+            postDataSource.verifyAndAddPost(title, content, imageStreams).getOrThrow().also {
+                _postUpdateEvents.tryEmit(
+                    PostUpdateEvent.PostAdded(it.toDomain().toPostFeed())
+                )
+            }
 
         response.toDomain()
     }
@@ -124,7 +126,9 @@ class PostRepositoryImpl @Inject constructor(
             content = content,
             removedImages = removedImages,
             newImages = imageStreams
-        ).getOrThrow()
+        ).getOrThrow().also {
+            _postUpdateEvents.tryEmit(PostUpdateEvent.PostUpdated(it.toDomain().toPostFeed()))
+        }
 
         response.toDomain()
     }

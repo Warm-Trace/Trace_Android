@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.insertHeaderItem
+import androidx.paging.map
 import com.virtuous.domain.model.post.HomeTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.repository.PostRepository
@@ -45,7 +46,7 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is PostUpdateEvent.PostUpdated -> {
-
+                        _updatedPostFeeds.value += event.postFeed
                     }
 
                     is PostUpdateEvent.PostAdded -> {
@@ -63,6 +64,7 @@ class HomeViewModel @Inject constructor(
     private val _deletedPostIds = MutableStateFlow<Set<Int>>(emptySet())
     private val _blockedProviderIds = MutableStateFlow<Set<String>>(emptySet())
     private val _addedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
+    private val _updatedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
 
     private val _cachedPostFeeds = tabType.flatMapLatest { tab ->
         postRepository.getPosts(tab)
@@ -73,10 +75,15 @@ class HomeViewModel @Inject constructor(
             _cachedPostFeeds,
             _deletedPostIds,
             _blockedProviderIds,
-            _addedPostFeeds
-        ) { pagingData, deletedIds, blockedIds, addedPostFeeds ->
+            _addedPostFeeds,
+            _updatedPostFeeds
+        ) { pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds ->
             var result = pagingData
                 .filter { it.providerId !in blockedIds && it.postId !in deletedIds }
+                .map { postFeed ->
+                    val updatedPost = updatedPostFeeds.find { it.postId == postFeed.postId }
+                    updatedPost ?: postFeed
+                }
 
             addedPostFeeds.reversed().forEach {
                 result = result.insertHeaderItem(item = it)
