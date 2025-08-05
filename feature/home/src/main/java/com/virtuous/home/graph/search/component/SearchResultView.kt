@@ -53,8 +53,7 @@ internal fun SearchResultView(
     navigateToPost: (PostFeed) -> Unit,
 ) {
     val tabs = SearchType.entries
-
-    var isSearchTypeDropDownMenuExpanded by remember { mutableStateOf(false) }
+    var showSearchTypeMenu by remember { mutableStateOf(false) }
 
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
@@ -72,7 +71,7 @@ internal fun SearchResultView(
                         modifier = Modifier
                             .wrapContentWidth()
                             .clickable {
-                                isSearchTypeDropDownMenuExpanded = true
+                                showSearchTypeMenu = true
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -87,9 +86,9 @@ internal fun SearchResultView(
                     }
 
                     TabTypeDropdownMenu(
-                        expanded = isSearchTypeDropDownMenuExpanded,
+                        expanded = showSearchTypeMenu,
                         onTabTypeChange = onTabTypeChange,
-                        onDismiss = { isSearchTypeDropDownMenuExpanded = false },
+                        onDismiss = { showSearchTypeMenu = false },
                         selectedTabType = tabType
                     )
                 }

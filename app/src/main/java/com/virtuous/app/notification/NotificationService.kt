@@ -70,7 +70,7 @@ class NotificationService : FirebaseMessagingService() {
 
         val builder = NotificationCompat.Builder(context, BACKGROUND_CHANNEL_ID)
             .setSmallIcon(com.virtuous.designsystem.R.drawable.app_icon_pencil)
-            .setLargeIcon(getEmotionBitmap(context, type, data["emotion"]))
+            .setLargeIcon(getEmotionBitmap(context, type, data["EMOTION"]))
             .setColor(ContextCompat.getColor(context, R.color.white))
             .setContentTitle(title)
             .setContentText(body)
@@ -78,7 +78,7 @@ class NotificationService : FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
-        val systemNotificationId = if ((type == "comment" || type == "emotion") && postId != null) {
+        val systemNotificationId = if ((type == "COMMENT" || type == "EMOTION") && postId != null) {
             "${type}_${postId}".hashCode()
         } else {
             System.currentTimeMillis().toInt()
@@ -104,7 +104,7 @@ class NotificationService : FirebaseMessagingService() {
 
 
 private fun getEmotionBitmap(context: Context, type: String?, emotionType: String?): Bitmap? {
-    if (type == "emotion" && emotionType != null) {
+    if (type == "EMOTION" && emotionType != null) {
         val emotion = Emotion.fromString(emotionType)
         val emotionResId = when (emotion) {
             Emotion.HEARTWARMING -> com.virtuous.designsystem.R.drawable.heartwarming

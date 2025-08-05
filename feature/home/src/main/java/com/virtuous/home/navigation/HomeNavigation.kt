@@ -104,6 +104,7 @@ fun NavGraphBuilder.homeNavGraph(
     navigateToUpdatePost: (Int) -> Unit,
     navigateToUserProfile: (String) -> Unit,
     navigateToNotification: () -> Unit,
+    navigateToMission: () -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<HomeBaseRoute>(startDestination = HomeGraph.HomeRoute) {
@@ -213,7 +214,8 @@ fun NavGraphBuilder.homeNavGraph(
         ) {
             NotificationRoute(
                 navigateToPost = navigateToPostById,
-                navigateBack = navigateBack
+                navigateBack = navigateBack,
+                navigateToMission = navigateToMission
             )
         }
 

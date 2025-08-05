@@ -198,13 +198,13 @@ class MainActivity : ComponentActivity() {
         viewModel.readNotification(notificationId)
 
         when (type) {
-            "mission" -> {
+            "MISSION" -> {
                 navigationHelper.navigate(
                     NavigationEvent.To(MissionGraph.MissionRoute, popUpTo = true)
                 )
             }
 
-            "comment", "emotion" -> {
+            "COMMENT", "EMOTION" -> {
                 intent.getStringExtra("postId")?.toIntOrNull()?.let { postId ->
                     navigationHelper.navigate(
                         NavigationEvent.StackAndTo(

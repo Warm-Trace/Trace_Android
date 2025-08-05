@@ -17,6 +17,7 @@ import com.virtuous.home.navigation.navigateToUpdatePost
 import com.virtuous.home.navigation.navigateToUserProfile
 import com.virtuous.home.navigation.navigateToWritePost
 import com.virtuous.mission.navigation.missionNavGraph
+import com.virtuous.mission.navigation.navigateToMission
 import com.virtuous.mission.navigation.navigateToVerifyMission
 import com.virtuous.mypage.navigation.myPageNavGraph
 import com.virtuous.mypage.navigation.navigateToBlockedUser
@@ -67,6 +68,7 @@ fun AppNavHost(
             navigateToPostById = { postId ->
                 navController.navigateToPost(postId)
             },
+            navigateToMission = navController::navigateToMission,
             navigateBack = { navigateBack(navController) },
         )
 
