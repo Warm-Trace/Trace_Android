@@ -94,6 +94,8 @@ class PostViewModel @Inject constructor(
 
         postRepository.getPost(postId).onSuccess {
             _postDetail.value = it
+        }.onFailure {
+            _eventChannel.send(PostEvent.GetPostFailure)
         }
     }
 
@@ -208,6 +210,7 @@ class PostViewModel @Inject constructor(
 
     sealed class PostEvent {
         data class ShowSnackBar(val message: String) : PostEvent()
+        data object GetPostFailure : PostEvent()
         data object DeletePostSuccess : PostEvent()
         data object DeletePostFailure : PostEvent()
         data object ReportPostSuccess : PostEvent()

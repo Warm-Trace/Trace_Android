@@ -101,6 +101,11 @@ internal fun PostRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
+                is PostEvent.GetPostFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글을 불러올 수 없습니다."))
+                    navigateBack()
+                }
+
                 is PostEvent.DeletePostSuccess -> {
                     navigateBack()
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
@@ -307,7 +312,7 @@ private fun PostScreen(
 
                         Spacer(Modifier.height(3.dp))
 
-                        Row() {
+                        Row {
                             Text(
                                 postDetail.formattedTime,
                                 style = TraceTheme.typography.bodyXSM,
@@ -547,7 +552,7 @@ private fun PostScreen(
 
             Spacer(Modifier.weight(1f))
 
-            Box() {
+            Box {
                 Image(
                     painter = painterResource(R.drawable.menu_ic),
                     contentDescription = "메뉴",
