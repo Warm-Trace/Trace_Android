@@ -1,5 +1,6 @@
 package com.virtuous.home.graph.post
 
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -81,6 +82,7 @@ import com.virtuous.home.graph.post.component.OtherPostDropdownMenu
 import com.virtuous.home.graph.post.component.OwnPostDropdownMenu
 import com.virtuous.home.graph.post.component.PostImageContent
 import com.virtuous.home.graph.post.component.TraceCommentField
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -93,7 +95,7 @@ internal fun PostRoute(
     navigateToUserProfile: (String) -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
-    val comments = viewModel.commentPagingFlow.collectAsLazyPagingItems()
+    val comments = viewModel.comments.collectAsLazyPagingItems()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
@@ -187,6 +189,7 @@ internal fun PostRoute(
         commentInput = commentInput,
         isReplying = replyTargetId != null,
         replyTargetId = replyTargetId,
+        onRefresh = viewModel::onRefresh,
         onCommentInputChange = viewModel::setCommentInput,
         onAddComment = viewModel::addComment,
         onDeletePost = viewModel::deletePost,
@@ -212,6 +215,7 @@ private fun PostScreen(
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
+    onRefresh : () -> Unit,
     onDeletePost: () -> Unit,
     onReportPost: (String) -> Unit,
     toggleEmotion: (Emotion) -> Unit,
@@ -230,12 +234,15 @@ private fun PostScreen(
     var showOwnPostMenu by remember { mutableStateOf(false) }
     var showOtherPostMenu by remember { mutableStateOf(false) }
 
-
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
     val isAppending = comments.loadState.append is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing, onRefresh = { comments.refresh() })
+        refreshing = isRefreshing,
+        onRefresh = {
+            onRefresh()
+            comments.refresh()
+        })
 
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -598,16 +605,23 @@ private fun PostScreen(
                 onValueChange = onCommentInputChange,
                 onAddComment = {
                     keyboardController?.hide()
-
                     onAddComment()
-
                     coroutineScope.launch {
-                        val visibleItems = listState.layoutInfo.visibleItemsInfo
-                        val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-                        val lastItemIndex = comments.itemCount
 
-                        if (lastVisibleIndex < lastItemIndex) {
-                            listState.animateScrollToItem(index = lastItemIndex)
+                        var attempts = 0
+                        var lastPosition = -1
+                        var currentPosition = listState.firstVisibleItemIndex
+
+                        while (currentPosition != lastPosition && attempts < 10) {
+                            lastPosition = currentPosition
+                            listState.scrollToItem(index = Int.MAX_VALUE)
+                            delay(100)
+                            currentPosition = listState.firstVisibleItemIndex
+                            attempts++
+                            Log.d(
+                                "PostScreen",
+                                "attempt: $attempts, lastPosition: $lastPosition, currentPosition: $currentPosition"
+                            )
                         }
                     }
                 },
@@ -734,6 +748,7 @@ fun PostScreenPreview() {
         onCommentInputChange = {},
         navigateBack = {},
         navigateToUpdatePost = {},
+        onRefresh = {},
         onAddComment = {},
         onReplyComment = { },
         onDeleteComment = {},
