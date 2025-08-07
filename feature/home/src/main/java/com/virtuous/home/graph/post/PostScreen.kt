@@ -231,7 +231,6 @@ private fun PostScreen(
 ) {
     var showOwnPostMenu by remember { mutableStateOf(false) }
     var showOtherPostMenu by remember { mutableStateOf(false) }
-    var scrollToBottomAfterCommentAdded by remember { mutableStateOf(false) }
 
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
     val isAppending = comments.loadState.append is LoadState.Loading
@@ -240,7 +239,6 @@ private fun PostScreen(
         refreshing = isRefreshing,
         onRefresh = {
             onRefresh()
-            comments.refresh()
         })
 
     val coroutineScope = rememberCoroutineScope()

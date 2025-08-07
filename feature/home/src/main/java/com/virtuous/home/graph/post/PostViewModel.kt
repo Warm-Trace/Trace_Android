@@ -117,6 +117,7 @@ class PostViewModel @Inject constructor(
     fun onRefresh() {
         getPost()
         _deletedCommentIds.value = emptySet()
+        refreshComments()
     }
 
     fun setCommentInput(commentInput: String) {

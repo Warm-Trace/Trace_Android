@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -75,15 +76,15 @@ class HomeViewModel @Inject constructor(
             commentRepository.commentUpdateEvents.collect { event ->
                 when (event) {
                     is CommentUpdateEvent.CommentDeleted -> {
-                        val currentUpdates = _commentCountUpdates.value.toMutableMap()
-                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) - 1
-                        _commentCountUpdates.value = currentUpdates
+                        _commentCountUpdates.update { current ->
+                            current + (event.postId to (current[event.postId] ?: 0) - 1)
+                        }
                     }
 
                     is CommentUpdateEvent.CommentAdded -> {
-                        val currentUpdates = _commentCountUpdates.value.toMutableMap()
-                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) + 1
-                        _commentCountUpdates.value = currentUpdates
+                        _commentCountUpdates.update { current ->
+                            current + (event.postId to (current[event.postId] ?: 0) + 1)
+                        }
                     }
                 }
             }

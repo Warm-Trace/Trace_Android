@@ -40,7 +40,7 @@ class CommentRepositoryImpl @Inject constructor(
         suspendRunCatching {
             val response =
                 commentDataSource.addComment(postId = postId, content = content).getOrThrow().also {
-                    _commentUpdateEvents.emit(CommentUpdateEvent.CommentAdded(postId))
+                    _commentUpdateEvents.tryEmit(CommentUpdateEvent.CommentAdded(postId))
                 }
 
             Comment(
@@ -56,8 +56,6 @@ class CommentRepositoryImpl @Inject constructor(
                 isOwner = response.isOwner,
                 replies = emptyList()
             )
-
-
         }
 
     override suspend fun addReplyToComment(
