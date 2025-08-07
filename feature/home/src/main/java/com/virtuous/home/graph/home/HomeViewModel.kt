@@ -55,6 +55,18 @@ class HomeViewModel @Inject constructor(
                     is PostUpdateEvent.PostAdded -> {
                         _addedPostFeeds.value += event.postFeed
                     }
+
+                    is PostUpdateEvent.EmotionAdded -> {
+                        val currentUpdates = _emotionCountUpdates.value.toMutableMap()
+                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) + 1
+                        _emotionCountUpdates.value = currentUpdates
+                    }
+
+                    is PostUpdateEvent.EmotionDeleted -> {
+                        val currentUpdates = _emotionCountUpdates.value.toMutableMap()
+                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) - 1
+                        _emotionCountUpdates.value = currentUpdates
+                    }
                 }
             }
         }
@@ -86,6 +98,7 @@ class HomeViewModel @Inject constructor(
     private val _addedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
     private val _updatedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
     private val _commentCountUpdates = MutableStateFlow<Map<Int, Int>>(emptyMap())
+    private val _emotionCountUpdates = MutableStateFlow<Map<Int, Int>>(emptyMap())
 
     private val _cachedPostFeeds = tabType.flatMapLatest { tab ->
         postRepository.getPosts(tab)
@@ -103,14 +116,19 @@ class HomeViewModel @Inject constructor(
 
     val postFeeds: Flow<PagingData<PostFeed>> = combine(
         _combinedPostFlows,
-        _commentCountUpdates
-    ) { (pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds), commentCountUpdates ->
+        _commentCountUpdates,
+        _emotionCountUpdates
+    ) { (pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds), commentCountUpdates, emotionCountUpdates ->
         var result = pagingData
             .filter { it.providerId !in blockedIds && it.postId !in deletedIds }
             .map { postFeed ->
                 val updatedPost = updatedPostFeeds.find { it.postId == postFeed.postId } ?: postFeed
                 val commentCountChange = commentCountUpdates[postFeed.postId] ?: 0
-                updatedPost.copy(commentCount = (updatedPost.commentCount + commentCountChange).coerceAtLeast(0))
+                val emotionCountChange = emotionCountUpdates[postFeed.postId] ?: 0
+                updatedPost.copy(
+                    commentCount = (updatedPost.commentCount + commentCountChange).coerceAtLeast(0),
+                    totalEmotionCount = (updatedPost.totalEmotionCount + emotionCountChange).coerceAtLeast(0)
+                )
             }
 
         addedPostFeeds.reversed().forEach {

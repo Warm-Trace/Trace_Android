@@ -59,4 +59,6 @@ sealed class PostUpdateEvent {
     data class PostDeleted(val postId: Int) : PostUpdateEvent()
     data class PostUpdated(val postFeed: PostFeed) : PostUpdateEvent()
     data class UserBlocked(val providerId: String) : PostUpdateEvent()
+    data class EmotionAdded(val postId : Int) : PostUpdateEvent()
+    data class EmotionDeleted(val postId : Int) : PostUpdateEvent()
 }

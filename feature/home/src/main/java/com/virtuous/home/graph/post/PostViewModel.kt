@@ -214,8 +214,6 @@ class PostViewModel @Inject constructor(
             }.onFailure {
                 _eventChannel.send(PostEvent.AddCommentFailure)
             }
-
-
     }
 
     fun replyComment(onSuccess: (Int) -> Unit) =
