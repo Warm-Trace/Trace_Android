@@ -1,6 +1,5 @@
 package com.virtuous.home.graph.post
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -55,6 +54,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.virtuous.common.util.formatCount
 import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.util.clickable
@@ -82,11 +82,9 @@ import com.virtuous.home.graph.post.component.OtherPostDropdownMenu
 import com.virtuous.home.graph.post.component.OwnPostDropdownMenu
 import com.virtuous.home.graph.post.component.PostImageContent
 import com.virtuous.home.graph.post.component.TraceCommentField
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-
 
 @Composable
 internal fun PostRoute(
@@ -215,7 +213,7 @@ private fun PostScreen(
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
-    onRefresh : () -> Unit,
+    onRefresh: () -> Unit,
     onDeletePost: () -> Unit,
     onReportPost: (String) -> Unit,
     toggleEmotion: (Emotion) -> Unit,
@@ -233,6 +231,7 @@ private fun PostScreen(
 ) {
     var showOwnPostMenu by remember { mutableStateOf(false) }
     var showOtherPostMenu by remember { mutableStateOf(false) }
+    var scrollToBottomAfterCommentAdded by remember { mutableStateOf(false) }
 
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
     val isAppending = comments.loadState.append is LoadState.Loading
@@ -499,19 +498,21 @@ private fun PostScreen(
             }
 
             items(
-                comments.itemCount
+                count = comments.itemCount,
+                key = comments.itemKey { comment -> comment.commentId }
             ) { index ->
-                comments[index]?.let { comment ->
-                    if (!comment.isDeleted || comment.replies.isNotEmpty()) {
+                val comment = comments[index]
+                comment?.let {
+                    if (!it.isDeleted || it.replies.isNotEmpty()) {
                         Spacer(Modifier.height(13.dp))
 
                         CommentView(
-                            comment = comment,
+                            comment = it,
                             replyTargetId = replyTargetId,
                             onDelete = onDeleteComment,
                             onReport = { commentId, reason -> onReportComment(commentId, reason) },
                             onReply = {
-                                onReplyTargetIdChange(comment.commentId)
+                                onReplyTargetIdChange(it.commentId)
 
                                 coroutineScope.launch {
                                     focusRequester.requestFocus()
@@ -606,23 +607,9 @@ private fun PostScreen(
                 onAddComment = {
                     keyboardController?.hide()
                     onAddComment()
+
                     coroutineScope.launch {
-
-                        var attempts = 0
-                        var lastPosition = -1
-                        var currentPosition = listState.firstVisibleItemIndex
-
-                        while (currentPosition != lastPosition && attempts < 10) {
-                            lastPosition = currentPosition
-                            listState.scrollToItem(index = Int.MAX_VALUE)
-                            delay(100)
-                            currentPosition = listState.firstVisibleItemIndex
-                            attempts++
-                            Log.d(
-                                "PostScreen",
-                                "attempt: $attempts, lastPosition: $lastPosition, currentPosition: $currentPosition"
-                            )
-                        }
+                        listState.animateScrollToItem(index = Int.MAX_VALUE)
                     }
                 },
                 onReplyComment = {

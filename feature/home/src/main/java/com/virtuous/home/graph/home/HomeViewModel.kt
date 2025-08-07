@@ -9,6 +9,8 @@ import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import com.virtuous.domain.model.post.HomeTab
 import com.virtuous.domain.model.post.PostFeed
+import com.virtuous.domain.repository.CommentRepository
+import com.virtuous.domain.repository.CommentUpdateEvent
 import com.virtuous.domain.repository.PostRepository
 import com.virtuous.domain.repository.PostUpdateEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val commentRepository: CommentRepository
 ) : ViewModel() {
     private val _eventChannel = Channel<HomeEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -55,8 +58,25 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-    }
 
+        viewModelScope.launch {
+            commentRepository.commentUpdateEvents.collect { event ->
+                when (event) {
+                    is CommentUpdateEvent.CommentDeleted -> {
+                        val currentUpdates = _commentCountUpdates.value.toMutableMap()
+                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) - 1
+                        _commentCountUpdates.value = currentUpdates
+                    }
+
+                    is CommentUpdateEvent.CommentAdded -> {
+                        val currentUpdates = _commentCountUpdates.value.toMutableMap()
+                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) + 1
+                        _commentCountUpdates.value = currentUpdates
+                    }
+                }
+            }
+        }
+    }
 
     private val _tabType: MutableStateFlow<HomeTab> = MutableStateFlow(HomeTab.ALL)
     val tabType = _tabType.asStateFlow()
@@ -65,37 +85,47 @@ class HomeViewModel @Inject constructor(
     private val _blockedProviderIds = MutableStateFlow<Set<String>>(emptySet())
     private val _addedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
     private val _updatedPostFeeds = MutableStateFlow<List<PostFeed>>(emptyList())
+    private val _commentCountUpdates = MutableStateFlow<Map<Int, Int>>(emptyMap())
 
     private val _cachedPostFeeds = tabType.flatMapLatest { tab ->
         postRepository.getPosts(tab)
     }.cachedIn(viewModelScope)
 
-    val postFeeds: Flow<PagingData<PostFeed>> =
-        combine(
-            _cachedPostFeeds,
-            _deletedPostIds,
-            _blockedProviderIds,
-            _addedPostFeeds,
-            _updatedPostFeeds
-        ) { pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds ->
-            var result = pagingData
-                .filter { it.providerId !in blockedIds && it.postId !in deletedIds }
-                .map { postFeed ->
-                    val updatedPost = updatedPostFeeds.find { it.postId == postFeed.postId }
-                    updatedPost ?: postFeed
-                }
+    private val _combinedPostFlows = combine(
+        _cachedPostFeeds,
+        _deletedPostIds,
+        _blockedProviderIds,
+        _addedPostFeeds,
+        _updatedPostFeeds
+    ) { pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds ->
+        Quintuple(pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds)
+    }
 
-            addedPostFeeds.reversed().forEach {
-                result = result.insertHeaderItem(item = it)
+    val postFeeds: Flow<PagingData<PostFeed>> = combine(
+        _combinedPostFlows,
+        _commentCountUpdates
+    ) { (pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds), commentCountUpdates ->
+        var result = pagingData
+            .filter { it.providerId !in blockedIds && it.postId !in deletedIds }
+            .map { postFeed ->
+                val updatedPost = updatedPostFeeds.find { it.postId == postFeed.postId } ?: postFeed
+                val commentCountChange = commentCountUpdates[postFeed.postId] ?: 0
+                updatedPost.copy(commentCount = (updatedPost.commentCount + commentCountChange).coerceAtLeast(0))
             }
 
-            result
+        addedPostFeeds.reversed().forEach {
+            result = result.insertHeaderItem(item = it)
         }
+
+        result
+    }
 
     fun onRefresh() {
         _deletedPostIds.value = emptySet()
         _blockedProviderIds.value = emptySet()
         _addedPostFeeds.value = emptyList()
+        _updatedPostFeeds.value = emptyList()
+        _commentCountUpdates.value = emptyMap()
     }
 
     fun setTabType(tabType: HomeTab) {
@@ -108,5 +138,12 @@ class HomeViewModel @Inject constructor(
         data object NavigateToWritePost : HomeEvent()
         data object NavigateToSearch : HomeEvent()
     }
-}
 
+    data class Quintuple<A, B, C, D, E>(
+        val first: A,
+        val second: B,
+        val third: C,
+        val fourth: D,
+        val fifth: E
+    )
+}

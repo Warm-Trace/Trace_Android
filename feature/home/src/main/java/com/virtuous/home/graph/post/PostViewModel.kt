@@ -214,6 +214,8 @@ class PostViewModel @Inject constructor(
             }.onFailure {
                 _eventChannel.send(PostEvent.AddCommentFailure)
             }
+
+
     }
 
     fun replyComment(onSuccess: (Int) -> Unit) =
@@ -242,7 +244,7 @@ class PostViewModel @Inject constructor(
 
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {
-        commentRepository.deleteComment(commentId)
+        commentRepository.deleteComment(postId, commentId)
             .onSuccess {
                 _eventChannel.send(PostEvent.DeleteCommentSuccess)
                 _deletedCommentIds.value += commentId
