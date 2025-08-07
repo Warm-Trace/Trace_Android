@@ -58,15 +58,15 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is PostUpdateEvent.EmotionAdded -> {
-                        val currentUpdates = _emotionCountUpdates.value.toMutableMap()
-                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) + 1
-                        _emotionCountUpdates.value = currentUpdates
+                        _emotionCountUpdates.update { current ->
+                            current + (event.postId to (current[event.postId] ?: 0) + 1)
+                        }
                     }
 
                     is PostUpdateEvent.EmotionDeleted -> {
-                        val currentUpdates = _emotionCountUpdates.value.toMutableMap()
-                        currentUpdates[event.postId] = (currentUpdates[event.postId] ?: 0) - 1
-                        _emotionCountUpdates.value = currentUpdates
+                        _emotionCountUpdates.update { current ->
+                            current + (event.postId to (current[event.postId] ?: 0) - 1)
+                        }
                     }
                 }
             }
@@ -128,7 +128,9 @@ class HomeViewModel @Inject constructor(
                 val emotionCountChange = emotionCountUpdates[postFeed.postId] ?: 0
                 updatedPost.copy(
                     commentCount = (updatedPost.commentCount + commentCountChange).coerceAtLeast(0),
-                    totalEmotionCount = (updatedPost.totalEmotionCount + emotionCountChange).coerceAtLeast(0)
+                    totalEmotionCount = (updatedPost.totalEmotionCount + emotionCountChange).coerceAtLeast(
+                        0
+                    )
                 )
             }
 
