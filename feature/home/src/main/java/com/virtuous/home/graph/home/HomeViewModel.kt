@@ -144,6 +144,7 @@ class HomeViewModel @Inject constructor(
         _addedPostFeeds.value = emptyList()
         _updatedPostFeeds.value = emptyList()
         _commentCountUpdates.value = emptyMap()
+        _emotionCountUpdates.value = emptyMap()
     }
 
     fun setTabType(tabType: HomeTab) {
