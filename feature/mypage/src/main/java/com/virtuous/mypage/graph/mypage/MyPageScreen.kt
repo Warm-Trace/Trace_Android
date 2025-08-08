@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,6 +42,7 @@ import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
+import com.virtuous.designsystem.component.Swallow
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.GrayLine
@@ -50,6 +52,7 @@ import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.post.PostType
+import com.virtuous.domain.model.user.SwallowLevel
 import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 import kotlinx.coroutines.flow.flowOf
@@ -159,9 +162,11 @@ private fun MyPageScreen(
 
                     Spacer(Modifier.width(20.dp))
 
-                    Column {
-                        Row() {
-                            Text(userInfo.name, style = TraceTheme.typography.headingLB)
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Row {
+                            Text(userInfo.name, style = TraceTheme.typography.headingMB)
 
                             Spacer(Modifier.width(2.dp))
 
@@ -175,26 +180,58 @@ private fun MyPageScreen(
                             )
                         }
 
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                        Text(
-                            "선행 점수 ${userInfo.verificationScore}",
-                            style = TraceTheme.typography.bodyMR.copy(
-                                fontSize = 15.sp,
-                                lineHeight = 19.sp
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Spacer(Modifier.width(4.dp))
+
+                            Image(
+                                painter = painterResource(R.drawable.point_ic),
+                                contentDescription = "선행 포인트",
+                                modifier = Modifier.width(14.dp).height(27.dp)
                             )
-                        )
 
-                        Spacer(Modifier.height(5.dp))
+                            Spacer(Modifier.width(8.dp))
 
-                        Text(
-                            "선행 마크 ${userInfo.verificationCount}",
-                            style = TraceTheme.typography.bodyMR.copy(
-                                fontSize = 15.sp,
-                                lineHeight = 19.sp
+                            Text(
+                                "선행 포인트  ${userInfo.verificationScore}",
+                                style = TraceTheme.typography.bodySR.copy(
+                                    fontSize = 15.sp,
+                                    lineHeight = 19.sp
+                                )
                             )
-                        )
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.verification_mark),
+                                contentDescription = "선행 마크",
+                                modifier = Modifier.size(22.dp),
+                            )
+
+                            Spacer(Modifier.width(4.dp))
+
+                            Text(
+                                "선행 마크  ${userInfo.verificationCount}",
+                                style = TraceTheme.typography.bodySR.copy(
+                                    fontSize = 15.sp,
+                                    lineHeight = 19.sp
+                                )
+                            )
+                        }
                     }
+
+                    Spacer(Modifier.weight(1f))
+
+                    Swallow(level = SwallowLevel.ADULT_BIRD)
+
+                    Spacer(Modifier.width(10.dp))
                 }
 
                 Spacer(Modifier.height(28.dp))
