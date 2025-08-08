@@ -75,7 +75,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getBlockedUsers(): Result<List<BlockedUser>> = suspendRunCatching {
         val response = userDataSource.getBlockedUsers().getOrThrow()
-        response.toDomain()
+        response.map {
+            it.toDomain()
+        }
     }
 
     override suspend fun unblockUser(providerId: String): Result<Unit> = suspendRunCatching {

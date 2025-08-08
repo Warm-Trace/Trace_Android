@@ -193,7 +193,7 @@ interface TraceApi {
     ): Result<Unit>
 
     @GET("/api/v1/reports/blocked-users")
-    suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse>
+    suspend fun getBlockedUsers(): Result<List<GetBlockedUsersResponse>>
 
     @POST("/api/v1/reports/unblock/{blockedProviderId}")
     suspend fun unblockUser(

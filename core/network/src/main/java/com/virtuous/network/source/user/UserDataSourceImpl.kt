@@ -56,7 +56,7 @@ class UserDataSourceImpl @Inject constructor(
         return traceApi.updateProfileImage(requestImage)
     }
 
-    override suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse> =
+    override suspend fun getBlockedUsers(): Result<List<GetBlockedUsersResponse>> =
         traceApi.getBlockedUsers()
 
     override suspend fun unblockUser(providerId: String): Result<Unit> =
