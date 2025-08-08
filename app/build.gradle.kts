@@ -4,6 +4,8 @@ plugins {
     id("trace.android.application")
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -45,8 +47,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -69,7 +71,10 @@ android {
     buildFeatures {
         buildConfig = true
     }
+}
 
+baselineProfile {
+    dexLayoutOptimization = true
 }
 
 dependencies {
@@ -80,4 +85,6 @@ dependencies {
 
     implementation(libs.kakao.user)
     implementation(libs.firebase.messaging)
+    implementation(libs.androidx.profileinstaller)
+    baselineProfile(projects.baselineprofile)
 }
