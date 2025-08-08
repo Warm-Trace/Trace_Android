@@ -12,6 +12,7 @@ import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.mypage.graph.blocked_user.BlockedUserRoute
 import com.virtuous.mypage.graph.mypage.MyPageRoute
 import com.virtuous.mypage.graph.setting.SettingRoute
+import com.virtuous.mypage.graph.swallow.SwallowRoute
 import com.virtuous.mypage.graph.updateprofile.UpdateProfileRoute
 import com.virtuous.mypage.graph.webview.WebViewRoute
 import com.virtuous.navigation.MyPageBaseRoute
@@ -34,6 +35,10 @@ fun NavController.navigateToBlockedUser(navOptions: NavOptions? = null) {
     navigate(MyPageGraph.BlockedUserRoute, navOptions)
 }
 
+fun NavController.navigateToSwallow(navOptions: NavOptions? = null) {
+    navigate(MyPageGraph.SwallowRoute, navOptions)
+}
+
 fun NavGraphBuilder.myPageNavGraph(
     navigateToLogin: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
@@ -42,6 +47,7 @@ fun NavGraphBuilder.myPageNavGraph(
     navigateToWebView: (String) -> Unit,
     navigateToBlockedUser: () -> Unit,
     navigateToUserProfile: (String) -> Unit,
+    navigateToSwallow: () -> Unit,
     navigateBack: () -> Unit
 ) {
     navigation<MyPageBaseRoute>(startDestination = MyPageGraph.MyPageRoute) {
@@ -49,7 +55,8 @@ fun NavGraphBuilder.myPageNavGraph(
             MyPageRoute(
                 navigateToPost = navigateToPost,
                 navigateToEditProfile = navigateToUpdateProfile,
-                navigateToSetting = navigateToSetting
+                navigateToSetting = navigateToSetting,
+                navigateToSwallow = navigateToSwallow,
             )
         }
 
@@ -64,14 +71,26 @@ fun NavGraphBuilder.myPageNavGraph(
 
         composable<MyPageGraph.SettingRoute>(
             enterTransition = {
-                if (initialState.destination.containsRoute(listOf(MyPageGraph.WebViewRoute::class, MyPageGraph.BlockedUserRoute::class))) {
+                if (initialState.destination.containsRoute(
+                        listOf(
+                            MyPageGraph.WebViewRoute::class,
+                            MyPageGraph.BlockedUserRoute::class
+                        )
+                    )
+                ) {
                     null
                 } else {
                     defaultSlideFadeIn()
                 }
             },
             exitTransition = {
-                if (targetState.destination.containsRoute(listOf(MyPageGraph.WebViewRoute::class, MyPageGraph.BlockedUserRoute::class))) {
+                if (targetState.destination.containsRoute(
+                        listOf(
+                            MyPageGraph.WebViewRoute::class,
+                            MyPageGraph.BlockedUserRoute::class
+                        )
+                    )
+                ) {
                     null
                 } else {
                     defaultSlideFadeOut()
@@ -84,6 +103,35 @@ fun NavGraphBuilder.myPageNavGraph(
                 navigateBack = navigateBack,
                 navigateToBlockedUser = navigateToBlockedUser
             )
+        }
+
+        composable<MyPageGraph.SwallowRoute>(
+            enterTransition = {
+                if (initialState.destination.containsRoute(
+                        listOf(
+                            MyPageGraph.SettingRoute::class,
+                        )
+                    )
+                ) {
+                    null
+                } else {
+                    defaultSlideFadeIn()
+                }
+            },
+            exitTransition = {
+                if (targetState.destination.containsRoute(
+                        listOf(
+                            MyPageGraph.SettingRoute::class,
+                        )
+                    )
+                ) {
+                    null
+                } else {
+                    defaultSlideFadeOut()
+                }
+            }
+        ) {
+            SwallowRoute(navigateBack)
         }
 
         composable<MyPageGraph.BlockedUserRoute>(

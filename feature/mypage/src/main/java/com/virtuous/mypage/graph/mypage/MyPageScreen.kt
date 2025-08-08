@@ -42,7 +42,7 @@ import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
-import com.virtuous.designsystem.component.Swallow
+import com.virtuous.designsystem.component.SwallowProfile
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.GrayLine
@@ -64,6 +64,7 @@ internal fun MyPageRoute(
     navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
+    navigateToSwallow: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
@@ -77,6 +78,7 @@ internal fun MyPageRoute(
                 is MyPageEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is MyPageEvent.NavigateToEditProfile -> navigateToEditProfile()
                 is MyPageEvent.NavigateToSetting -> navigateToSetting()
+                is MyPageEvent.NavigateToSwallow -> navigateToSwallow()
             }
         }
     }
@@ -104,9 +106,9 @@ internal fun MyPageRoute(
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postFeed -> viewModel.onEvent(MyPageEvent.NavigateToPost(postFeed)) },
         navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
-        navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) }
+        navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) },
+        navigateToSwallow = { viewModel.onEvent(MyPageEvent.NavigateToSwallow) }
     )
-
 }
 
 @Composable
@@ -119,11 +121,12 @@ private fun MyPageScreen(
     navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
+    navigateToSwallow: () -> Unit,
 ) {
     val tabs = MyPageTab.entries
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
-    
+
     Log.d("SwallowLevel", swallowLevel.label)
 
     Box(
@@ -230,7 +233,7 @@ private fun MyPageScreen(
 
                     Spacer(Modifier.weight(1f))
 
-                    Swallow(level = swallowLevel)
+                    SwallowProfile(level = swallowLevel, navigateToSwallow = navigateToSwallow)
 
                     Spacer(Modifier.width(10.dp))
                 }
@@ -314,6 +317,7 @@ fun MyPageScreenPreview() {
         swallowLevel = SwallowLevel.ADOLESCENT_BIRD,
         tabType = MyPageTab.WRITTEN_POSTS,
         navigateToPost = {},
+        navigateToSwallow = {},
         onTabTypeChange = {}
     )
 }
