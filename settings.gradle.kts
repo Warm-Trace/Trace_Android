@@ -48,3 +48,4 @@ include(":feature:mypage")
 
 
 
+include(":baselineprofile")

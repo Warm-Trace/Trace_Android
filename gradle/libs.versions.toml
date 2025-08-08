@@ -82,6 +82,7 @@ androidxEspresso = "3.6.1"
 
 # https://kotest.io/
 kotest = "5.9.1"
+baselineprofileVersion = "1.2.4"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -182,3 +183,4 @@ android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint"}
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofileVersion" }

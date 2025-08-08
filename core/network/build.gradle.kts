@@ -10,16 +10,28 @@ plugins {
 android {
     namespace = "com.virtuous.network"
 
-    defaultConfig {
-        val properties = Properties().apply {
+    buildTypes {
+        val localProperties = Properties().apply {
             load(FileInputStream(rootProject.file("local.properties")))
         }
 
-        buildConfigField(
-            "String",
-            "TRACE_BASE_URL",
-            properties["TRACE_BASE_URL"] as String
-        )
+        debug {
+            buildConfigField(
+                "String",
+                "TRACE_BASE_URL",
+                localProperties["TRACE_BASE_URL"] as String
+            )
+        }
+
+        release {
+            consumerProguardFiles("consumer-rules.pro")
+
+            buildConfigField(
+                "String",
+                "TRACE_BASE_URL",
+                localProperties["TRACE_BASE_URL"] as String
+            )
+        }
     }
 
     buildFeatures {
