@@ -3,8 +3,8 @@ package com.virtuous.domain.model.user
 enum class SwallowLevel(
     val level: Int,
     val label: String,
-    val goodDeedCount: Int,
-    val missionCount: Int
+    val verifiedPostCount: Int,
+    val completedMissionCount: Int
 ) {
     EGG(0, "알", 0, 0),
     BABY_BIRD(1, "새끼", 1, 1),
@@ -15,9 +15,9 @@ enum class SwallowLevel(
     LEGENDARY_SWALLOW(6, "전설의 제비", 60, 25);
 
     companion object {
-        fun getLevel(goodDeedCount: Int, missionCount: Int): SwallowLevel {
+        fun getLevel(verifiedPostCount: Int, completedMissionCount: Int): SwallowLevel {
             return entries.lastOrNull {
-                goodDeedCount >= it.goodDeedCount && missionCount >= it.missionCount
+                verifiedPostCount >= it.verifiedPostCount && completedMissionCount >= it.completedMissionCount
             } ?: EGG
         }
     }

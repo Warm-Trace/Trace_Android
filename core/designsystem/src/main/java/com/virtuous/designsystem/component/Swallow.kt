@@ -36,7 +36,7 @@ fun Swallow(
     ) {
         Image(painter = painterResource(swallowRes), contentDescription = level.label, modifier = Modifier.size(70.dp), contentScale = ContentScale.Fit)
 
-        Spacer(Modifier.height(3.dp))
+        Spacer(Modifier.height(5.dp))
 
         Text("현재 레벨: ${level.label}", style = TraceTheme.typography.bodySM)
     }

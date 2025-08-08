@@ -223,7 +223,7 @@ private fun UserProfileScreen(
 @Composable
 private fun UserProfileScreenPreview() {
     UserProfileScreen(
-        userInfo = UserInfo("닉네임", null, 0, 0),
+        userInfo = UserInfo("닉네임", null, 0, 0, 0, 0),
         tabType = UserProfileTab.WRITTEN_POSTS,
         displayedPosts = fakeLazyPagingPosts(),
         onTabTypeChange = {},

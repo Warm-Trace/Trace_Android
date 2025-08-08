@@ -36,13 +36,9 @@ class UserProfileViewModel @Inject constructor(
     private val routeArgs: HomeGraph.UserProfileRoute = savedStateHandle.toRoute()
     private val providerId = routeArgs.providerId
 
-    init {
-        getUserInfo()
-    }
-
     private val _userInfo = MutableStateFlow(
         UserInfo(
-            "닉네임", null, 0, 0
+            "닉네임", null, 0, 0, 0,0
         )
     )
     val userInfo = _userInfo.asStateFlow()
@@ -55,6 +51,10 @@ class UserProfileViewModel @Inject constructor(
             postRepository.getUserPosts(providerId, tab)
         }
         .cachedIn(viewModelScope)
+
+    init {
+        getUserInfo()
+    }
 
     private fun getUserInfo() = viewModelScope.launch {
         userRepository.loadUserInfo(providerId).onSuccess {

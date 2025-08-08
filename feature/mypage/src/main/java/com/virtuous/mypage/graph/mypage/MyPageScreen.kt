@@ -1,5 +1,6 @@
 package com.virtuous.mypage.graph.mypage
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -69,6 +69,7 @@ internal fun MyPageRoute(
     val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
     val displayedPosts = viewModel.displayedPosts.collectAsLazyPagingItems()
+    val swallowLevel by viewModel.swallowLevel.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
@@ -99,6 +100,7 @@ internal fun MyPageRoute(
         userInfo = userInfo,
         tabType = tabType,
         displayedPosts = displayedPosts,
+        swallowLevel = swallowLevel,
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postFeed -> viewModel.onEvent(MyPageEvent.NavigateToPost(postFeed)) },
         navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
@@ -112,6 +114,7 @@ private fun MyPageScreen(
     userInfo: UserInfo,
     tabType: MyPageTab,
     displayedPosts: LazyPagingItems<PostFeed>,
+    swallowLevel: SwallowLevel,
     onTabTypeChange: (MyPageTab) -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
@@ -120,6 +123,8 @@ private fun MyPageScreen(
     val tabs = MyPageTab.entries
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
+    
+    Log.d("SwallowLevel", swallowLevel.label)
 
     Box(
         modifier = Modifier
@@ -147,7 +152,7 @@ private fun MyPageScreen(
                     )
                 }
 
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(12.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -190,17 +195,16 @@ private fun MyPageScreen(
                             Image(
                                 painter = painterResource(R.drawable.point_ic),
                                 contentDescription = "선행 포인트",
-                                modifier = Modifier.width(14.dp).height(27.dp)
+                                modifier = Modifier
+                                    .width(14.dp)
+                                    .height(27.dp)
                             )
 
-                            Spacer(Modifier.width(8.dp))
+                            Spacer(Modifier.width(10.dp))
 
                             Text(
-                                "선행 포인트  ${userInfo.verificationScore}",
-                                style = TraceTheme.typography.bodySR.copy(
-                                    fontSize = 15.sp,
-                                    lineHeight = 19.sp
-                                )
+                                "${userInfo.verificationScore}",
+                                style = TraceTheme.typography.bodySSB
                             )
                         }
 
@@ -215,21 +219,18 @@ private fun MyPageScreen(
                                 modifier = Modifier.size(22.dp),
                             )
 
-                            Spacer(Modifier.width(4.dp))
+                            Spacer(Modifier.width(6.dp))
 
                             Text(
-                                "선행 마크  ${userInfo.verificationCount}",
-                                style = TraceTheme.typography.bodySR.copy(
-                                    fontSize = 15.sp,
-                                    lineHeight = 19.sp
-                                )
+                                "${userInfo.verificationCount}",
+                                style = TraceTheme.typography.bodySSB
                             )
                         }
                     }
 
                     Spacer(Modifier.weight(1f))
 
-                    Swallow(level = SwallowLevel.ADULT_BIRD)
+                    Swallow(level = swallowLevel)
 
                     Spacer(Modifier.width(10.dp))
                 }
@@ -306,10 +307,11 @@ private fun MyPageScreen(
 @Composable
 fun MyPageScreenPreview() {
     MyPageScreen(
-        userInfo = UserInfo("닉네임", null, 0, 0),
+        userInfo = UserInfo("닉네임", null, 0, 0, 0, 0),
         navigateToEditProfile = {},
         navigateToSetting = {},
         displayedPosts = fakeLazyPagingPosts(),
+        swallowLevel = SwallowLevel.ADOLESCENT_BIRD,
         tabType = MyPageTab.WRITTEN_POSTS,
         navigateToPost = {},
         onTabTypeChange = {}
