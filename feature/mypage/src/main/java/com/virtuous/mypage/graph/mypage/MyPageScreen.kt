@@ -1,6 +1,5 @@
 package com.virtuous.mypage.graph.mypage
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -126,8 +125,6 @@ private fun MyPageScreen(
     val tabs = MyPageTab.entries
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
-
-    Log.d("SwallowLevel", swallowLevel.label)
 
     Box(
         modifier = Modifier
