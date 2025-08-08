@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Cursor(
-    val dateTime : LocalDateTime?,
-    val id : Int?,
+data class Cursor<T>(
+    val dateTime: LocalDateTime?,
+    val id: T?,
 )

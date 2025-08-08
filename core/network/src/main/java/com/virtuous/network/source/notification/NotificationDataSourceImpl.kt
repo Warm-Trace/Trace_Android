@@ -32,7 +32,7 @@ class NotificationDataSourceImpl @Inject constructor(
 
     override suspend fun getNotifications(
         cursorDateTime: LocalDateTime?,
-        cursorId: Int?,
+        cursorId: String?,
         size: Int
     ): Result<GetNotificationsResponse> = traceApi.getNotifications(
         cursorDateTime = cursorDateTime,

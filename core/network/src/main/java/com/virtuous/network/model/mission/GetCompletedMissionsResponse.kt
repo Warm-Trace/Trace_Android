@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetCompletedMissionsResponse(
     val hasNext: Boolean,
-    val cursor: Cursor?,
+    val cursor: Cursor<Int>?,
     val content: List<MissionContent>,
 ) {
     fun toDomain(): List<MissionFeed> = content.map { it.toDomain() }

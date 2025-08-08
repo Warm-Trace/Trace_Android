@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetPostsResponse(
     val hasNext: Boolean,
-    val cursor: Cursor?,
+    val cursor: Cursor<Int>?,
     val content: List<PostContent>,
 ) {
     fun toDomain(): List<PostFeed> = content.map { it.toDomain() }

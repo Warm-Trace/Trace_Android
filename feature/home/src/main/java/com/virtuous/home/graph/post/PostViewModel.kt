@@ -4,7 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
+import androidx.paging.map
+import com.virtuous.domain.model.post.Comment
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.EmotionCount
 import com.virtuous.domain.model.post.PostDetail
@@ -15,8 +19,10 @@ import com.virtuous.navigation.HomeGraph
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -40,7 +46,7 @@ class PostViewModel @Inject constructor(
         getPost()
     }
 
-    private val _refreshTrigger = MutableStateFlow(false)
+    private val _commentRefreshTrigger = MutableStateFlow(false)
 
     private val _postDetail = MutableStateFlow(
         PostDetail(
@@ -67,17 +73,52 @@ class PostViewModel @Inject constructor(
     )
     val postDetail = _postDetail.asStateFlow()
 
-    val commentPagingFlow = _refreshTrigger
+    private val _deletedCommentIds = MutableStateFlow<Set<Int>>(emptySet())
+
+    private val _cachedComments = _commentRefreshTrigger
         .flatMapLatest {
             commentRepository.getCommentPagingFlow(postId)
         }
         .cachedIn(viewModelScope)
+
+    val comments: Flow<PagingData<Comment>> =
+        combine(
+            _cachedComments,
+            _deletedCommentIds,
+        ) { pagingData, deletedIds ->
+            pagingData
+                .filter { comment ->
+                    // 대댓글이 없는 부모 댓글이고, 삭제된 경우 -> 목록에서 완전히 제거
+                    (comment.replies.isEmpty() && comment.commentId in deletedIds).not()
+                }
+                .map { comment ->
+                    // 삭제된 대댓글을 replies 리스트에서 필터링
+                    val filteredReplies = comment.replies.filter { reply ->
+                        reply.commentId !in deletedIds
+                    }
+
+                    var newComment = comment.copy(replies = filteredReplies)
+
+                    // 대댓글이 있는 부모 댓글이고, 삭제된 경우 -> isDeleted = true로 변경
+                    if (comment.replies.isNotEmpty() && comment.commentId in deletedIds) {
+                        newComment = newComment.copy(isDeleted = true)
+                    }
+
+                    newComment
+                }
+        }
 
     private val _commentInput = MutableStateFlow("")
     val commentInput = _commentInput.asStateFlow()
 
     private val _replyTargetId: MutableStateFlow<Int?> = MutableStateFlow(null)
     val replyTargetId = _replyTargetId.asStateFlow()
+
+    fun onRefresh() {
+        getPost()
+        _deletedCommentIds.value = emptySet()
+        refreshComments()
+    }
 
     fun setCommentInput(commentInput: String) {
         _commentInput.value = commentInput
@@ -96,6 +137,8 @@ class PostViewModel @Inject constructor(
 
         postRepository.getPost(postId).onSuccess {
             _postDetail.value = it
+        }.onFailure {
+            _eventChannel.send(PostEvent.GetPostFailure)
         }
     }
 
@@ -110,6 +153,7 @@ class PostViewModel @Inject constructor(
             .onSuccess { _eventChannel.send(PostEvent.BlockUserSuccess) }
             .onFailure { _eventChannel.send(PostEvent.BlockUserFailure) }
     }
+
     fun deletePost() = viewModelScope.launch {
         postRepository.deletePost(postId = postId)
             .onSuccess { _eventChannel.send(PostEvent.DeletePostSuccess) }
@@ -154,7 +198,7 @@ class PostViewModel @Inject constructor(
     }
 
     private fun refreshComments() = viewModelScope.launch {
-        _refreshTrigger.value = !_refreshTrigger.value
+        _commentRefreshTrigger.value = !_commentRefreshTrigger.value
     }
 
     fun addComment() = viewModelScope.launch {
@@ -188,9 +232,8 @@ class PostViewModel @Inject constructor(
                 content = _commentInput.value
             ).onSuccess {
                 clearReplyTargetId()
-                refreshComments()
                 _commentInput.value = ""
-
+                refreshComments()
                 onSuccess(parentId)
                 _eventChannel.send(PostEvent.AddReplySuccess)
             }.onFailure {
@@ -200,10 +243,10 @@ class PostViewModel @Inject constructor(
 
 
     fun deleteComment(commentId: Int) = viewModelScope.launch {
-        commentRepository.deleteComment(commentId)
+        commentRepository.deleteComment(postId, commentId)
             .onSuccess {
-                refreshComments()
                 _eventChannel.send(PostEvent.DeleteCommentSuccess)
+                _deletedCommentIds.value += commentId
             }
             .onFailure { _eventChannel.send(PostEvent.DeleteCommentFailure) }
     }
@@ -216,6 +259,7 @@ class PostViewModel @Inject constructor(
 
     sealed class PostEvent {
         data class ShowSnackBar(val message: String) : PostEvent()
+        data object GetPostFailure : PostEvent()
         data object DeletePostSuccess : PostEvent()
         data object DeletePostFailure : PostEvent()
         data object ReportPostSuccess : PostEvent()

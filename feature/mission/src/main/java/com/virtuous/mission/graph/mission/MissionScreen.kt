@@ -1,7 +1,6 @@
 package com.virtuous.mission.graph.mission
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -87,60 +86,53 @@ private fun MissionScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-
-    }
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(vertical = 15.dp, horizontal = 20.dp)
-    ) {
-        item {
-            if (!dailyMission.mission.isVerified) {
-                MissionHeaderView(
-                    dailyMission = dailyMission,
-                    changeMission = changeMission,
-                    verifyMission = onVerifyMission
+        if (isRefreshing || isAppending) {
+            CircularProgressIndicator(
+                color = PrimaryDefault, modifier = Modifier.align(
+                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
                 )
-            }
-
-            if (dailyMission.mission.isVerified) {
-                MissionCompletedHeaderView(
-                    dailyMission = dailyMission
-                )
-            }
-
-            Spacer(Modifier.height(16.dp))
-        }
-
-        item {
-            Text(
-                "미션 기록",
-                style = TraceTheme.typography.bodySSB.copy(fontSize = 16.sp, lineHeight = 20.sp)
             )
-
-            Spacer(Modifier.height(16.dp))
         }
 
-        items(count = completedMissions.itemCount) { index ->
-            Box {
-                Column {
-                    completedMissions[index]?.let {
-                        VerifiedMissionBox(it, navigateToPost = navigateToPost)
-
-                        Spacer(Modifier.height(10.dp))
-                    }
-                }
-
-                if (isRefreshing || isAppending) {
-                    CircularProgressIndicator(
-                        color = PrimaryDefault, modifier = Modifier.align(
-                            if (isRefreshing) Alignment.Center else Alignment.BottomCenter
-                        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(vertical = 15.dp, horizontal = 20.dp)
+        ) {
+            item {
+                if (!dailyMission.mission.isVerified) {
+                    MissionHeaderView(
+                        dailyMission = dailyMission,
+                        changeMission = changeMission,
+                        verifyMission = onVerifyMission
                     )
                 }
+
+                if (dailyMission.mission.isVerified) {
+                    MissionCompletedHeaderView(
+                        dailyMission = dailyMission
+                    )
+                }
+
+                Spacer(Modifier.height(16.dp))
             }
 
+            item {
+                Text(
+                    "미션 기록",
+                    style = TraceTheme.typography.bodySSB.copy(fontSize = 16.sp, lineHeight = 20.sp)
+                )
+
+                Spacer(Modifier.height(16.dp))
+            }
+
+            items(count = completedMissions.itemCount) { index ->
+                completedMissions[index]?.let {
+                    VerifiedMissionBox(it, navigateToPost = navigateToPost)
+
+                    Spacer(Modifier.height(10.dp))
+                }
+            }
         }
     }
 }
@@ -154,14 +146,12 @@ private fun MissionScreenPreview() {
             mission = Mission(
                 description = "길거리에서 쓰레기 줍기",
                 isVerified = false,
-            ),
-            changeCount = 0
+            ), changeCount = 0
         ),
         completedMissions = fakeLazyPagingMissions(),
         changeMission = {},
         navigateToPost = {},
-        onVerifyMission = {}
-    )
+        onVerifyMission = {})
 }
 
 @Composable
@@ -175,29 +165,25 @@ private fun fakeLazyPagingMissions(): LazyPagingItems<MissionFeed> {
                     isVerified = true,
                     imageUrl = "https://picsum.photos/200/300?random=1",
                     createdAt = LocalDate.of(2025, 5, 22)
-                ),
-                MissionFeed(
+                ), MissionFeed(
                     missionId = 2,
                     description = "길거리 쓰레기 줍기",
                     isVerified = false,
                     imageUrl = null,
                     createdAt = LocalDate.of(2025, 5, 21)
-                ),
-                MissionFeed(
+                ), MissionFeed(
                     missionId = 3,
                     description = "카페에서 다 쓴 컵 정리하기",
                     isVerified = true,
                     imageUrl = "https://picsum.photos/200/300?random=6",
                     createdAt = LocalDate.of(2025, 5, 20)
-                ),
-                MissionFeed(
+                ), MissionFeed(
                     missionId = 4,
                     description = "지인에게 따뜻한 말 한마디 전하기",
                     isVerified = false,
                     imageUrl = null,
                     createdAt = LocalDate.of(2025, 5, 19)
-                ),
-                MissionFeed(
+                ), MissionFeed(
                     missionId = 5,
                     description = "엘리베이터 버튼 대신 눌러주기",
                     isVerified = true,

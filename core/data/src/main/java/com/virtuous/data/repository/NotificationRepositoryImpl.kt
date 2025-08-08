@@ -22,7 +22,10 @@ class NotificationRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(pageSize = DEFAULT_PAGE_SIZE),
             pagingSourceFactory = {
-                NotificationPagingSource(notificationDataSource)
+                NotificationPagingSource(
+                    notificationDataSource,
+                    DEFAULT_PAGE_SIZE
+                )
             }
         ).flow
     }

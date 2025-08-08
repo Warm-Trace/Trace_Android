@@ -86,6 +86,7 @@ internal fun HomeRoute(
         postFeeds = postFeeds,
         tabType = tabType,
         onTabTypeChange = viewModel::setTabType,
+        onRefresh = viewModel::onRefresh,
         navigateToPost = { postFeed -> viewModel.onEvent(HomeEvent.NavigateToPost(postFeed)) },
         navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
         navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) },
@@ -100,6 +101,7 @@ private fun HomeScreen(
     postFeeds: LazyPagingItems<PostFeed>,
     tabType: HomeTab,
     onTabTypeChange: (HomeTab) -> Unit,
+    onRefresh: () -> Unit,
     navigateToSearch: () -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToWritePost: () -> Unit,
@@ -112,7 +114,10 @@ private fun HomeScreen(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { postFeeds.refresh() }
+        onRefresh = {
+            postFeeds.refresh()
+            onRefresh()
+        }
     )
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -181,9 +186,10 @@ private fun HomeScreen(
                     painter = painterResource(R.drawable.notification_ic),
                     contentDescription = "알림",
                     modifier = Modifier.clickable {
+                        navigateToNotification()
                     })
 
-                Spacer(Modifier.width(20.dp))
+                Spacer(Modifier.width(25.dp))
 
                 Image(
                     painter = painterResource(R.drawable.search_ic),
@@ -192,7 +198,7 @@ private fun HomeScreen(
                         navigateToSearch()
                     })
 
-                Spacer(Modifier.width(22.dp))
+                Spacer(Modifier.width(25.dp))
 
                 Box() {
                     Image(
@@ -282,6 +288,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         tabType = HomeTab.ALL,
         onTabTypeChange = {},
+        onRefresh = {},
         navigateToPost = {},
         navigateToWritePost = {},
         navigateToSearch = {},

@@ -9,9 +9,9 @@ import com.virtuous.network.source.mission.MissionDataSource
 class MissionPagingSource(
     private val missionDataSource: MissionDataSource,
     private val pageSize: Int = 20
-) : PagingSource<Cursor, MissionFeed>() {
+) : PagingSource<Cursor<Int>, MissionFeed>() {
 
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, MissionFeed> {
+    override suspend fun load(params: LoadParams<Cursor<Int>>): LoadResult<Cursor<Int>, MissionFeed> {
         return try {
             val cursor = params.key
 
@@ -22,7 +22,7 @@ class MissionPagingSource(
 
             val postFeeds = response.toDomain()
 
-            val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
+            val nextCursor = if (response.hasNext && response.cursor != null) Cursor<Int>(
                 id = null,
                 dateTime = response.cursor?.dateTime
                     ?: throw IllegalStateException("Cursor must be present when hasNext is true")
@@ -42,5 +42,5 @@ class MissionPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor, MissionFeed>): Cursor? = null
+    override fun getRefreshKey(state: PagingState<Cursor<Int>, MissionFeed>): Cursor<Int>? = null
 }

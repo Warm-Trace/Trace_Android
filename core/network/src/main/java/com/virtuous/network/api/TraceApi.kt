@@ -209,7 +209,7 @@ interface TraceApi {
     @GET("/api/v1/notifications/all")
     suspend fun getNotifications(
         @Query("cursorDateTime") cursorDateTime: LocalDateTime?,
-        @Query("cursorId") cursorId: Int?,
+        @Query("cursorId") cursorId: String?,
         @Query("size") size: Int,
     ): Result<GetNotificationsResponse>
 

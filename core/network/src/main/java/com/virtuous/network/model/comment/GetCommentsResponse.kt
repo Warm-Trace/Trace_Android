@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetCommentsResponse(
     val hasNext: Boolean,
-    val cursor: Cursor?,
+    val cursor: Cursor<Int>?,
     val content: List<CommentContent>,
 ) {
     fun toDomain(): List<Comment> = content.map { it.toDomain() }

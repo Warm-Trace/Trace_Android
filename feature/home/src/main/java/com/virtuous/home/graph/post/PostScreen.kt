@@ -54,6 +54,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.virtuous.common.util.formatCount
 import com.virtuous.common_ui.event.TraceEvent
 import com.virtuous.common_ui.util.clickable
@@ -85,7 +86,6 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-
 @Composable
 internal fun PostRoute(
     navigateBack: () -> Unit,
@@ -93,7 +93,7 @@ internal fun PostRoute(
     navigateToUserProfile: (String) -> Unit,
     viewModel: PostViewModel = hiltViewModel()
 ) {
-    val comments = viewModel.commentPagingFlow.collectAsLazyPagingItems()
+    val comments = viewModel.comments.collectAsLazyPagingItems()
     val commentInput by viewModel.commentInput.collectAsStateWithLifecycle()
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
@@ -101,6 +101,11 @@ internal fun PostRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
+                is PostEvent.GetPostFailure -> {
+                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글을 불러올 수 없습니다."))
+                    navigateBack()
+                }
+
                 is PostEvent.DeletePostSuccess -> {
                     navigateBack()
                     viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
@@ -182,6 +187,7 @@ internal fun PostRoute(
         commentInput = commentInput,
         isReplying = replyTargetId != null,
         replyTargetId = replyTargetId,
+        onRefresh = viewModel::onRefresh,
         onCommentInputChange = viewModel::setCommentInput,
         onAddComment = viewModel::addComment,
         onDeletePost = viewModel::deletePost,
@@ -207,6 +213,7 @@ private fun PostScreen(
     commentInput: String,
     isReplying: Boolean,
     replyTargetId: Int?,
+    onRefresh: () -> Unit,
     onDeletePost: () -> Unit,
     onReportPost: (String) -> Unit,
     toggleEmotion: (Emotion) -> Unit,
@@ -225,12 +232,14 @@ private fun PostScreen(
     var showOwnPostMenu by remember { mutableStateOf(false) }
     var showOtherPostMenu by remember { mutableStateOf(false) }
 
-
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
     val isAppending = comments.loadState.append is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing, onRefresh = { comments.refresh() })
+        refreshing = isRefreshing,
+        onRefresh = {
+            onRefresh()
+        })
 
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -307,7 +316,7 @@ private fun PostScreen(
 
                         Spacer(Modifier.height(3.dp))
 
-                        Row() {
+                        Row {
                             Text(
                                 postDetail.formattedTime,
                                 style = TraceTheme.typography.bodyXSM,
@@ -487,19 +496,21 @@ private fun PostScreen(
             }
 
             items(
-                comments.itemCount
+                count = comments.itemCount,
+                key = comments.itemKey { comment -> comment.commentId }
             ) { index ->
-                comments[index]?.let { comment ->
-                    if (!comment.isDeleted || comment.replies.isNotEmpty()) {
+                val comment = comments[index]
+                comment?.let {
+                    if (!it.isDeleted || it.replies.isNotEmpty()) {
                         Spacer(Modifier.height(13.dp))
 
                         CommentView(
-                            comment = comment,
+                            comment = it,
                             replyTargetId = replyTargetId,
                             onDelete = onDeleteComment,
                             onReport = { commentId, reason -> onReportComment(commentId, reason) },
                             onReply = {
-                                onReplyTargetIdChange(comment.commentId)
+                                onReplyTargetIdChange(it.commentId)
 
                                 coroutineScope.launch {
                                     focusRequester.requestFocus()
@@ -547,7 +558,7 @@ private fun PostScreen(
 
             Spacer(Modifier.weight(1f))
 
-            Box() {
+            Box {
                 Image(
                     painter = painterResource(R.drawable.menu_ic),
                     contentDescription = "메뉴",
@@ -593,17 +604,10 @@ private fun PostScreen(
                 onValueChange = onCommentInputChange,
                 onAddComment = {
                     keyboardController?.hide()
-
                     onAddComment()
 
                     coroutineScope.launch {
-                        val visibleItems = listState.layoutInfo.visibleItemsInfo
-                        val lastVisibleIndex = visibleItems.lastOrNull()?.index ?: 0
-                        val lastItemIndex = comments.itemCount
-
-                        if (lastVisibleIndex < lastItemIndex) {
-                            listState.animateScrollToItem(index = lastItemIndex)
-                        }
+                        listState.animateScrollToItem(index = Int.MAX_VALUE)
                     }
                 },
                 onReplyComment = {
@@ -729,6 +733,7 @@ fun PostScreenPreview() {
         onCommentInputChange = {},
         navigateBack = {},
         navigateToUpdatePost = {},
+        onRefresh = {},
         onAddComment = {},
         onReplyComment = { },
         onDeleteComment = {},

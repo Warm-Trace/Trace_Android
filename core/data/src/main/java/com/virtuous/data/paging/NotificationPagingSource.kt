@@ -8,10 +8,10 @@ import com.virtuous.network.source.notification.NotificationDataSource
 
 class NotificationPagingSource(
     private val notificationDataSource: NotificationDataSource,
-    private val pageSize: Int = 20
-) : PagingSource<Cursor, Notification>() {
+    private val pageSize: Int = 20,
+) : PagingSource<Cursor<String>, Notification>() {
 
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, Notification> {
+    override suspend fun load(params: LoadParams<Cursor<String>>): LoadResult<Cursor<String>, Notification> {
         return try {
             val cursor = params.key
 
@@ -23,7 +23,7 @@ class NotificationPagingSource(
 
             val notifications = response.toDomain()
 
-            val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
+            val nextCursor = if (response.hasNext && response.cursor != null) Cursor<String>(
                 id = response.cursor?.id
                     ?: throw IllegalStateException("Cursor must be present when hasNext is true"),
                 dateTime = response.cursor?.dateTime
@@ -38,11 +38,10 @@ class NotificationPagingSource(
                 prevKey = null,
                 nextKey = safeNextCursor
             )
-
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor, Notification>): Cursor? = null
+    override fun getRefreshKey(state: PagingState<Cursor<String>, Notification>): Cursor<String>? = null
 }

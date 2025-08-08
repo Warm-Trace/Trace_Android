@@ -1,6 +1,5 @@
 package com.virtuous.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.virtuous.domain.model.mypage.MyPageTab
@@ -12,9 +11,9 @@ class MyPostPagingSource(
     private val postDatasource: PostDataSource,
     private val tabType: MyPageTab,
     private val pageSize: Int = 20
-) : PagingSource<Cursor, PostFeed>() {
+) : PagingSource<Cursor<Int>, PostFeed>() {
 
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostFeed> {
+    override suspend fun load(params: LoadParams<Cursor<Int>>): LoadResult<Cursor<Int>, PostFeed> {
         return try {
             val cursor = params.key
 
@@ -27,7 +26,7 @@ class MyPostPagingSource(
 
             val postFeeds = response.toDomain()
 
-            val nextCursor = if (response.hasNext && response.cursor != null) Cursor(
+            val nextCursor = if (response.hasNext && response.cursor != null) Cursor<Int>(
                 id = response.cursor?.id
                     ?: throw IllegalStateException("Cursor must be present when hasNext is true"),
                 dateTime = response.cursor?.dateTime
@@ -48,5 +47,5 @@ class MyPostPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor, PostFeed>): Cursor? = null
+    override fun getRefreshKey(state: PagingState<Cursor<Int>, PostFeed>): Cursor<Int>? = null
 }

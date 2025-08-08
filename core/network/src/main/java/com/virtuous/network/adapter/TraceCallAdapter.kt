@@ -45,17 +45,32 @@ private class TraceCall<T : Any>(
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val body = response.body()
 
-                if (response.isSuccessful && body != null) {
-                    Log.d("traceResponse", "${response.raw()} body ${body}")
-                    callback.onResponse(
-                        this@TraceCall,
-                        Response.success(Result.success(body))
-
-                    )
+                if (response.isSuccessful) {
+                    Log.d("traceResponse", "${response.raw()} body - ${body}")
+                    if (body != null) {
+                        callback.onResponse(
+                            this@TraceCall,
+                            Response.success(Result.success(body))
+                        )
+                    } else {
+                        @Suppress("UNCHECKED_CAST")
+                        callback.onResponse(
+                            this@TraceCall,
+                            Response.success(Result.success(Unit as T))
+                        )
+                    }
                 } else {
                     callback.onResponse(
                         this@TraceCall,
-                        Response.success(Result.failure(RuntimeException("HTTP ${response.code()}: ${response.message()} body: ${response.errorBody()?.string()}")))
+                        Response.success(
+                            Result.failure(
+                                RuntimeException(
+                                    "HTTP ${response.code()}: ${response.message()} body: ${
+                                        response.errorBody()?.string()
+                                    }"
+                                )
+                            )
+                        )
                     )
                 }
             }
@@ -73,7 +88,9 @@ private class TraceCall<T : Any>(
     }
 
     override fun clone(): Call<Result<T>> = TraceCall(delegate.clone())
-    override fun execute(): Response<Result<T>> = throw NotImplementedError("TraceCall doesn't support execute()")
+    override fun execute(): Response<Result<T>> =
+        throw NotImplementedError("TraceCall doesn't support execute()")
+
     override fun isExecuted(): Boolean = delegate.isExecuted
     override fun cancel() = delegate.cancel()
     override fun isCanceled(): Boolean = delegate.isCanceled

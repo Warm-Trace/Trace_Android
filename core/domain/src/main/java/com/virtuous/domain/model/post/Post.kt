@@ -75,6 +75,26 @@ data class PostDetail(
         createdAt.format(formatter)
     }
 
+    fun toPostFeed() : PostFeed {
+        return PostFeed(
+            postId = this.postId,
+            providerId = this.providerId,
+            postType = this.postType,
+            title = this.title,
+            content = this.content,
+            nickname = this.nickname,
+            profileImageUrl = this.profileImageUrl,
+            viewCount = this.viewCount,
+            commentCount = 0,
+            totalEmotionCount = this.emotionCount.totalCount,
+            isVerified = this.isVerified,
+            imageUrl = this.images.firstOrNull(),
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt
+        )
+    }
+
+
     companion object {
         private val formatter = DateTimeFormatter.ofPattern("MM/dd HH:mm")
     }
