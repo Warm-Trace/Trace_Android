@@ -56,12 +56,12 @@ internal fun NotificationView(
             NotificationType.COMMENT -> R.drawable.comment_ic
 
             NotificationType.EMOTION -> when (emotion) {
-                HEARTWARMING -> R.drawable.heartwarming
-                LIKEABLE -> R.drawable.likeable
-                TOUCHING -> R.drawable.touching
-                IMPRESSIVE -> R.drawable.impressive
-                GRATEFUL -> R.drawable.grateful
-                else -> R.drawable.heartwarming
+                HEARTWARMING -> R.drawable.heartwarming_ic
+                LIKEABLE -> R.drawable.likeable_ic
+                TOUCHING -> R.drawable.touching_ic
+                IMPRESSIVE -> R.drawable.impressive_ic
+                GRATEFUL -> R.drawable.grateful_ic
+                else -> R.drawable.heartwarming_ic
             }
 
             NotificationType.MISSION -> R.drawable.mission
