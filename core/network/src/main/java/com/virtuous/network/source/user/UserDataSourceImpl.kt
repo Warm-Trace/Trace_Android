@@ -4,6 +4,7 @@ import android.os.Build
 import com.virtuous.network.api.TraceApi
 import com.virtuous.network.model.user.GetBlockedUsersResponse
 import com.virtuous.network.model.user.LoadUserInfoResponse
+import com.virtuous.network.model.user.LoadUserVerificationsResponse
 import com.virtuous.network.model.user.UpdateNicknameRequest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -20,6 +21,9 @@ class UserDataSourceImpl @Inject constructor(
 
     override suspend fun loadUserInfo(providerId: String): Result<LoadUserInfoResponse> =
         traceApi.loadUserInfo(providerId)
+
+    override suspend fun loadUserVerifications(): Result<LoadUserVerificationsResponse> =
+        traceApi.loadMyVerifications()
 
     override suspend fun updateNickname(nickname: String): Result<LoadUserInfoResponse> =
         traceApi.updateNickname(
@@ -52,7 +56,7 @@ class UserDataSourceImpl @Inject constructor(
         return traceApi.updateProfileImage(requestImage)
     }
 
-    override suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse> =
+    override suspend fun getBlockedUsers(): Result<List<GetBlockedUsersResponse>> =
         traceApi.getBlockedUsers()
 
     override suspend fun unblockUser(providerId: String): Result<Unit> =

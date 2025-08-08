@@ -28,7 +28,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,7 +67,6 @@ import com.virtuous.designsystem.theme.EmotionLabel
 import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.MissionBackground
 import com.virtuous.designsystem.theme.PrimaryDefault
-import com.virtuous.designsystem.theme.Red
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.designsystem.theme.WarmGray
 import com.virtuous.domain.model.post.Comment
@@ -375,11 +373,11 @@ private fun PostScreen(
                         }
 
                         val emotionResource = when (emotion) {
-                            Emotion.HEARTWARMING -> R.drawable.heartwarming
-                            Emotion.LIKEABLE -> R.drawable.likeable
-                            Emotion.TOUCHING -> R.drawable.touching
-                            Emotion.IMPRESSIVE -> R.drawable.impressive
-                            Emotion.GRATEFUL -> R.drawable.grateful
+                            Emotion.HEARTWARMING -> R.drawable.heartwarming_ic
+                            Emotion.LIKEABLE -> R.drawable.likeable_ic
+                            Emotion.TOUCHING -> R.drawable.touching_ic
+                            Emotion.IMPRESSIVE -> R.drawable.impressive_ic
+                            Emotion.GRATEFUL -> R.drawable.grateful_ic
                         }
 
                         val isBorder = emotion == postDetail.yourEmotionType
@@ -408,10 +406,30 @@ private fun PostScreen(
                                         )
                                     }
 
+                                    if(emotion == Emotion.HEARTWARMING || emotion == Emotion.LIKEABLE || emotion == Emotion.IMPRESSIVE) {
+                                        Image(
+                                            painter = painterResource(R.drawable.sprout_left_ic),
+                                            contentDescription = "새싹",
+                                            modifier = Modifier
+                                                .size(9.dp)
+                                                .align(Alignment.TopCenter)
+                                                .offset(x = -6.dp, y = -2.dp)
+                                        )
+                                    }
+                                    else {
+                                        Image(
+                                            painter = painterResource(R.drawable.sprout_right_ic),
+                                            contentDescription = "새싹",
+                                            modifier = Modifier
+                                                .size(9.dp)
+                                                .align(Alignment.TopCenter)
+                                                .offset(x = 6.dp, y = -2.dp)
+                                        )
+                                    }
+
                                     if (emotion == Emotion.GRATEFUL) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.heart),
-                                            tint = Red,
+                                        Image(
+                                            painter = painterResource(R.drawable.heart_ic),
                                             contentDescription = "하트",
                                             modifier = Modifier
                                                 .size(5.5.dp)
@@ -419,9 +437,8 @@ private fun PostScreen(
                                                 .offset(x = 1.dp)
                                         )
 
-                                        Icon(
-                                            painter = painterResource(R.drawable.heart),
-                                            tint = Red,
+                                        Image(
+                                            painter = painterResource(R.drawable.heart_ic),
                                             contentDescription = "하트",
                                             modifier = Modifier
                                                 .size(5.5.dp)
@@ -429,14 +446,13 @@ private fun PostScreen(
                                                 .offset(x = -2.dp)
                                         )
 
-                                        Icon(
-                                            painter = painterResource(R.drawable.heart),
-                                            tint = Red,
+                                        Image(
+                                            painter = painterResource(R.drawable.heart_ic),
                                             contentDescription = "하트",
                                             modifier = Modifier
                                                 .size(5.5.dp)
-                                                .align(Alignment.TopEnd)
-                                                .offset(x = -3.dp)
+                                                .align(Alignment.TopStart)
+                                                .offset(x = 3.dp)
                                         )
                                     }
                                 }

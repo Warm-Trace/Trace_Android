@@ -22,6 +22,7 @@ import com.virtuous.mission.navigation.navigateToVerifyMission
 import com.virtuous.mypage.navigation.myPageNavGraph
 import com.virtuous.mypage.navigation.navigateToBlockedUser
 import com.virtuous.mypage.navigation.navigateToSetting
+import com.virtuous.mypage.navigation.navigateToSwallow
 import com.virtuous.mypage.navigation.navigateToUpdateProfile
 import com.virtuous.mypage.navigation.navigateToWebView
 import com.virtuous.navigation.HomeGraph
@@ -94,7 +95,8 @@ fun AppNavHost(
             },
             navigateToWebView = navController::navigateToWebView,
             navigateToBlockedUser = navController::navigateToBlockedUser,
-            navigateToUserProfile = navController::navigateToUserProfile
+            navigateToUserProfile = navController::navigateToUserProfile,
+            navigateToSwallow = navController::navigateToSwallow
         )
 
     }

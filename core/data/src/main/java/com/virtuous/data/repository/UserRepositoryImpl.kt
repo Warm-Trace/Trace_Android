@@ -35,12 +35,16 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadMyUserInfo(): Result<UserInfo> = suspendRunCatching {
-        val response = userDataSource.loadMyUserInfo().getOrThrow()
+        val userInfoResponse = userDataSource.loadMyUserInfo().getOrThrow()
+        val userVerificationsResponse = userDataSource.loadUserVerifications().getOrThrow()
+
         val userInfo = UserInfo(
-            name = response.nickname,
-            profileImageUrl = response.profileImageUrl,
-            verificationScore = response.verificationScore,
-            verificationCount = response.verificationCount,
+            name = userInfoResponse.nickname,
+            profileImageUrl = userInfoResponse.profileImageUrl,
+            verificationScore = userInfoResponse.verificationScore,
+            verificationCount = userInfoResponse.verificationCount,
+            verifiedPostCount = userVerificationsResponse.verifiedPostCount,
+            completedMissionCount = userVerificationsResponse.completedMissionCount,
         )
 
         localUserDataSource.setUserInfo(userInfo)
@@ -54,6 +58,8 @@ class UserRepositoryImpl @Inject constructor(
             profileImageUrl = response.profileImageUrl,
             verificationScore = response.verificationScore,
             verificationCount = response.verificationCount,
+            verifiedPostCount = 0,
+            completedMissionCount = 0
         )
     }
 
@@ -69,7 +75,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getBlockedUsers(): Result<List<BlockedUser>> = suspendRunCatching {
         val response = userDataSource.getBlockedUsers().getOrThrow()
-        response.toDomain()
+        response.map {
+            it.toDomain()
+        }
     }
 
     override suspend fun unblockUser(providerId: String): Result<Unit> = suspendRunCatching {

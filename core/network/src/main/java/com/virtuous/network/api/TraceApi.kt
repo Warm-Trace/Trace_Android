@@ -27,6 +27,7 @@ import com.virtuous.network.model.token.CheckTokenHealthResponse
 import com.virtuous.network.model.token.RefreshTokenRequest
 import com.virtuous.network.model.user.GetBlockedUsersResponse
 import com.virtuous.network.model.user.LoadUserInfoResponse
+import com.virtuous.network.model.user.LoadUserVerificationsResponse
 import com.virtuous.network.model.user.UpdateNicknameRequest
 import kotlinx.datetime.LocalDateTime
 import okhttp3.MultipartBody
@@ -65,6 +66,9 @@ interface TraceApi {
 
     @GET("/api/v1/user/{providerId}/profile")
     suspend fun loadUserInfo(@Path("providerId") providerId: String): Result<LoadUserInfoResponse>
+
+    @GET("/api/v1/user/verifications")
+    suspend fun loadMyVerifications(): Result<LoadUserVerificationsResponse>
 
     @PUT("/api/v1/user/profile/nickname")
     suspend fun updateNickname(
@@ -189,7 +193,7 @@ interface TraceApi {
     ): Result<Unit>
 
     @GET("/api/v1/reports/blocked-users")
-    suspend fun getBlockedUsers(): Result<GetBlockedUsersResponse>
+    suspend fun getBlockedUsers(): Result<List<GetBlockedUsersResponse>>
 
     @POST("/api/v1/reports/unblock/{blockedProviderId}")
     suspend fun unblockUser(

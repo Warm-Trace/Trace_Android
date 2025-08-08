@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -41,6 +41,7 @@ import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
+import com.virtuous.designsystem.component.SwallowProfile
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.GrayLine
@@ -50,6 +51,7 @@ import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.post.PostType
+import com.virtuous.domain.model.user.SwallowLevel
 import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 import kotlinx.coroutines.flow.flowOf
@@ -61,11 +63,13 @@ internal fun MyPageRoute(
     navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
+    navigateToSwallow: () -> Unit,
     viewModel: MyPageViewModel = hiltViewModel(),
 ) {
     val userInfo by viewModel.userInfo.collectAsStateWithLifecycle()
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
     val displayedPosts = viewModel.displayedPosts.collectAsLazyPagingItems()
+    val swallowLevel by viewModel.swallowLevel.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.eventChannel.collect { event ->
@@ -73,6 +77,7 @@ internal fun MyPageRoute(
                 is MyPageEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is MyPageEvent.NavigateToEditProfile -> navigateToEditProfile()
                 is MyPageEvent.NavigateToSetting -> navigateToSetting()
+                is MyPageEvent.NavigateToSwallow -> navigateToSwallow()
             }
         }
     }
@@ -96,12 +101,13 @@ internal fun MyPageRoute(
         userInfo = userInfo,
         tabType = tabType,
         displayedPosts = displayedPosts,
+        swallowLevel = swallowLevel,
         onTabTypeChange = viewModel::setTabType,
         navigateToPost = { postFeed -> viewModel.onEvent(MyPageEvent.NavigateToPost(postFeed)) },
         navigateToEditProfile = { viewModel.onEvent(MyPageEvent.NavigateToEditProfile) },
-        navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) }
+        navigateToSetting = { viewModel.onEvent(MyPageEvent.NavigateToSetting) },
+        navigateToSwallow = { viewModel.onEvent(MyPageEvent.NavigateToSwallow) }
     )
-
 }
 
 @Composable
@@ -109,10 +115,12 @@ private fun MyPageScreen(
     userInfo: UserInfo,
     tabType: MyPageTab,
     displayedPosts: LazyPagingItems<PostFeed>,
+    swallowLevel: SwallowLevel,
     onTabTypeChange: (MyPageTab) -> Unit,
     navigateToPost: (PostFeed) -> Unit,
     navigateToEditProfile: () -> Unit,
     navigateToSetting: () -> Unit,
+    navigateToSwallow: () -> Unit,
 ) {
     val tabs = MyPageTab.entries
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
@@ -144,7 +152,7 @@ private fun MyPageScreen(
                     )
                 }
 
-                Spacer(Modifier.height(5.dp))
+                Spacer(Modifier.height(12.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -159,9 +167,11 @@ private fun MyPageScreen(
 
                     Spacer(Modifier.width(20.dp))
 
-                    Column {
-                        Row() {
-                            Text(userInfo.name, style = TraceTheme.typography.headingLB)
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Row {
+                            Text(userInfo.name, style = TraceTheme.typography.headingMB)
 
                             Spacer(Modifier.width(2.dp))
 
@@ -175,26 +185,54 @@ private fun MyPageScreen(
                             )
                         }
 
-                        Spacer(Modifier.height(10.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                        Text(
-                            "선행 점수 ${userInfo.verificationScore}",
-                            style = TraceTheme.typography.bodyMR.copy(
-                                fontSize = 15.sp,
-                                lineHeight = 19.sp
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Spacer(Modifier.width(4.dp))
+
+                            Image(
+                                painter = painterResource(R.drawable.point_ic),
+                                contentDescription = "선행 포인트",
+                                modifier = Modifier
+                                    .width(14.dp)
+                                    .height(27.dp)
                             )
-                        )
 
-                        Spacer(Modifier.height(5.dp))
+                            Spacer(Modifier.width(10.dp))
 
-                        Text(
-                            "선행 마크 ${userInfo.verificationCount}",
-                            style = TraceTheme.typography.bodyMR.copy(
-                                fontSize = 15.sp,
-                                lineHeight = 19.sp
+                            Text(
+                                "${userInfo.verificationScore}",
+                                style = TraceTheme.typography.bodySSB
                             )
-                        )
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.verification_mark),
+                                contentDescription = "선행 마크",
+                                modifier = Modifier.size(22.dp),
+                            )
+
+                            Spacer(Modifier.width(6.dp))
+
+                            Text(
+                                "${userInfo.verificationCount}",
+                                style = TraceTheme.typography.bodySSB
+                            )
+                        }
                     }
+
+                    Spacer(Modifier.weight(1f))
+
+                    SwallowProfile(level = swallowLevel, navigateToSwallow = navigateToSwallow)
+
+                    Spacer(Modifier.width(10.dp))
                 }
 
                 Spacer(Modifier.height(28.dp))
@@ -269,12 +307,14 @@ private fun MyPageScreen(
 @Composable
 fun MyPageScreenPreview() {
     MyPageScreen(
-        userInfo = UserInfo("닉네임", null, 0, 0),
+        userInfo = UserInfo("닉네임", null, 0, 0, 0, 0),
         navigateToEditProfile = {},
         navigateToSetting = {},
         displayedPosts = fakeLazyPagingPosts(),
+        swallowLevel = SwallowLevel.ADOLESCENT_BIRD,
         tabType = MyPageTab.WRITTEN_POSTS,
         navigateToPost = {},
+        navigateToSwallow = {},
         onTabTypeChange = {}
     )
 }

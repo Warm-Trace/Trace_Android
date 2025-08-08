@@ -121,7 +121,9 @@ class HomeViewModel @Inject constructor(
         _emotionCountUpdates
     ) { (pagingData, deletedIds, blockedIds, addedPostFeeds, updatedPostFeeds), commentCountUpdates, emotionCountUpdates ->
         var result = pagingData
-            .filter { it.providerId !in blockedIds && it.postId !in deletedIds }
+            .filter {
+                it.providerId !in blockedIds && it.postId !in deletedIds
+            }
             .map { postFeed ->
                 val updatedPost = updatedPostFeeds.find { it.postId == postFeed.postId } ?: postFeed
                 val commentCountChange = commentCountUpdates[postFeed.postId] ?: 0
