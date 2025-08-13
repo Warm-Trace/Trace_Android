@@ -44,7 +44,6 @@ import java.time.LocalDateTime
 internal fun NotificationView(
     notification: Notification,
     navigateToPost: (Int) -> Unit,
-    navigateToMission: () -> Unit,
     readNotification: (String) -> Unit,
     deleteNotification: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -72,7 +71,7 @@ internal fun NotificationView(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                if (notification.type == NotificationType.MISSION) navigateToMission()
+                if (notification.type == NotificationType.MISSION) {}
                 else {
                     notification.postId?.let {
                         navigateToPost(notification.postId!!)
@@ -178,7 +177,6 @@ private fun NotificationViewPreview() {
                 type = NotificationType.COMMENT,
             ),
             navigateToPost = {},
-            navigateToMission = {},
             readNotification = {},
             deleteNotification = {},
         )

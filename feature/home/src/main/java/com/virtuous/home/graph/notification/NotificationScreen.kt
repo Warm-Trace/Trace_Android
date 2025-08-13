@@ -57,7 +57,6 @@ internal fun NotificationRoute(
         readNotification = viewModel::readNotification,
         deleteNotification = viewModel::deleteNotification,
         navigateToPost = navigateToPost,
-        navigateToMission = navigateToMission,
         navigateBack = navigateBack,
     )
 }
@@ -70,7 +69,6 @@ private fun NotificationScreen(
     readNotification: (String) -> Unit,
     deleteNotification: (String) -> Unit,
     navigateToPost: (Int) -> Unit,
-    navigateToMission: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val isRefreshing = notifications.loadState.refresh is LoadState.Loading
@@ -106,7 +104,6 @@ private fun NotificationScreen(
                     NotificationView(
                         notification = it,
                         navigateToPost = navigateToPost,
-                        navigateToMission = navigateToMission,
                         readNotification = readNotification,
                         deleteNotification = deleteNotification,
                         modifier = Modifier.animateItem(
@@ -171,7 +168,6 @@ private fun NotificationScreenPreview() {
         notifications = fakeLazyPagingNotifications(),
         navigateBack = {},
         navigateToPost = {},
-        navigateToMission = {},
         readNotification = {},
         deleteNotification = {},
         onRefresh = {}

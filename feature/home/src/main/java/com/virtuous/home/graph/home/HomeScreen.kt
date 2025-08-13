@@ -58,6 +58,7 @@ import com.virtuous.home.graph.home.component.TabSelector
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.util.UUID
 
 
 @Composable
@@ -137,7 +138,12 @@ private fun HomeScreen(
                 Spacer(Modifier.height(15.dp))
             }
 
-            items(postFeeds.itemCount) { index ->
+            items(
+                count = postFeeds.itemCount,
+                key = { index ->
+                    postFeeds[index]?.postId ?: UUID.randomUUID()
+                }
+            ) { index ->
                 postFeeds[index]?.let {
                     PostFeed(
                         postFeed = it,

@@ -47,5 +47,9 @@ class PostPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Cursor<Int>, PostFeed>): Cursor<Int>? = null
+    override fun getRefreshKey(state: PagingState<Cursor<Int>, PostFeed>): Cursor<Int>? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey
+        }
+    }
 }
