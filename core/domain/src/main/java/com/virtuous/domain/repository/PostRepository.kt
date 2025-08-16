@@ -49,7 +49,7 @@ interface PostRepository {
 
     suspend fun reportPost(postId: Int, reason: String): Result<Unit>
 
-    suspend fun toggleEmotion(postId: Int, emotionType: Emotion): Result<Boolean>
+    suspend fun toggleEmotion(postId: Int, originEmotionType : Emotion?, emotionType: Emotion): Result<Boolean>
 
     suspend fun blockUser(providerId : String) : Result<Unit>
 }
