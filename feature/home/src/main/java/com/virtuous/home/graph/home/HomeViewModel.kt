@@ -102,8 +102,8 @@ class HomeViewModel @Inject constructor(
     private val _emotionCountUpdates = MutableStateFlow<Map<Int, Int>>(emptyMap())
 
     private val _cachedPostFeeds = tabType.flatMapLatest { tab ->
-        postRepository.getPosts(tab)
-    }.cachedIn(viewModelScope)
+        postRepository.getPosts(tab).cachedIn(viewModelScope)
+    }
 
     private val _combinedPostFlows = combine(
         _cachedPostFeeds,

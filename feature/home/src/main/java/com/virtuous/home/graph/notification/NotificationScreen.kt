@@ -32,6 +32,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
@@ -73,6 +74,7 @@ private fun NotificationScreen(
 ) {
     val isRefreshing = notifications.loadState.refresh is LoadState.Loading
     val isAppending = notifications.loadState.append is LoadState.Loading
+    val listState = notifications.rememberLazyListState()
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -88,6 +90,7 @@ private fun NotificationScreen(
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 52.dp, start = 10.dp, end = 20.dp)
@@ -98,7 +101,7 @@ private fun NotificationScreen(
 
             items(
                 count = notifications.itemCount,
-                key = { index -> notifications[index]?.id ?: "-1" }
+                key = { index -> notifications[index]?.id ?: index }
             ) { index ->
                 notifications[index]?.let {
                     NotificationView(
