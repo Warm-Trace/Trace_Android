@@ -50,7 +50,7 @@ fun AppNavHost(
                     }
                 )
             },
-            navigateBack = { navigateBack(navController) },
+            navigateBack = navController::popBackStack,
             navigateToEditProfile = navController::navigateToEditProfile
         )
 
@@ -70,7 +70,7 @@ fun AppNavHost(
                 navController.navigateToPost(postId)
             },
             navigateToMission = navController::navigateToMission,
-            navigateBack = { navigateBack(navController) },
+            navigateBack = navController::popBackStack,
         )
 
         missionNavGraph(
@@ -80,14 +80,14 @@ fun AppNavHost(
                 })
             },
             navigateToVerifyMission = navController::navigateToVerifyMission,
-            navigateBack = { navigateBack(navController) }
+            navigateBack = navController::popBackStack
         )
 
         myPageNavGraph(
             navigateToPost = navController::navigateToPost,
             navigateToUpdateProfile = navController::navigateToUpdateProfile,
             navigateToSetting = navController::navigateToSetting,
-            navigateBack = { navigateBack(navController) },
+            navigateBack = navController::popBackStack,
             navigateToLogin = {
                 navController.navigateToLogin(navOptions {
                     popUpTo(0) { inclusive = true }
@@ -101,10 +101,3 @@ fun AppNavHost(
 
     }
 }
-
-private fun navigateBack(
-    navController: NavHostController
-) {
-    navController.popBackStack()
-}
- 

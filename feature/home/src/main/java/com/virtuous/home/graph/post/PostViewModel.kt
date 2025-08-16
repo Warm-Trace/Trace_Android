@@ -161,7 +161,11 @@ class PostViewModel @Inject constructor(
     }
 
     fun toggleEmotion(emotion: Emotion) = viewModelScope.launch {
-        postRepository.toggleEmotion(postId = postId, emotionType = emotion).onSuccess { isAdded ->
+        postRepository.toggleEmotion(
+            postId = postId,
+            originEmotionType = _postDetail.value.yourEmotionType,
+            emotionType = emotion
+        ).onSuccess { isAdded ->
             val current = _postDetail.value
 
             val updatedEmotionCount = current.emotionCount.let { count ->

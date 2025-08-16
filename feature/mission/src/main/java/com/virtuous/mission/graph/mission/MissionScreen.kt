@@ -25,6 +25,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.mission.DailyMission
@@ -35,6 +36,7 @@ import com.virtuous.mission.graph.mission.component.MissionHeaderView
 import com.virtuous.mission.graph.mission.component.VerifiedMissionBox
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
+import java.util.UUID
 
 @Composable
 internal fun MissionRoute(
@@ -82,6 +84,7 @@ private fun MissionScreen(
 ) {
     val isRefreshing = completedMissions.loadState.refresh is LoadState.Loading
     val isAppending = completedMissions.loadState.append is LoadState.Loading
+    val listState = completedMissions.rememberLazyListState()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -95,6 +98,7 @@ private fun MissionScreen(
         }
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 15.dp, horizontal = 20.dp)
@@ -126,7 +130,11 @@ private fun MissionScreen(
                 Spacer(Modifier.height(16.dp))
             }
 
-            items(count = completedMissions.itemCount) { index ->
+            items(
+                count = completedMissions.itemCount,
+                key = { index ->
+                    completedMissions[index]?.missionId ?: index
+                }) { index ->
                 completedMissions[index]?.let {
                     VerifiedMissionBox(it, navigateToPost = navigateToPost)
 

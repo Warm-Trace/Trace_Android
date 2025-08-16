@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -42,6 +41,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.TraceDropDownMenu
@@ -58,7 +58,6 @@ import com.virtuous.home.graph.home.component.TabSelector
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.util.UUID
 
 
 @Composable
@@ -120,7 +119,7 @@ private fun HomeScreen(
             onRefresh()
         }
     )
-    val listState = rememberLazyListState()
+    val listState = postFeeds.rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -141,7 +140,7 @@ private fun HomeScreen(
             items(
                 count = postFeeds.itemCount,
                 key = { index ->
-                    postFeeds[index]?.postId ?: UUID.randomUUID()
+                    postFeeds[index]?.postId ?: index
                 }
             ) { index ->
                 postFeeds[index]?.let {

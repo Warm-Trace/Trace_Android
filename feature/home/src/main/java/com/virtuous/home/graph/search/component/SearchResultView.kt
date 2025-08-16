@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
@@ -57,16 +58,18 @@ internal fun SearchResultView(
 
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
+    val listState = displayedPosts.rememberLazyListState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
         ) {
             item {
                 Spacer(Modifier.height(10.dp))
 
-                Box() {
+                Box {
                     Row(
                         modifier = Modifier
                             .wrapContentWidth()
@@ -130,20 +133,6 @@ internal fun SearchResultView(
                     Text("${displayedPosts.itemCount}개", style = TraceTheme.typography.bodySR)
 
                     Spacer(Modifier.weight(1f))
-
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Icon(
-//                    painter = painterResource(R.drawable.sort_ic),
-//                    contentDescription = "정렬",
-//                    tint = LightGray
-//                )
-//
-//                Spacer(Modifier.width(5.dp))
-//
-//                Text("정렬", style = TraceTheme.typography.bodySM, color = LightGray)
-//            }
                 }
 
                 Spacer(Modifier.height(25.dp))
@@ -180,7 +169,11 @@ internal fun SearchResultView(
                 }
             }
 
-            items(displayedPosts.itemCount) { index ->
+            items(
+                count = displayedPosts.itemCount,
+                key = { index ->
+                    displayedPosts[index]?.postId ?: index
+                }) { index ->
                 displayedPosts[index]?.let { postFeed ->
                     PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed) })
 

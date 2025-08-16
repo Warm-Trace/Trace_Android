@@ -38,6 +38,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.PostFeed
 import com.virtuous.designsystem.component.ProfileImage
@@ -56,6 +57,7 @@ import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
+import java.util.UUID
 
 
 @Composable
@@ -126,11 +128,14 @@ private fun MyPageScreen(
     val isRefreshing = displayedPosts.loadState.refresh is LoadState.Loading
     val isAppending = displayedPosts.loadState.append is LoadState.Loading
 
+    val listState = displayedPosts.rememberLazyListState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
@@ -266,23 +271,26 @@ private fun MyPageScreen(
                 Spacer(Modifier.height(20.dp))
             }
 
-            items(displayedPosts.itemCount) { index ->
-                Box {
-                    Column {
-                        displayedPosts[index]?.let { postFeed ->
-                            PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed) })
+            items(
+                count = displayedPosts.itemCount,
+                key = { index ->
+                    displayedPosts[index]?.postId ?: index
+                }
+            ) { index ->
+                Column {
+                    displayedPosts[index]?.let { postFeed ->
+                        PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed) })
 
-                            Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                            HorizontalDivider(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                thickness = 1.dp,
-                                color = GrayLine
-                            )
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            thickness = 1.dp,
+                            color = GrayLine
+                        )
 
-                            Spacer(Modifier.height(15.dp))
-                        }
+                        Spacer(Modifier.height(15.dp))
                     }
                 }
             }
