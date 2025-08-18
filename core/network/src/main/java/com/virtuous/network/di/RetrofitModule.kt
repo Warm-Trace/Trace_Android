@@ -11,6 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
@@ -34,6 +35,10 @@ object RetrofitModule {
             .addInterceptor(interceptor)
             .authenticator(authenticator)
 
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        builder.addInterceptor(loggingInterceptor)
+
         return builder.build()
     }
 
@@ -42,7 +47,7 @@ object RetrofitModule {
     fun provideTraceApi(
         json: Json,
         okHttpClient: OkHttpClient,
-        callAdapterFactory : TraceCallAdapterFactory
+        callAdapterFactory: TraceCallAdapterFactory
     ): TraceApi = Retrofit.Builder()
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))

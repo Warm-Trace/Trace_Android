@@ -1,6 +1,5 @@
 package com.virtuous.network.adapter
 
-import android.util.Log
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -46,7 +45,6 @@ private class TraceCall<T : Any>(
                 val body = response.body()
 
                 if (response.isSuccessful) {
-                    Log.d("traceResponse", "${response.raw()} body - ${body}")
                     if (body != null) {
                         callback.onResponse(
                             this@TraceCall,
@@ -76,8 +74,6 @@ private class TraceCall<T : Any>(
             }
 
             override fun onFailure(call: Call<T>, throwable: Throwable) {
-                Log.d("traceResponseFailure", "$throwable")
-
                 callback.onResponse(
                     this@TraceCall,
                     Response.success(Result.failure(throwable as Exception))
