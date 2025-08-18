@@ -42,3 +42,6 @@
 
 # Keep classes annotated with @Serializable
 -keep @kotlinx.serialization.Serializable class * { *; }
+
+# 네트워크 모델
+-keep class com.virtuous.network.model.** { *; }

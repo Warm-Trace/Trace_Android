@@ -5,7 +5,12 @@ plugins {
 
 android {
     namespace = "com.virtuous.navigation"
+
+    buildTypes {
+        release { consumerProguardFiles("consumer-rules.pro") }
+    }
 }
+
 
 dependencies {
     implementation(libs.androidx.navigation.ui)

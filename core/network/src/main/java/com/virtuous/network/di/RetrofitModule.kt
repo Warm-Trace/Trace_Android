@@ -1,5 +1,6 @@
 package com.virtuous.network.di
 
+import com.virtuous.network.BuildConfig
 import com.virtuous.network.adapter.TraceCallAdapterFactory
 import com.virtuous.network.api.TraceApi
 import com.virtuous.network.authenticator.TraceAuthenticator
@@ -35,9 +36,11 @@ object RetrofitModule {
             .addInterceptor(interceptor)
             .authenticator(authenticator)
 
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        builder.addInterceptor(loggingInterceptor)
+        if(BuildConfig.DEBUG) {
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            builder.addInterceptor(loggingInterceptor)
+        }
 
         return builder.build()
     }
