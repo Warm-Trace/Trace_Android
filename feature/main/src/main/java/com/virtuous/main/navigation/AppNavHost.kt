@@ -54,6 +54,7 @@ fun AppNavHost(
             navigateToEditProfile = navController::navigateToEditProfile
         )
 
+
         homeNavGraph(
             navigateToPost = navController::navigateToPost,
             navigateToWritePost = navController::navigateToWritePost,

@@ -12,8 +12,8 @@ android {
     namespace = "com.virtuous.trace"
 
     defaultConfig {
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.0.4"
         targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
