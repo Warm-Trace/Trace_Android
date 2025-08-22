@@ -47,7 +47,6 @@ class NotificationService : FirebaseMessagingService() {
         super.onMessageReceived(message)
 
         val data = message.data
-
         val title = data["title"] ?: "흔적"
         val body = data["body"] ?: ""
         val type = data["type"]
