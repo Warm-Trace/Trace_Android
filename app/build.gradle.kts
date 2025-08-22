@@ -12,8 +12,8 @@ android {
     namespace = "com.virtuous.trace"
 
     defaultConfig {
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 6
+        versionName = "1.0.5"
         targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -47,6 +47,7 @@ android {
 
     buildTypes {
         release {
+            manifestPlaceholders["APP_NAME"] = "@string/app_name"
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -57,13 +58,9 @@ android {
         }
 
         debug {
+            manifestPlaceholders["APP_NAME"] = "@string/app_name_debug"
             applicationIdSuffix = ".debug"
             isMinifyEnabled = false
-
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
         }
     }
 

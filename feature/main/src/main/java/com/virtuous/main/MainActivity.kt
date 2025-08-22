@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen()
 
-        if (intent.extras != null) { // 백그라운드 알림으로 앱에 진입
+        if (intent.extras != null && intent.getStringExtra("type") != null && intent.getStringExtra("id") != null) { // 백그라운드 알림으로 앱에 진입
             handleNotificationIntent(intent, viewModel.navigationHelper)
         } else {
             viewModel.checkSession()
@@ -192,7 +192,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleNotificationIntent(intent: Intent, navigationHelper: NavigationHelper) {
-        val notificationId = intent.getStringExtra("id") ?: ""
+        val notificationId = intent.getStringExtra("id") ?: return
         val type = intent.getStringExtra("type") ?: return
 
         viewModel.readNotification(notificationId)
