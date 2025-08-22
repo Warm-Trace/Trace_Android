@@ -126,7 +126,7 @@ private fun SettingScreen(
                     Spacer(Modifier.weight(1f))
 
                     Text(
-                        "1.0.4", // 현재 수동 설정 방식 - 수정 예정
+                        "1.0.6", // 현재 수동 설정 방식 - 수정 예정
                         color = Gray,
                         style = TraceTheme.typography.bodyMR
                     )
