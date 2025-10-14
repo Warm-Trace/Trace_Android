@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -29,8 +27,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.Gray
@@ -154,7 +154,7 @@ private fun RecentKeyword(
                     }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Close,
+                   painter = painterResource(id = R.drawable.close_ic),
                     contentDescription = "최근 검색어 삭제",
                     modifier = Modifier
                         .size(18.dp)

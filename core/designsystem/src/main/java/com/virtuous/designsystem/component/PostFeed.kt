@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -64,11 +62,11 @@ fun PostFeed(
                 navigateToPost(postFeed)
             }) {
 
-        Column(
-            modifier = Modifier
-                .padding(end = endPadding)
-                .align(Alignment.CenterStart)
-        ) {
+            Column(
+                modifier = Modifier
+                    .padding(end = endPadding)
+                    .align(Alignment.CenterStart)
+            ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     postFeed.title,
@@ -154,7 +152,7 @@ fun PostFeed(
                 Spacer(Modifier.width(10.dp))
 
                 Image(
-                    imageVector = Icons.Default.Favorite,
+                    painter = painterResource(R.drawable.heart_ic),
                     contentDescription = "감정표현",
                     colorFilter = ColorFilter.tint(Red),
                     modifier = Modifier.size(15.dp)

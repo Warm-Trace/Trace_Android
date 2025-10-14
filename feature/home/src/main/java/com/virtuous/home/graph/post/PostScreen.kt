@@ -647,13 +647,8 @@ private fun PostScreen(
             Spacer(Modifier.height(10.dp))
         }
 
-        if (isRefreshing || isAppending) {
-            CircularProgressIndicator(
-                color = PrimaryDefault, modifier = Modifier.align(
-                    if (isRefreshing) Alignment.Center else Alignment.BottomCenter
-                )
-            )
-        }
+
+
     }
 }
 

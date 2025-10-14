@@ -21,40 +21,48 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.analytics.AnalyticsEvent
+import com.virtuous.analytics.AnalyticsEvent.PropertiesKeys.SCREEN_NAME
+import com.virtuous.analytics.AnalyticsEvent.Types.SCREEN_VIEW
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.auth.navigation.navigateToLogin
 import com.virtuous.common_ui.ui.TraceBottomBarAnimation
 import com.virtuous.designsystem.component.TraceSnackBar
 import com.virtuous.designsystem.component.TraceSnackBarHost
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.TraceTheme
+import com.virtuous.home.navigation.navigateToHome
 import com.virtuous.main.navigation.AppBottomBar
 import com.virtuous.main.navigation.AppNavHost
 import com.virtuous.navigation.HomeGraph
 import com.virtuous.navigation.MissionGraph
-import com.virtuous.navigation.NavigationEvent
-import com.virtuous.navigation.NavigationHelper
+import com.virtuous.navigation.getRouteName
 import com.virtuous.navigation.shouldHideBottomBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
+    private lateinit var navController: NavHostController
 
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,45 +70,60 @@ class MainActivity : ComponentActivity() {
 
         installSplashScreen()
 
-        if (intent.extras != null && intent.getStringExtra("type") != null && intent.getStringExtra("id") != null) { // 백그라운드 알림으로 앱에 진입
-            handleNotificationIntent(intent, viewModel.navigationHelper)
+        if (intent.extras != null && intent.getStringExtra("type") != null && intent.getStringExtra(
+                "id"
+            ) != null
+        ) { // 백그라운드 알림으로 앱에 진입
+            handleNotificationIntent(intent)
         } else {
-            viewModel.checkSession()
+            lifecycleScope.launch {
+                val isSessionValid = viewModel.checkSession()
+                if (isSessionValid) {
+                    navController.navigateToHome(navOptions {
+                        popUpTo(0) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                    })
+                } else {
+                    navController.navigateToLogin(navOptions {
+                        popUpTo(0) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                    })
+                }
+            }
+
             requestNotificationPermission(this)
         }
 
         enableEdgeToEdge()
 
         setContent {
-            val navController = rememberNavController()
+            navController = rememberNavController()
             val currentDestination = navController.currentBackStackEntryAsState()
                 .value?.destination
             val snackBarHostState = remember { SnackbarHostState() }
 
-            LaunchedEffect(Unit) {
-                lifecycleScope.launch {
-                    lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED, {
-                        launch {
-                            viewModel.navigationHelper.navigationFlow.collect { event ->
-                                handleNavigationEvent(
-                                    navController = navController,
-                                    event = event,
-                                )
-                            }
-                        }
-
-                        launch {
-                            viewModel.eventHelper.eventChannel.collect { event ->
-                                when (event) {
-                                    is TraceEvent.ShowSnackBar -> snackBarHostState.showSnackbar(
-                                        event.message
-                                    )
-                                }
-                            }
-                        }
-                    })
+            LifecycleStartEffect(navController) {
+                val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+                    val screenName = destination.getRouteName()
+                    if (screenName != null) {
+                        analyticsHelper.logEvent(
+                            AnalyticsEvent(
+                                type = SCREEN_VIEW,
+                                properties = mutableMapOf(SCREEN_NAME to screenName),
+                            ),
+                        )
+                    }
                 }
 
+                navController.addOnDestinationChangedListener(listener)
+
+                onStopOrDispose {
+                    navController.removeOnDestinationChangedListener(listener)
+                }
             }
 
             TraceTheme {
@@ -154,44 +177,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleNotificationIntent(intent, viewModel.navigationHelper)
+        handleNotificationIntent(intent)
     }
 
-    private fun handleNavigationEvent(
-        navController: NavController,
-        event: NavigationEvent
-    ) {
-        when (event) {
-            is NavigationEvent.To -> {
-                val navOptions = navOptions {
-                    if (event.popUpTo) {
-                        popUpTo(0) { inclusive = true }
-                    }
-
-                    launchSingleTop = true
-                }
-
-                navController.navigate(
-                    route = event.route,
-                    navOptions = navOptions
-                )
-            }
-
-            is NavigationEvent.Up -> navController.navigateUp()
-
-            is NavigationEvent.StackAndTo -> {
-                navController.navigate(event.stackRoute, navOptions = navOptions {
-                    popUpTo(0) { inclusive = true }
-                    launchSingleTop = true
-                })
-                navController.navigate(event.toRoute, navOptions = navOptions {
-                    launchSingleTop = true
-                })
-            }
-        }
-    }
-
-    private fun handleNotificationIntent(intent: Intent, navigationHelper: NavigationHelper) {
+    private fun handleNotificationIntent(intent: Intent) {
         val notificationId = intent.getStringExtra("id") ?: return
         val type = intent.getStringExtra("type") ?: return
 
@@ -199,19 +188,23 @@ class MainActivity : ComponentActivity() {
 
         when (type) {
             "MISSION" -> {
-                navigationHelper.navigate(
-                    NavigationEvent.To(MissionGraph.MissionRoute, popUpTo = true)
-                )
+                navController.navigate(MissionGraph.MissionRoute) {
+                    popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
+                }
             }
 
             "COMMENT", "EMOTION" -> {
                 intent.getStringExtra("postId")?.toIntOrNull()?.let { postId ->
-                    navigationHelper.navigate(
-                        NavigationEvent.StackAndTo(
-                            stackRoute = HomeGraph.HomeRoute,
-                            toRoute = HomeGraph.PostRoute(postId)
-                        )
-                    )
+                    intent.getStringExtra("postId")?.toIntOrNull()?.let { postId ->
+                        navController.navigate(HomeGraph.HomeRoute, navOptions {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        })
+                        navController.navigate(HomeGraph.PostRoute(postId), navOptions {
+                            launchSingleTop = true
+                        })
+                    }
                 }
             }
         }
@@ -226,7 +219,6 @@ class MainActivity : ComponentActivity() {
                 permission
             ) == PERMISSION_GRANTED
 
-            // 권한이 없고, 이전에 거절한 적이 없는 경우(최초 요청)에만 권한을 요청
             if (!permissionGranted && !ActivityCompat.shouldShowRequestPermissionRationale(
                     activity,
                     permission
