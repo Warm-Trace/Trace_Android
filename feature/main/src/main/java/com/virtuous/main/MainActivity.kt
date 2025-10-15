@@ -222,18 +222,8 @@ class MainActivity : ComponentActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = Manifest.permission.POST_NOTIFICATIONS
 
-            val permissionGranted = ContextCompat.checkSelfPermission(
-                activity,
-                permission
-            ) == PERMISSION_GRANTED
-
-            if (!permissionGranted && !ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity,
-                    permission
-                )
-            ) {
-                ActivityCompat.requestPermissions(activity, arrayOf(permission), 1001)
-            }
+            ActivityCompat.requestPermissions(activity, arrayOf(permission), 1001)
         }
     }
 }
+
