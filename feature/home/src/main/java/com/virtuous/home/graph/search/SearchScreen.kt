@@ -13,16 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.domain.model.post.PostFeed
@@ -33,6 +35,7 @@ import com.virtuous.home.graph.search.SearchViewModel.SearchEvent
 import com.virtuous.home.graph.search.component.SearchInitialView
 import com.virtuous.home.graph.search.component.SearchResultView
 import com.virtuous.home.graph.search.component.TraceSearchField
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun SearchRoute(
@@ -47,6 +50,9 @@ internal fun SearchRoute(
     val tabType by viewModel.tabType.collectAsStateWithLifecycle()
     val displayedPosts = viewModel.postFeeds.collectAsLazyPagingItems()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(isSearched) {
         viewModel.loadRecentKeywords()
     }
@@ -56,6 +62,12 @@ internal fun SearchRoute(
             when (event) {
                 is SearchEvent.NavigateToPost -> navigateToPost(event.postFeed)
                 is SearchEvent.NavigateBack -> navigateBack()
+                is SearchEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
+                }
             }
         }
     }

@@ -23,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<SearchEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -87,12 +86,12 @@ class SearchViewModel @Inject constructor(
 
     fun searchByInput() = viewModelScope.launch {
         if (_keywordInput.value.isEmpty()) {
-            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            _eventChannel.send(SearchEvent.ShowSnackbar("검색할 키워드를 입력해주세요."))
             return@launch
         }
 
         if (_keywordInput.value.length < MIN_SEARCH_LENGTH) {
-            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
+            _eventChannel.send(SearchEvent.ShowSnackbar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
 
@@ -127,6 +126,7 @@ class SearchViewModel @Inject constructor(
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
         data class NavigateToPost(val postFeed: PostFeed) : SearchEvent()
+        data class ShowSnackbar(val message: String) : SearchEvent()
     }
 
     companion object {

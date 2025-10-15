@@ -34,6 +34,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,11 +51,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.virtuous.auth.graph.editprofile.EditProfileViewModel.EditProfileEvent
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Background
@@ -64,7 +65,7 @@ import com.virtuous.designsystem.theme.Red
 import com.virtuous.designsystem.theme.TextField
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.designsystem.theme.White
-
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun EditProfileRoute(
@@ -76,15 +77,20 @@ internal fun EditProfileRoute(
     val isNameValid by viewModel.isNameValid.collectAsStateWithLifecycle()
     val profileImageUrl by viewModel.profileImage.collectAsStateWithLifecycle()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is EditProfileEvent.RegisterUserSuccess -> {
+                is EditProfileEvent.NavigateToHome -> {
                     navigateToHome()
                 }
-
-                is EditProfileEvent.RegisterUserFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("프로필 설정에 실패했습니다"))
+                is EditProfileEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
             }
         }

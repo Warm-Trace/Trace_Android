@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -31,9 +32,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ImageContent
@@ -47,6 +48,7 @@ import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.home.graph.updatepost.UpdatePostViewModel.UpdatePostEvent
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun UpdatePostRoute(
@@ -59,18 +61,21 @@ internal fun UpdatePostRoute(
     val content by viewModel.content.collectAsStateWithLifecycle()
     val images by viewModel.images.collectAsStateWithLifecycle()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is UpdatePostEvent.UpdatePostSuccess -> {
+                is UpdatePostEvent.NavigateToPostDetail -> {
                     navigateToPost(event.postDetail)
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 수정되었습니다."))
                 }
-
-                is UpdatePostEvent.UpdatePostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 수정에 실패했습니다."))
+                is UpdatePostEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
-
                 is UpdatePostEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -238,7 +243,7 @@ private fun GalleryPicker(
             painter = painterResource(R.drawable.add_image_ic),
             contentDescription = "사진 첨부",
             tint = PrimaryActive,
-            modifier = Modifier
+            modifier = modifier
                 .size(32.dp)
                 .clickable(enabled = remaining > 0) {
                     if (remaining >= 2) {

@@ -27,6 +27,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.CheckCancelDialog
@@ -55,6 +56,7 @@ import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.home.graph.writepost.WritePostViewModel.WritePostEvent
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -70,23 +72,23 @@ internal fun WritePostRoute(
     val isVerified by viewModel.isVerified.collectAsStateWithLifecycle()
     val isCreatingPost by viewModel.isCreatingPost.collectAsStateWithLifecycle()
     val isVerifyingPost by viewModel.isVerifyingPost.collectAsStateWithLifecycle()
+    val showVerifyFailureDg by viewModel.showVerifyFailureDialog.collectAsStateWithLifecycle()
 
-    var showVerifyFailDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is WritePostEvent.AddPostSuccess -> {
+                is WritePostEvent.NavigateToPostDetail -> {
                     navigateToPost(event.postDetail)
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 등록되었습니다."))
                 }
 
-                is WritePostEvent.AddPostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글 등록에 실패했습니다."))
-                }
-
-                is WritePostEvent.VerifyFailure -> {
-                    showVerifyFailDialog = true
+                is WritePostEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
 
                 is WritePostEvent.NavigateToBack -> navigateBack()
@@ -94,12 +96,12 @@ internal fun WritePostRoute(
         }
     }
 
-    if (showVerifyFailDialog) {
+    if (showVerifyFailureDg) {
         CheckCancelDialog(
             onCheck = {
                 viewModel.addPost()
             },
-            onDismiss = { showVerifyFailDialog = false },
+            onDismiss = { viewModel.setShowVerifyFailureDialog(false) },
             checkText = "등록",
             dialogText = "게시글이 선행 인증에 실패했습니다.\n그래도 등록하시겠습니까?"
         )
@@ -353,7 +355,6 @@ private fun GalleryPicker(
     addImages: (List<String>) -> Unit,
 ) {
     val remaining = maxSelection - imagesSize
-
     val multipleLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickMultipleVisualMedia(
             maxSelection.coerceAtLeast(2)

@@ -34,6 +34,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,13 +43,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
 import com.virtuous.common_ui.util.clickable
@@ -61,6 +63,7 @@ import com.virtuous.designsystem.theme.TextField
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.designsystem.theme.White
 import com.virtuous.mypage.graph.updateprofile.UpdateProfileViewModel.UpdateProfileEvent
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun UpdateProfileRoute(
@@ -74,11 +77,19 @@ internal fun UpdateProfileRoute(
     val isProfileImageChanged by viewModel.isProfileImageChanged.collectAsStateWithLifecycle()
     val isChanged = isNameChanged || isProfileImageChanged
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is UpdateProfileEvent.NavigateBack -> navigateBack()
+                is UpdateProfileEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
+                }
             }
         }
     }

@@ -2,7 +2,6 @@ package com.virtuous.home.graph.writepost
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.domain.repository.PostRepository
@@ -19,7 +18,6 @@ import javax.inject.Inject
 class WritePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -45,6 +43,9 @@ class WritePostViewModel @Inject constructor(
     private val _isVerifyingPost = MutableStateFlow(false)
     val isVerifyingPost = _isVerifyingPost.asStateFlow()
 
+    private val _showVerifyFailureDg = MutableStateFlow(false)
+    val showVerifyFailureDialog = _showVerifyFailureDg.asStateFlow()
+
     fun setType(type: WritePostType) {
         _type.value = type
     }
@@ -69,6 +70,10 @@ class WritePostViewModel @Inject constructor(
         _images.value = _images.value.filter { it != image }
     }
 
+    fun setShowVerifyFailureDialog(show: Boolean) {
+        _showVerifyFailureDg.value = show
+    }
+
     fun addPost() = viewModelScope.launch {
         _isCreatingPost.value = true
 
@@ -78,9 +83,10 @@ class WritePostViewModel @Inject constructor(
             _content.value,
             _images.value
         ).onSuccess { postDetail ->
-            _eventChannel.send(WritePostEvent.AddPostSuccess(postDetail))
+            _eventChannel.send(WritePostEvent.NavigateToPostDetail(postDetail))
+            _eventChannel.send(WritePostEvent.ShowSnackbar("게시글이 등록되었습니다."))
         }.onFailure {
-            _eventChannel.send(WritePostEvent.AddPostFailure)
+            _eventChannel.send(WritePostEvent.ShowSnackbar("게시글 등록에 실패했습니다."))
         }
 
         _isCreatingPost.value = false
@@ -94,10 +100,11 @@ class WritePostViewModel @Inject constructor(
             _content.value,
             _images.value
         ).onSuccess { postDetail ->
-            _eventChannel.send(WritePostEvent.AddPostSuccess(postDetail))
+            _eventChannel.send(WritePostEvent.NavigateToPostDetail(postDetail))
+            _eventChannel.send(WritePostEvent.ShowSnackbar("게시글이 등록되었습니다."))
             userRepository.loadMyUserInfo()
         }.onFailure {
-            _eventChannel.send(WritePostEvent.VerifyFailure)
+            setShowVerifyFailureDialog(true)
         }
 
         _isVerifyingPost.value = false
@@ -105,8 +112,7 @@ class WritePostViewModel @Inject constructor(
 
     sealed class WritePostEvent {
         data object NavigateToBack : WritePostEvent()
-        data class AddPostSuccess(val postDetail: PostDetail) : WritePostEvent()
-        data object AddPostFailure : WritePostEvent()
-        data object VerifyFailure : WritePostEvent()
+        data class NavigateToPostDetail(val postDetail: PostDetail) : WritePostEvent()
+        data class ShowSnackbar(val message: String) : WritePostEvent()
     }
 }

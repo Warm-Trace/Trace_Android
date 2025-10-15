@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -39,6 +41,7 @@ import com.virtuous.analytics.AnalyticsEvent.PropertiesKeys.SCREEN_NAME
 import com.virtuous.analytics.AnalyticsEvent.Types.SCREEN_VIEW
 import com.virtuous.analytics.AnalyticsHelper
 import com.virtuous.auth.navigation.navigateToLogin
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.ui.TraceBottomBarAnimation
 import com.virtuous.designsystem.component.TraceSnackBar
 import com.virtuous.designsystem.component.TraceSnackBarHost
@@ -100,6 +103,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
+
         setContent {
             navController = rememberNavController()
             val currentDestination = navController.currentBackStackEntryAsState()
@@ -126,50 +130,54 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            TraceTheme {
-                val imeIsShown = WindowInsets.isImeVisible
-                val statusBarPadding =
-                    WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-                val bottomPadding =
-                    if (imeIsShown) 0.dp else WindowInsets.navigationBars.asPaddingValues()
-                        .calculateBottomPadding()
+            CompositionLocalProvider(
+                LocalSnackbarHostState provides snackBarHostState,
+            ) {
+                TraceTheme {
+                    val imeIsShown = WindowInsets.isImeVisible
+                    val statusBarPadding =
+                        WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+                    val bottomPadding =
+                        if (imeIsShown) 0.dp else WindowInsets.navigationBars.asPaddingValues()
+                            .calculateBottomPadding()
 
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    contentWindowInsets = WindowInsets(
-                        top = statusBarPadding,
-                        bottom = bottomPadding
-                    ),
-                    snackbarHost = {
-                        TraceSnackBarHost(
-                            hostState = snackBarHostState,
-                            snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
-                        )
-                    },
-                    containerColor = Background,
-                    bottomBar = {
-                        TraceBottomBarAnimation(
-                            visible = currentDestination?.shouldHideBottomBar() == false,
-                            modifier = Modifier.navigationBarsPadding(),
-                        ) {
-                            AppBottomBar(
-                                currentDestination = currentDestination,
-                                navigateToBottomNaviDestination = { bottomNaviDestination ->
-                                    navController.navigate(
-                                        bottomNaviDestination,
-                                        navOptions = navOptions {
-                                            popUpTo(0) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        })
-                                }
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        contentWindowInsets = WindowInsets(
+                            top = statusBarPadding,
+                            bottom = bottomPadding
+                        ),
+                        snackbarHost = {
+                            TraceSnackBarHost(
+                                hostState = snackBarHostState,
+                                snackbar = { snackBarData -> TraceSnackBar(snackBarData) }
                             )
+                        },
+                        containerColor = Background,
+                        bottomBar = {
+                            TraceBottomBarAnimation(
+                                visible = currentDestination?.shouldHideBottomBar() == false,
+                                modifier = Modifier.navigationBarsPadding(),
+                            ) {
+                                AppBottomBar(
+                                    currentDestination = currentDestination,
+                                    navigateToBottomNaviDestination = { bottomNaviDestination ->
+                                        navController.navigate(
+                                            bottomNaviDestination,
+                                            navOptions = navOptions {
+                                                popUpTo(0) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            })
+                                    }
+                                )
+                            }
                         }
+                    ) { innerPadding ->
+                        AppNavHost(navController, Modifier.padding(innerPadding))
                     }
-                ) { innerPadding ->
-                    AppNavHost(navController, Modifier.padding(innerPadding))
                 }
             }
         }

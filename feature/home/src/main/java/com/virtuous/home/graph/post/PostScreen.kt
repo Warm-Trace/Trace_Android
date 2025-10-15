@@ -26,7 +26,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -47,7 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -55,7 +54,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.virtuous.common.util.formatCount
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.BackButton
@@ -96,85 +95,19 @@ internal fun PostRoute(
     val postDetail by viewModel.postDetail.collectAsStateWithLifecycle()
     val replyTargetId by viewModel.replyTargetId.collectAsStateWithLifecycle()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is PostEvent.GetPostFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글을 불러올 수 없습니다."))
-                    navigateBack()
+                is PostEvent.NavigateBack -> navigateBack()
+                is PostEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
-
-                is PostEvent.DeletePostSuccess -> {
-                    navigateBack()
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("게시글이 삭제되었습니다."))
-                }
-
-                is PostEvent.DeletePostFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "게시글 삭제에 실패했습니다."
-                    )
-                )
-
-                is PostEvent.ReportPostSuccess,
-                is PostEvent.ReportCommentSuccess -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "신고가 접수되었습니다."
-                    )
-                )
-
-                is PostEvent.ReportPostFailure -> {}
-                is PostEvent.ReportCommentFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "신고 접수에 실패했습니다."
-                    )
-                )
-
-                is PostEvent.AddCommentSuccess -> {}
-                is PostEvent.AddCommentFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "댓글 작성에 실패했습니다."
-                    )
-                )
-
-                is PostEvent.AddReplySuccess -> {}
-                is PostEvent.AddReplyFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "답글 작성에 실패했습니다."
-                    )
-                )
-
-                is PostEvent.DeleteCommentSuccess -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "댓글이 삭제되었습니다."
-                    )
-                )
-
-                is PostEvent.DeleteCommentFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "댓글 삭제에 실패했습니다."
-                    )
-                )
-
-                is PostEvent.ShowSnackBar -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        event.message
-                    )
-                )
-
-                is PostEvent.BlockUserSuccess -> {
-                    navigateBack()
-                    viewModel.eventHelper.sendEvent(
-                        TraceEvent.ShowSnackBar(
-                            "해당 유저를 차단했습니다."
-                        )
-                    )
-                }
-
-                is PostEvent.BlockUserFailure -> viewModel.eventHelper.sendEvent(
-                    TraceEvent.ShowSnackBar(
-                        "유저 차단에 실패했습니다."
-                    )
-                )
             }
         }
     }

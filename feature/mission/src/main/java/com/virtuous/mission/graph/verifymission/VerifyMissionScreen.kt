@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -33,9 +34,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.ImageContent
@@ -49,7 +50,7 @@ import com.virtuous.designsystem.theme.TextHint
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.mission.graph.verifymission.VerifyMissionViewModel.VerifyMissionEvent
 import com.virtuous.mission.graph.verifymission.component.VerifyMissionHeaderView
-
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun VerifyMissionRoute(
@@ -64,18 +65,21 @@ internal fun VerifyMissionRoute(
     val images by viewModel.images.collectAsStateWithLifecycle()
     val isVerifyingMission by viewModel.isVerifyingMission.collectAsStateWithLifecycle()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is VerifyMissionEvent.VerifyMissionSuccess -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
+                is VerifyMissionEvent.NavigateToPost -> {
                     navigateToPost(event.postId)
                 }
-
-                is VerifyMissionEvent.VerifyMissionFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 실패했습니다."))
+                is VerifyMissionEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
-
                 is VerifyMissionEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -180,7 +184,7 @@ private fun VerifyMissionScreen(
                 painter = painterResource(R.drawable.close_ic),
                 contentDescription = "뒤로 가기",
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(22.dp)
                     .clickable(
                         isRipple = true
                     ) {
