@@ -165,7 +165,9 @@ private fun UpdatePostScreen(
                     value = content,
                     onValueChange = onContentChange,
                     lazyListState = lazyListState,
-                    hint = if (type == PostType.GOOD_DEED) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
+                    hint = if (type == PostType.GOOD_DEED) stringResource(R.string.write_content_hint_good_deed) else stringResource(
+                        R.string.write_content_hint_free
+                    ),
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
             }
@@ -259,7 +261,7 @@ private fun GalleryPicker(
             Spacer(Modifier.width(4.dp))
 
             Text(
-                "5장 제한", style = TraceTheme.typography.bodySM,
+                stringResource(R.string.image_limit), style = TraceTheme.typography.bodySM,
                 color = PrimaryActive
             )
         }

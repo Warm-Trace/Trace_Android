@@ -17,9 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.CheckCancelDialog
 import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.Black
@@ -41,8 +43,14 @@ internal fun BlockedUserView(
                 showUnblockUserDg = false
             },
             onDismiss = { showUnblockUserDg = false },
-            title = "${blockedUser.name}님을 차단 해제하시겠습니까?",
-            dialogText = "이제 ${blockedUser.name}님의 모든 콘텐츠가 다시 표시되고, 관련 알림 수신이 재개됩니다"
+            title = stringResource(
+                id = R.string.unblock_user_title,
+                blockedUser.name
+            ),
+            dialogText = stringResource(
+                id = com.virtuous.designsystem.R.string.unblock_user_message,
+                blockedUser.name
+            )
         )
     }
 
@@ -79,7 +87,7 @@ internal fun BlockedUserView(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "차단 해제",
+                text = stringResource(id =R.string.unblock),
                 style = TraceTheme.typography.bodyXMSB,
                 color = Black
             )

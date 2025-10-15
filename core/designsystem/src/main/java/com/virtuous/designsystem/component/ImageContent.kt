@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
@@ -85,7 +86,7 @@ fun ImageContent(
                             .padding(horizontal = 10.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("대표", style = TraceTheme.typography.bodySSB, color = White)
+                        Text(stringResource(R.string.representative_image), style = TraceTheme.typography.bodySSB, color = White)
                     }
                 }
 
@@ -135,7 +136,7 @@ fun ImageContent(
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        "사진 삭제하기",
+                                        stringResource(R.string.delete_photo),
                                         style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
                                     )
                                 },

@@ -46,10 +46,14 @@
     <string name="setting">설정</string>
     <string name="blocked_accounts">차단된 계정</string>
     <string name="unblock">차단 해제</string>
+    <string name="unblock_user_title">%s님을 차단 해제하시겠습니까?</string>
+    <string name="unblock_user_message">이제 %s님의 모든 콘텐츠가 다시 표시되고, 관련 알림 수신이 재개됩니다</string>
     <string name="my_swallow">나의 제비</string>
 
     <!-- Home -->
     <string name="title_hint">제목</string>
+    <string name="traces">흔적들</string>
+    <string name="view_count_suffix">%d 읽음</string>
     <string name="good_deed_hint">따뜻한 흔적을 남겨보세요!</string>
     <string name="general_content_hint">내용을 입력하세요</string>
     <string name="board_name">%s게시판</string>
@@ -72,7 +76,8 @@
     <string name="write_content_hint_good_deed">따뜻한 흔적을 남겨보세요!</string>
     <string name="write_content_hint_free">내용을 입력하세요.</string>
     <string name="image_limit">5장 제한</string>
-
+    <string name="representative_image">대표</string>
+ㄴ
     <!-- Mission -->
     <string name="todays_goodness_mission">오늘의 선행 미션</string>
     <string name="mission_record">미션 기록</string>
@@ -89,8 +94,6 @@
     <string name="free">자유</string>
     <string name="good_deed">선행</string>
     <string name="mission">미션</string>
-
-    <string name="representative">대표</string>
 
     <string name="just_now">방금</string>
     <string name="moments_ago">방금 전</string>
