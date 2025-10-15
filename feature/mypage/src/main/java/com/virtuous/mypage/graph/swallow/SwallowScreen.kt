@@ -87,7 +87,7 @@ private fun SwallowScreen(
                 Spacer(Modifier.height(10.dp))
 
                 Text(
-                    stringResource(R.string.my_mission_verified, userInfo.verifiedPostCount),
+                    stringResource(R.string.my_mission_verified, userInfo.completedMissionCount),
                     style = TraceTheme.typography.bodyMM
                 )
 
