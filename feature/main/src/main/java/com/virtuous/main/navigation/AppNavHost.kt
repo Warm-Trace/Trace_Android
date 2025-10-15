@@ -47,27 +47,59 @@ fun AppNavHost(
                 navController.navigateToHome(
                     navOptions {
                         popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
                     }
                 )
             },
             navigateBack = navController::popBackStack,
-            navigateToEditProfile = navController::navigateToEditProfile
+            navigateToEditProfile = { signUpToken, providerId ->
+                navController.navigateToEditProfile(signUpToken, providerId, navOptions {
+                    launchSingleTop = true
+                })
+            }
         )
 
         homeNavGraph(
-            navigateToPost = navController::navigateToPost,
-            navigateToWritePost = navController::navigateToWritePost,
-            navigateToUpdatePost = navController::navigateToUpdatePost,
-            navigateToSearch = navController::navigateToSearch,
+            navigateToPost = { postDetail ->
+                navController.navigateToPost(postDetail, navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToWritePost = {
+                navController.navigateToWritePost(navOptions = navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToUpdatePost = { postId ->
+                navController.navigateToUpdatePost(postId = postId, navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToSearch = {
+                navController.navigateToSearch(navOptions = navOptions {
+                    launchSingleTop = true
+                })
+            },
             navigateToPostReplacing = { postDetail ->
                 navController.navigateToPost(postDetail, navOptions = navOptions {
                     popUpTo<HomeGraph.HomeRoute>()
+                    launchSingleTop = true
                 })
             },
-            navigateToUserProfile = navController::navigateToUserProfile,
-            navigateToNotification = navController::navigateToNotification,
+            navigateToUserProfile = { userId ->
+                navController.navigateToUserProfile(userId, navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToNotification = {
+                navController.navigateToNotification(navOptions {
+                    launchSingleTop = true
+                })
+            },
             navigateToPostById = { postId ->
-                navController.navigateToPost(postId)
+                navController.navigateToPost(postId, navOptions {
+                    launchSingleTop = true
+                })
             },
             navigateBack = navController::popBackStack,
         )
@@ -76,27 +108,60 @@ fun AppNavHost(
             navigateToPost = { postId ->
                 navController.navigateToPost(postId, navOptions = navOptions {
                     popUpTo(MissionGraph.MissionRoute)
+                    launchSingleTop = true
                 })
             },
-            navigateToVerifyMission = navController::navigateToVerifyMission,
+            navigateToVerifyMission = { missionId ->
+                navController.navigateToVerifyMission(missionId, navOptions {
+                    launchSingleTop = true
+                })
+            },
             navigateBack = navController::popBackStack
         )
 
         myPageNavGraph(
-            navigateToPost = navController::navigateToPost,
-            navigateToUpdateProfile = navController::navigateToUpdateProfile,
-            navigateToSetting = navController::navigateToSetting,
-            navigateBack = navController::popBackStack,
+            navigateToPost = { postId ->
+                navController.navigateToPost(postId, navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToUpdateProfile = {
+                navController.navigateToUpdateProfile(navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToSetting = {
+                navController.navigateToSetting(navOptions {
+                    launchSingleTop = true
+                })
+            },
             navigateToLogin = {
                 navController.navigateToLogin(navOptions {
                     popUpTo(0) { inclusive = true }
+                    launchSingleTop = true
                 })
             },
-            navigateToWebView = navController::navigateToWebView,
-            navigateToBlockedUser = navController::navigateToBlockedUser,
-            navigateToUserProfile = navController::navigateToUserProfile,
-            navigateToSwallow = navController::navigateToSwallow
+            navigateToWebView = { url ->
+                navController.navigateToWebView(url, navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToBlockedUser = {
+                navController.navigateToBlockedUser(navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToUserProfile = { userId ->
+                navController.navigateToUserProfile(userId, navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateToSwallow = {
+                navController.navigateToSwallow(navOptions {
+                    launchSingleTop = true
+                })
+            },
+            navigateBack = navController::popBackStack,
         )
-
     }
 }

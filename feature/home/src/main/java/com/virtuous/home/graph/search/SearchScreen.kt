@@ -174,9 +174,32 @@ private fun SearchScreen(
     }
 }
 
-@Preview
+@Preview(name = "검색 전")
 @Composable
-private fun SearchScreenPreview() {
+private fun SearchScreenBeforePreview() {
+    SearchScreen(
+        navigateBack = {},
+        keywordInput = "",
+        recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
+        isSearched = false,
+        searchType = SearchType.CONTENT,
+        tabType = SearchTab.ALL,
+        displayedPosts = fakeLazyPagingPosts(),
+        onKeywordInputChange = {},
+        clearKeywords = {},
+        onSearchTypeChange = {},
+        onTabTypeChange = {},
+        removeKeyword = {},
+        searchByInput = {},
+        searchByRecentKeyword = {},
+        resetSearch = {},
+        navigateToPost = {}
+    )
+}
+
+@Preview(name = "검색 후")
+@Composable
+private fun SearchScreenAfterPreview() {
     SearchScreen(
         navigateBack = {},
         keywordInput = "",

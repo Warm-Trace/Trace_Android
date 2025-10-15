@@ -158,7 +158,7 @@ private fun RecentKeyword(
                    painter = painterResource(id = R.drawable.close_ic),
                     contentDescription = "최근 검색어 삭제",
                     modifier = Modifier
-                        .size(18.dp)
+                        .size(10.dp)
                         .align(Alignment.Center)
                 )
             }

@@ -248,8 +248,12 @@ private fun MyPageScreen(
                     Modifier, Background,
                     Black,
                     {
-                        TabRowDefaults.SecondaryIndicator(
-                            Modifier.tabIndicatorOffset(tabs.indexOf(tabType))
+                        Box(
+                            modifier = Modifier
+                                .tabIndicatorOffset(tabs.indexOf(tabType), matchContentSize = false)
+                                .height(3.dp)
+                                .padding(horizontal = 12.dp)
+                                .background(color = TabIndicator, shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
                         )
                     },
                     divider = @Composable { HorizontalDivider() },
