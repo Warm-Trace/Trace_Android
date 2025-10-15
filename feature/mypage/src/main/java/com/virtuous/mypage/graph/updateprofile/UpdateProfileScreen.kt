@@ -39,6 +39,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.virtuous.designsystem.R as DesignR
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -184,7 +186,6 @@ private fun UpdateProfileScreen(
                                             "사진/앨범에서 불러오기" -> imageLauncher.launch(
                                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                             )
-
                                             "기본 이미지 적용" -> onProfileImageUrlChange(null)
                                         }
                                     },
@@ -199,7 +200,7 @@ private fun UpdateProfileScreen(
             Spacer(Modifier.height(46.dp))
 
             Text(
-                "사용자 이름",
+                stringResource(R.string.user_name),
                 style = TraceTheme.typography.headingMB,
                 color = PrimaryDefault,
                 modifier = Modifier
@@ -214,7 +215,7 @@ private fun UpdateProfileScreen(
                 onValueChange = { onNameChange(it) },
                 placeholder = {
                     Text(
-                        "사용자 이름을 입력해주세요",
+                        stringResource(R.string.enter_user_name),
                         style = TraceTheme.typography.bodySM,
                         color = Color.Gray
                     )
@@ -247,7 +248,7 @@ private fun UpdateProfileScreen(
                 Spacer(Modifier.height(2.dp))
 
                 Text(
-                    "닉네임은 최소 2자, 최대 12자까지 가능해요",
+                    stringResource(DesignR.string.nickname_validation_message),
                     style = TraceTheme.typography.bodyXSM.copy(fontSize = 12.sp),
                     color = Red,
                     modifier = Modifier
@@ -276,7 +277,7 @@ private fun UpdateProfileScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 Text(
-                    "완료",
+                    stringResource(id = DesignR.string.complete),
                     color = White,
                     style = TraceTheme.typography.bodyXMM
                 )
@@ -296,7 +297,10 @@ private fun UpdateProfileScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Text("프로필 편집", style = TraceTheme.typography.bodyMSB)
+            Text(
+                stringResource(id = DesignR.string.profile_edit),
+                style = TraceTheme.typography.bodyMSB
+            )
         }
     }
 }

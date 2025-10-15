@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -27,6 +28,7 @@ import com.virtuous.domain.model.user.BlockedUser
 import com.virtuous.mypage.graph.blocked_user.BlockedUserViewModel.BlockedUserEvent
 import com.virtuous.mypage.graph.blocked_user.component.BlockedUserView
 import kotlinx.coroutines.launch
+import com.virtuous.designsystem.R
 
 @Composable
 fun BlockedUserRoute(
@@ -100,7 +102,7 @@ private fun BlockedUserScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Text("차단된 계정", style = TraceTheme.typography.bodyMSB)
+            Text(stringResource(R.string.blocked_accounts), style = TraceTheme.typography.bodyMSB)
         }
     }
 }

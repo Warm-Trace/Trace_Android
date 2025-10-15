@@ -119,7 +119,7 @@ fun ImageContent(
                         painter = painterResource(R.drawable.close_ic),
                         contentDescription = "이미지 삭제",
                         tint = White,
-                        modifier = modifier.size(20.dp)
+                        modifier = modifier.size(12.dp)
                     )
 
                     Box(

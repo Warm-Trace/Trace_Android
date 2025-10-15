@@ -22,7 +22,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -39,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -125,9 +125,12 @@ private fun EditProfileScreen(
     var expanded by remember { mutableStateOf(false) }
 
     val options = if (profileImageUrl != null) {
-        listOf("사진/앨범에서 불러오기", "기본 이미지 적용")
+        listOf(
+            stringResource(R.string.pick_from_album,),
+           stringResource( R.string.apply_default_image)
+        )
     } else {
-        listOf("사진/앨범에서 불러오기")
+        listOf(stringResource(R.string.pick_from_album))
     }
 
     val signUpAvailability by remember(name, isNameValid) {
@@ -178,7 +181,7 @@ private fun EditProfileScreen(
                                     text = {
                                         Text(
                                             option,
-                                            style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
+                                            style = TraceTheme.typography.bodyXSM,
                                         )
                                     },
                                     onClick = {
@@ -188,7 +191,9 @@ private fun EditProfileScreen(
                                                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                             )
 
-                                            "기본 이미지 적용" -> onProfileImageUrlChange(null)
+                                            "기본 이미지 적용" -> onProfileImageUrlChange(
+                                                null
+                                            )
                                         }
                                     },
                                 )
@@ -202,7 +207,7 @@ private fun EditProfileScreen(
             Spacer(Modifier.height(46.dp))
 
             Text(
-                "사용자 이름",
+                stringResource(R.string.user_name),
                 style = TraceTheme.typography.headingMB,
                 color = PrimaryDefault,
                 modifier = Modifier
@@ -217,7 +222,7 @@ private fun EditProfileScreen(
                 onValueChange = { onNameChange(it) },
                 placeholder = {
                     Text(
-                        "사용자 이름을 입력해주세요",
+                        stringResource(R.string.enter_user_name),
                         style = TraceTheme.typography.bodySM,
                         color = Color.Gray
                     )
@@ -250,7 +255,7 @@ private fun EditProfileScreen(
                 Spacer(Modifier.height(2.dp))
 
                 Text(
-                    "닉네임은 최소 2자, 최대 12자까지 가능해요",
+                    stringResource(R.string.nickname_validation_message),
                     style = TraceTheme.typography.bodyXSM.copy(fontSize = 12.sp),
                     color = Red,
                     modifier = Modifier
@@ -277,7 +282,7 @@ private fun EditProfileScreen(
                     .padding(horizontal = 20.dp)
             ) {
                 Text(
-                    "완료",
+                    stringResource(R.string.complete),
                     color = White,
                     style = TraceTheme.typography.bodyXMM
                 )
@@ -297,7 +302,10 @@ private fun EditProfileScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Text("프로필 설정", style = TraceTheme.typography.bodyMSB)
+            Text(
+                stringResource(R.string.profile_setup),
+                style = TraceTheme.typography.bodyMSB
+            )
         }
     }
 }

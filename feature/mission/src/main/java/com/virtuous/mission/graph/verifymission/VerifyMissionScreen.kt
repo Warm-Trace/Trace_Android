@@ -32,6 +32,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -186,12 +187,12 @@ private fun VerifyMissionScreen(
 
             Spacer(Modifier.width(15.dp))
 
-            Text("미션 인증하기", style = TraceTheme.typography.headingMR)
+            Text(stringResource(R.string.verify_mission), style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 
             Text(
-                "완료",
+                stringResource(R.string.complete),
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {

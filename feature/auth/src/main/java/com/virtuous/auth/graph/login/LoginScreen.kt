@@ -5,8 +5,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import com.virtuous.designsystem.R as DesignR
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,10 +61,12 @@ internal fun LoginRoute(
 
     LoginScreen(
         viewModel::loginKakao,
-        onLoginFailure = {   scope.launch {
-            snackbarHostState.currentSnackbarData?.dismiss()
-            snackbarHostState.showSnackbar("로그인에 실패했습니다")
-        } },
+        onLoginFailure = {
+            scope.launch {
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarHostState.showSnackbar("로그인에 실패했습니다")
+            }
+        },
     )
 }
 
@@ -81,13 +86,20 @@ private fun LoginScreen(
         Image(
             painter = painterResource(R.drawable.app_title),
             contentDescription = "앱 타이틀",
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(50.dp))
 
-        Text("작은 선행,", style = TraceTheme.typography.appDescription)
+        Text(
+            "작은 선행,",
+            style = TraceTheme.typography.appDescription
+        )
 
-        Text("따뜻한 흔적을 남기다", style = TraceTheme.typography.appDescription)
+        Text(
+            "따뜻한 흔적을 남기다",
+            style = TraceTheme.typography.appDescription
+        )
 
         Spacer(Modifier.height(40.dp))
 

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -134,7 +135,10 @@ private fun UpdatePostScreen(
         ) {
 
             item {
-                Text("${type.label}게시판", style = TraceTheme.typography.bodyMSB)
+                Text(
+                    stringResource(R.string.board_name, type.label),
+                    style = TraceTheme.typography.bodyMSB
+                )
 
                 Spacer(Modifier.height(28.dp))
 
@@ -180,7 +184,7 @@ private fun UpdatePostScreen(
 
             Spacer(Modifier.width(15.dp))
 
-            Text("수정", style = TraceTheme.typography.headingMR)
+            Text(stringResource(R.string.update), style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 

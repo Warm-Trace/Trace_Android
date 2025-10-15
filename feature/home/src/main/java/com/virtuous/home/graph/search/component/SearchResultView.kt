@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -130,7 +131,10 @@ internal fun SearchResultView(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("${displayedPosts.itemCount}개", style = TraceTheme.typography.bodySR)
+                    Text(
+                        stringResource(R.string.items_count, displayedPosts.itemCount),
+                        style = TraceTheme.typography.bodySR
+                    )
 
                     Spacer(Modifier.weight(1f))
                 }

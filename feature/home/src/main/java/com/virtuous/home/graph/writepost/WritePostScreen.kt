@@ -35,6 +35,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -103,8 +104,8 @@ internal fun WritePostRoute(
                 viewModel.addPost()
             },
             onDismiss = { viewModel.setShowVerifyFailureDialog(false) },
-            checkText = "등록",
-            dialogText = "게시글이 선행 인증에 실패했습니다.\n그래도 등록하시겠습니까?"
+            checkText = stringResource(R.string.register),
+            dialogText = stringResource(R.string.verify_fail_dialog_text)
         )
     }
 
@@ -179,10 +180,10 @@ private fun WritePostScreen(
                         }
                     ) {
                         Image(
-                            painter = if (type == WritePostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
+                            painter = if (type == WritePostType.GOOD_DEED) painterResource(com.virtuous.designsystem.R.drawable.checkbox_on) else painterResource(
                                 R.drawable.checkbox_off
                             ),
-                            contentDescription = "선행 게시글 타입",
+                            contentDescription = null,
                             modifier = Modifier.size(20.dp)
                         )
 
@@ -190,7 +191,7 @@ private fun WritePostScreen(
 
 
                         Text(
-                            "선행",
+                            stringResource(R.string.good_deed),
                             color = if (type == WritePostType.GOOD_DEED) PrimaryActive else TextHint,
                             style = TraceTheme.typography.bodySSB,
                         )
@@ -207,7 +208,7 @@ private fun WritePostScreen(
                             painter = if (type == WritePostType.FREE) painterResource(R.drawable.checkbox_on) else painterResource(
                                 R.drawable.checkbox_off
                             ),
-                            contentDescription = "선행 게시글 타입",
+                            contentDescription = null,
                             modifier = Modifier.size(20.dp)
                         )
 
@@ -215,7 +216,7 @@ private fun WritePostScreen(
 
 
                         Text(
-                            "자유",
+                            stringResource(R.string.free),
                             color = if (type == WritePostType.FREE) PrimaryActive else TextHint,
                             style = TraceTheme.typography.bodySSB,
                         )
@@ -247,7 +248,9 @@ private fun WritePostScreen(
                     value = content,
                     onValueChange = onContentChange,
                     lazyListState = lazyListState,
-                    hint = if (type == WritePostType.GOOD_DEED) "따뜻한 흔적을 남겨보세요!" else "내용을 입력하세요.",
+                    hint = if (type == WritePostType.GOOD_DEED) stringResource(R.string.write_content_hint_good_deed) else stringResource(
+                        R.string.write_content_hint_free
+                    ),
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
             }
@@ -266,12 +269,15 @@ private fun WritePostScreen(
 
             Spacer(Modifier.width(15.dp))
 
-            Text("글 쓰기", style = TraceTheme.typography.headingMR)
+            Text(
+                stringResource(R.string.title),
+                style = TraceTheme.typography.headingMR
+            )
 
             Spacer(Modifier.weight(1f))
 
             Text(
-                "완료",
+                stringResource(R.string.register),
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {
@@ -302,7 +308,7 @@ private fun WritePostScreen(
                         painter = if (isVerified) painterResource(R.drawable.checkbox_on) else painterResource(
                             R.drawable.checkbox_off
                         ),
-                        contentDescription = "선행 인증",
+                        contentDescription = null,
                         modifier = Modifier.size(20.dp)
                     )
 
@@ -310,7 +316,7 @@ private fun WritePostScreen(
 
 
                     Text(
-                        "선행 인증",
+                        stringResource(R.string.good_deed),
                         color = if (isVerified) PrimaryActive else PrimaryActive.copy(alpha = 0.7f),
                         style = TraceTheme.typography.bodySSB,
                     )
@@ -366,7 +372,7 @@ private fun GalleryPicker(
     ) {
         Icon(
             painter = painterResource(R.drawable.add_image_ic),
-            contentDescription = "사진 첨부",
+            contentDescription = "이미지 첨부하기",
             tint = PrimaryActive,
             modifier = Modifier
                 .size(32.dp)
@@ -387,7 +393,8 @@ private fun GalleryPicker(
             Spacer(Modifier.width(4.dp))
 
             Text(
-                "5장 제한", style = TraceTheme.typography.bodySM,
+                "5장 제한",
+                style = TraceTheme.typography.bodySM,
                 color = PrimaryActive
             )
         }

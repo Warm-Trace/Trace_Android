@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -179,7 +180,7 @@ private fun MyPageScreen(
 
                             Image(
                                 painter = painterResource(R.drawable.arrow_right),
-                                contentDescription = "설정",
+                                contentDescription = "프로필 수정",
                                 modifier = Modifier
                                     .clickable {
                                         navigateToEditProfile()
@@ -196,7 +197,7 @@ private fun MyPageScreen(
 
                             Image(
                                 painter = painterResource(R.drawable.point_ic),
-                                contentDescription = "선행 포인트",
+                                contentDescription = "선행 점수",
                                 modifier = Modifier
                                     .width(14.dp)
                                     .height(27.dp)
@@ -217,7 +218,7 @@ private fun MyPageScreen(
                         ) {
                             Image(
                                 painter = painterResource(R.drawable.verification_mark),
-                                contentDescription = "선행 마크",
+                                contentDescription = "선행 인증 마크",
                                 modifier = Modifier.size(22.dp),
                             )
 

@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
@@ -57,14 +58,14 @@ internal fun SearchInitialView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("최근 검색어", style = TraceTheme.typography.bodySSB)
+                Text(stringResource(R.string.recent_searches), style = TraceTheme.typography.bodySSB)
 
                 Spacer(Modifier.weight(1f))
 
                 if (recentKeywords.isNotEmpty()) {
                     TextButton(onClick = clearKeywords) {
                         Text(
-                            "전체 삭제",
+                            stringResource(R.string.clear_all),
                             style = TraceTheme.typography.bodySM,
                             color = LightGray
                         )
@@ -80,7 +81,7 @@ internal fun SearchInitialView(
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        "최근 검색어 내역이 없습니다.",
+                        stringResource(R.string.no_recent_search),
                         style = TraceTheme.typography.bodyMM,
                         color = Gray,
                         modifier = Modifier.align(Alignment.Center)
