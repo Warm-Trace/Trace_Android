@@ -1,5 +1,6 @@
 package com.virtuous.designsystem.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -12,16 +13,17 @@ import com.virtuous.designsystem.R
 
 @Composable
 fun BackButton(
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    @DrawableRes icon: Int = R.drawable.arrow_left_ic,
+    modifier: Modifier = Modifier,
 ) {
     IconButton(
         onClick = { navigateBack() },
-        modifier = Modifier
-            .padding(start = 10.dp, top = 2.dp)
+        modifier = modifier,
     ) {
         Icon(
-            painter = painterResource(R.drawable.arrow_left_ic),
-            contentDescription = "뒤로가기",
+            painter = painterResource(icon),
+            contentDescription = "뒤로 가기",
             modifier = Modifier.size(24.dp),
         )
     }

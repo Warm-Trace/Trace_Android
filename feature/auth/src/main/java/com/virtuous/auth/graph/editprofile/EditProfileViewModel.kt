@@ -3,7 +3,6 @@ package com.virtuous.auth.graph.editprofile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.user.NameRule
 import com.virtuous.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    val eventHelper: EventHelper,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _eventChannel = Channel<EditProfileEvent>()
@@ -55,15 +53,14 @@ class EditProfileViewModel @Inject constructor(
     internal fun registerUser() = viewModelScope.launch {
         authRepository.registerUser(signUpToken, providerId, name.value, profileImage.value)
             .onSuccess {
-               _eventChannel.send(EditProfileEvent.RegisterUserSuccess)
+                _eventChannel.send(EditProfileEvent.NavigateToHome)
             }.onFailure {
-            _eventChannel.send(EditProfileEvent.RegisterUserFailure)
-        }
+                _eventChannel.send(EditProfileEvent.ShowSnackbar("프로필 설정에 실패했습니다"))
+            }
     }
 
-
     sealed class EditProfileEvent {
-        data object RegisterUserSuccess : EditProfileEvent()
-        data object RegisterUserFailure : EditProfileEvent()
+        data object NavigateToHome : EditProfileEvent()
+        data class ShowSnackbar(val message: String) : EditProfileEvent()
     }
 }

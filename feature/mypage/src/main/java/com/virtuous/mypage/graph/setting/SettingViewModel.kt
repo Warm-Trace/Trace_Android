@@ -13,7 +13,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<SettingEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -25,15 +24,15 @@ class SettingViewModel @Inject constructor(
 
     fun unregisterUser() = viewModelScope.launch {
         authRepository.unregisterUser().onSuccess {
-            _eventChannel.send(SettingEvent.UnregisterUserSuccess)
+            _eventChannel.send(SettingEvent.NavigateToLogin)
         }.onFailure {
-            _eventChannel.send(SettingEvent.UnregisterUserFailure)
+            _eventChannel.send(SettingEvent.ShowSnackbar("회원 탈퇴에 실패했습니다."))
         }
     }
 
     sealed class SettingEvent {
         data object Logout : SettingEvent()
-        data object UnregisterUserSuccess : SettingEvent()
-        data object UnregisterUserFailure : SettingEvent()
+        data object NavigateToLogin : SettingEvent()
+        data class ShowSnackbar(val message: String) : SettingEvent()
     }
 }

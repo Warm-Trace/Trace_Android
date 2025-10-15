@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -113,9 +113,7 @@ private fun UserProfileScreen(
                 ) {
                     ProfileImage(
                         profileImageUrl = userInfo.profileImageUrl,
-                        imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
-                        paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
-                        strokeWidth = 10f,
+                        size = 86
                     )
 
                     Spacer(Modifier.width(20.dp))

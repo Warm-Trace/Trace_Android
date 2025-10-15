@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.virtuous.common_ui.event.EventHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.domain.repository.PostRepository
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class UpdatePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
-    val eventHelper: EventHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdatePostEvent>(Channel.BUFFERED)
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -89,15 +87,16 @@ class UpdatePostViewModel @Inject constructor(
             removedImages = _removedImages,
             images = _newImages
         ).onSuccess { postDetail ->
-            _eventChannel.send(UpdatePostEvent.UpdatePostSuccess(postDetail))
+            _eventChannel.send(UpdatePostEvent.NavigateToPostDetail(postDetail))
+            _eventChannel.send(UpdatePostEvent.ShowSnackbar("게시글이 수정되었습니다."))
         }.onFailure {
-            _eventChannel.send(UpdatePostEvent.UpdatePostFailure)
+            _eventChannel.send(UpdatePostEvent.ShowSnackbar("게시글 수정에 실패했습니다."))
         }
     }
 
     sealed class UpdatePostEvent {
         data object NavigateToBack : UpdatePostEvent()
-        data class UpdatePostSuccess(val postDetail: PostDetail) : UpdatePostEvent()
-        data object UpdatePostFailure : UpdatePostEvent()
+        data class NavigateToPostDetail(val postDetail: PostDetail) : UpdatePostEvent()
+        data class ShowSnackbar(val message: String) : UpdatePostEvent()
     }
 }

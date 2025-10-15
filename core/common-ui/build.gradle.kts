@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.virtuous.common_ui"
 }
+
 dependencies {
     implementation(libs.androidx.paging.compose)
 }

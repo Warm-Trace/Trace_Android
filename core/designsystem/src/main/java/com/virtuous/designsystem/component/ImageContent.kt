@@ -13,8 +13,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -29,10 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
@@ -85,7 +86,7 @@ fun ImageContent(
                             .padding(horizontal = 10.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("대표", style = TraceTheme.typography.bodySSB, color = White)
+                        Text(stringResource(R.string.representative_image), style = TraceTheme.typography.bodySSB, color = White)
                     }
                 }
 
@@ -116,10 +117,10 @@ fun ImageContent(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Clear,
+                        painter = painterResource(R.drawable.close_ic),
                         contentDescription = "이미지 삭제",
                         tint = White,
-                        modifier = modifier.size(20.dp)
+                        modifier = modifier.size(12.dp)
                     )
 
                     Box(
@@ -135,7 +136,7 @@ fun ImageContent(
                             DropdownMenuItem(
                                 text = {
                                     Text(
-                                        "사진 삭제하기",
+                                        stringResource(R.string.delete_photo),
                                         style = TraceTheme.typography.bodySM.copy(fontSize = 12.sp),
                                     )
                                 },

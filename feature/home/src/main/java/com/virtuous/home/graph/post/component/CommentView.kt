@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -67,8 +68,7 @@ internal fun CommentView(
             ) {
                 ProfileImage(
                     profileImageUrl = comment.profileImageUrl,
-                    imageSize = if (comment.profileImageUrl != null) 23.dp else 21.dp,
-                    paddingValue = if (comment.profileImageUrl != null) 1.dp else 2.dp,
+                    size = 21,
                     navigateToUserProfile = { navigateToUserProfile(comment.providerId) }
                 )
 
@@ -137,7 +137,11 @@ internal fun CommentView(
         }
 
         if (comment.isDeleted) {
-            Text("삭제된 댓글입니다.", style = TraceTheme.typography.bodySM, color = Gray)
+            Text(
+                stringResource(R.string.deleted_comment),
+                style = TraceTheme.typography.bodySM,
+                color = Gray
+            )
         }
     }
 
@@ -178,10 +182,8 @@ private fun ChildCommentView(
         ) {
             ProfileImage(
                 profileImageUrl = comment.profileImageUrl,
-                imageSize = if (comment.profileImageUrl != null) 23.dp else 19.dp,
-                paddingValue = if (comment.profileImageUrl != null) 1.dp else 3.dp,
-                navigateToUserProfile = { navigateToUserProfile(comment.providerId) }
-            )
+                size = 19,
+                navigateToUserProfile = { navigateToUserProfile(comment.providerId) })
 
             Spacer(Modifier.width(6.dp))
 
@@ -225,8 +227,7 @@ private fun ChildCommentView(
                     expanded = isOtherCommentDropDownMenuExpanded,
                     onDismiss = { isOtherCommentDropDownMenuExpanded = false },
                     onReport = { reason -> onReport(comment.commentId, reason) },
-                    onBlockUser = { onBlockUser(comment.providerId) }
-                )
+                    onBlockUser = { onBlockUser(comment.providerId) })
             }
         }
 

@@ -1,5 +1,6 @@
 package com.virtuous.network.di
 
+import com.virtuous.network.BuildConfig
 import com.virtuous.network.adapter.TraceCallAdapterFactory
 import com.virtuous.network.api.TraceApi
 import com.virtuous.network.authenticator.TraceAuthenticator
@@ -11,6 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import javax.inject.Singleton
@@ -34,6 +36,12 @@ object RetrofitModule {
             .addInterceptor(interceptor)
             .authenticator(authenticator)
 
+        if (BuildConfig.DEBUG) {
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            builder.addInterceptor(loggingInterceptor)
+        }
+
         return builder.build()
     }
 
@@ -47,7 +55,7 @@ object RetrofitModule {
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .addCallAdapterFactory(callAdapterFactory)
-        .baseUrl(com.virtuous.network.BuildConfig.TRACE_BASE_URL)
+        .baseUrl(BuildConfig.TRACE_BASE_URL)
         .build()
         .create(TraceApi::class.java)
 }

@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +21,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,11 +63,11 @@ fun PostFeed(
                 navigateToPost(postFeed)
             }) {
 
-        Column(
-            modifier = Modifier
-                .padding(end = endPadding)
-                .align(Alignment.CenterStart)
-        ) {
+            Column(
+                modifier = Modifier
+                    .padding(end = endPadding)
+                    .align(Alignment.CenterStart)
+            ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(
                     postFeed.title,
@@ -105,8 +104,7 @@ fun PostFeed(
             ) {
                 ProfileImage(
                     profileImageUrl = postFeed.profileImageUrl,
-                    imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
-                    paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp,
+                    size = 18
                 )
 
                 Spacer(Modifier.width(6.dp))
@@ -128,7 +126,7 @@ fun PostFeed(
                 Spacer(Modifier.width(8.dp))
 
                 Text(
-                    "${postFeed.viewCount} 읽음",
+                    stringResource(R.string.view_count_suffix, postFeed.viewCount),
                     style = TraceTheme.typography.bodySSB.copy(fontSize = 11.sp),
                     color = WarmGray
                 )
@@ -154,7 +152,7 @@ fun PostFeed(
                 Spacer(Modifier.width(10.dp))
 
                 Image(
-                    imageVector = Icons.Default.Favorite,
+                    painter = painterResource(R.drawable.heart_ic),
                     contentDescription = "감정표현",
                     colorFilter = ColorFilter.tint(Red),
                     modifier = Modifier.size(15.dp)

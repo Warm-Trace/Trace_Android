@@ -110,10 +110,10 @@ fun BirdFlyingAnimation() {
     )
 }
 
-@Preview
-@Composable
-fun VerifyingDialogPreview() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        VerifyingDialog()
+    @Preview
+    @Composable
+    fun VerifyingDialogPreview() {
+        Column(modifier = Modifier.fillMaxSize()) {
+            VerifyingDialog()
+        }
     }
-}

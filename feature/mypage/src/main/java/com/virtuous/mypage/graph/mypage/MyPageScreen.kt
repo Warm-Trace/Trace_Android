@@ -1,6 +1,7 @@
 package com.virtuous.mypage.graph.mypage
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,9 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -28,7 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -57,7 +61,6 @@ import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.mypage.graph.mypage.MyPageViewModel.MyPageEvent
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
-import java.util.UUID
 
 
 @Composable
@@ -165,9 +168,7 @@ private fun MyPageScreen(
                 ) {
                     ProfileImage(
                         profileImageUrl = userInfo.profileImageUrl,
-                        imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
-                        paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
-                        strokeWidth = 10f,
+                        size = 86
                     )
 
                     Spacer(Modifier.width(20.dp))
@@ -182,7 +183,7 @@ private fun MyPageScreen(
 
                             Image(
                                 painter = painterResource(R.drawable.arrow_right),
-                                contentDescription = "설정",
+                                contentDescription = "프로필 수정",
                                 modifier = Modifier
                                     .clickable {
                                         navigateToEditProfile()
@@ -199,7 +200,7 @@ private fun MyPageScreen(
 
                             Image(
                                 painter = painterResource(R.drawable.point_ic),
-                                contentDescription = "선행 포인트",
+                                contentDescription = "선행 점수",
                                 modifier = Modifier
                                     .width(14.dp)
                                     .height(27.dp)
@@ -220,7 +221,7 @@ private fun MyPageScreen(
                         ) {
                             Image(
                                 painter = painterResource(R.drawable.verification_mark),
-                                contentDescription = "선행 마크",
+                                contentDescription = "선행 인증 마크",
                                 modifier = Modifier.size(22.dp),
                             )
 
@@ -242,31 +243,34 @@ private fun MyPageScreen(
 
                 Spacer(Modifier.height(28.dp))
 
-                TabRow(
-                    selectedTabIndex = tabs.indexOf(tabType),
-                    containerColor = Background,
-                    contentColor = Black,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.SecondaryIndicator(
-                            color = TabIndicator,
+                SecondaryTabRow(
+                    tabs.indexOf(tabType),
+                    Modifier, Background,
+                    Black,
+                    {
+                        Box(
                             modifier = Modifier
-                                .tabIndicatorOffset(tabPositions[tabs.indexOf(tabType)])
+                                .tabIndicatorOffset(tabs.indexOf(tabType), matchContentSize = false)
+                                .height(3.dp)
+                                .padding(horizontal = 12.dp)
+                                .background(color = TabIndicator, shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
                         )
-                    }
-                ) {
-                    tabs.forEach { tab ->
-                        Tab(
-                            selected = tab == tabType,
-                            onClick = { onTabTypeChange(tab) },
-                            text = {
-                                Text(
-                                    tab.label,
-                                    style = TraceTheme.typography.myPageTab
-                                )
-                            }
-                        )
-                    }
-                }
+                    },
+                    divider = @Composable { HorizontalDivider() },
+                    tabs = {
+                        tabs.forEach { tab ->
+                            Tab(
+                                selected = tab == tabType,
+                                onClick = { onTabTypeChange(tab) },
+                                text = {
+                                    Text(
+                                        tab.label,
+                                        style = TraceTheme.typography.myPageTab
+                                    )
+                                }
+                            )
+                        }
+                    })
 
                 Spacer(Modifier.height(20.dp))
             }

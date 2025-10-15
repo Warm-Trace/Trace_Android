@@ -13,8 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val eventHelper: com.virtuous.common_ui.event.EventHelper
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdateProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -77,7 +76,6 @@ class UpdateProfileViewModel @Inject constructor(
                 val result = userRepository.updateNickname(_name.value)
                 if (result.isFailure) success = false
             }
-
             if (_isProfileImageChanged.value) {
                 val result = userRepository.updateProfileImage(_profileImageUrl.value)
                 if (result.isFailure) success = false
@@ -88,7 +86,7 @@ class UpdateProfileViewModel @Inject constructor(
                     _eventChannel.send(UpdateProfileEvent.NavigateBack)
                 }
             } else {
-                eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("프로필 수정에 실패했습니다."))
+                _eventChannel.send(UpdateProfileEvent.ShowSnackbar("프로필 수정에 실패했습니다."))
             }
         }
     }
@@ -100,5 +98,6 @@ class UpdateProfileViewModel @Inject constructor(
 
     sealed class UpdateProfileEvent {
         data object NavigateBack : UpdateProfileEvent()
+        data class ShowSnackbar(val message: String) : UpdateProfileEvent()
     }
 }
