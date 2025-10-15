@@ -16,6 +16,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -42,24 +43,24 @@ object AnalyticsModule {
     @Singleton
     fun provideAnalyticsHelper(
         @ApplicationContext context: Context,
-        amplitude: Amplitude,
+        amplitudeProvider: Provider<Amplitude>,
     ): AnalyticsHelper {
         return if (BuildConfig.DEBUG) {
             NoOpAnalyticsHelper()
         } else {
-            AmplitudeAnalyticsHelper(amplitude)
+            AmplitudeAnalyticsHelper(amplitudeProvider.get())
         }
     }
 
     @Provides
     @Singleton
     fun provideErrorHelper(
-        firebaseCrashlytics: FirebaseCrashlytics,
+        firebaseCrashlyticsProvider: Provider<FirebaseCrashlytics>
     ): ErrorHelper {
         return if (BuildConfig.DEBUG) {
             NoOpErrorHelper()
         } else {
-            FirebaseErrorHelper(firebaseCrashlytics)
+            FirebaseErrorHelper(firebaseCrashlyticsProvider.get())
         }
     }
 }

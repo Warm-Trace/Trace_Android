@@ -32,7 +32,7 @@ fun ProfileImage(
 ) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(profileImageUrl ?: R.drawable.default_profile).build()
+            .data(profileImageUrl ?: R.drawable.default_profile).crossfade(true).build()
     )
 
     Image(
