@@ -67,8 +67,7 @@ internal fun CommentView(
             ) {
                 ProfileImage(
                     profileImageUrl = comment.profileImageUrl,
-                    imageSize = if (comment.profileImageUrl != null) 23.dp else 21.dp,
-                    paddingValue = if (comment.profileImageUrl != null) 1.dp else 2.dp,
+                    size = 21,
                     navigateToUserProfile = { navigateToUserProfile(comment.providerId) }
                 )
 
@@ -178,10 +177,8 @@ private fun ChildCommentView(
         ) {
             ProfileImage(
                 profileImageUrl = comment.profileImageUrl,
-                imageSize = if (comment.profileImageUrl != null) 23.dp else 19.dp,
-                paddingValue = if (comment.profileImageUrl != null) 1.dp else 3.dp,
-                navigateToUserProfile = { navigateToUserProfile(comment.providerId) }
-            )
+                size = 19,
+                navigateToUserProfile = { navigateToUserProfile(comment.providerId) })
 
             Spacer(Modifier.width(6.dp))
 
@@ -225,8 +222,7 @@ private fun ChildCommentView(
                     expanded = isOtherCommentDropDownMenuExpanded,
                     onDismiss = { isOtherCommentDropDownMenuExpanded = false },
                     onReport = { reason -> onReport(comment.commentId, reason) },
-                    onBlockUser = { onBlockUser(comment.providerId) }
-                )
+                    onBlockUser = { onBlockUser(comment.providerId) })
             }
         }
 

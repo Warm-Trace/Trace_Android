@@ -103,8 +103,7 @@ fun PostFeed(
             ) {
                 ProfileImage(
                     profileImageUrl = postFeed.profileImageUrl,
-                    imageSize = if (postFeed.profileImageUrl != null) 18.dp else 16.dp,
-                    paddingValue = if (postFeed.profileImageUrl != null) 1.dp else 2.dp,
+                    size = 18
                 )
 
                 Spacer(Modifier.width(6.dp))

@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.ImageContent
 import com.virtuous.designsystem.component.TraceContentField
 import com.virtuous.designsystem.component.TraceTitleField
@@ -70,12 +71,14 @@ internal fun UpdatePostRoute(
                 is UpdatePostEvent.NavigateToPostDetail -> {
                     navigateToPost(event.postDetail)
                 }
+
                 is UpdatePostEvent.ShowSnackbar -> {
                     scope.launch {
                         snackbarHostState.currentSnackbarData?.dismiss()
                         snackbarHostState.showSnackbar(event.message)
                     }
                 }
+
                 is UpdatePostEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -105,7 +108,7 @@ private fun UpdatePostScreen(
     onContentChange: (String) -> Unit,
     addImages: (List<String>) -> Unit,
     removeImage: (String) -> Unit,
-    updatePost : () -> Unit,
+    updatePost: () -> Unit,
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
@@ -121,7 +124,6 @@ private fun UpdatePostScreen(
             .fillMaxSize()
             .imePadding()
     ) {
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -170,22 +172,13 @@ private fun UpdatePostScreen(
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
                 .height(50.dp)
-                .padding(horizontal = 15.dp, vertical = 8.dp),
+                .padding(start = 5.dp, end = 20.dp)
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.close_ic),
-                contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable(
-                        isRipple = true
-                    ) {
-                        navigateBack()
-                    }
-            )
+            BackButton(navigateBack, icon = R.drawable.close_ic)
 
-            Spacer(Modifier.width(30.dp))
+            Spacer(Modifier.width(15.dp))
 
             Text("수정", style = TraceTheme.typography.headingMR)
 

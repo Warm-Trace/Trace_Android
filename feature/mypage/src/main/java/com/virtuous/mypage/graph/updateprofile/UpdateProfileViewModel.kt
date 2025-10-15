@@ -86,7 +86,6 @@ class UpdateProfileViewModel @Inject constructor(
                     _eventChannel.send(UpdateProfileEvent.NavigateBack)
                 }
             } else {
-                ㄷ
                 _eventChannel.send(UpdateProfileEvent.ShowSnackbar("프로필 수정에 실패했습니다."))
             }
         }

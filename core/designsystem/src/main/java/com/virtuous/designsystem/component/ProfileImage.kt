@@ -12,50 +12,49 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.PrimaryDefault
+import com.virtuous.designsystem.theme.TraceTheme
 
 @Composable
 fun ProfileImage(
+    modifier: Modifier = Modifier,
     profileImageUrl: String?,
-    imageSize: Dp,
-    paddingValue: Dp,
-    strokeWidth: Float = 4f,
-    navigateToUserProfile: () -> Unit = {}
+    size: Int,
+    navigateToUserProfile: () -> Unit = {},
 ) {
     val profileImage = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(profileImageUrl ?: R.drawable.default_profile).crossfade(true).build()
+            .data(profileImageUrl ?: R.drawable.default_profile).build()
     )
 
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.clickable {
-        navigateToUserProfile()
-    }) {
-        Canvas(modifier = Modifier.size(imageSize + paddingValue)) {
-            val canvasWidth = size.width
-            val center = center
-            val radius = canvasWidth / 2f
+    Image(
+        painter = profileImage,
+        contentDescription = "프로필 이미지",
+        modifier = modifier
+            .size(size.dp)
+            .clip(CircleShape)
+            .clickable {
+                navigateToUserProfile()
+            },
+        contentScale = ContentScale.Crop
+    )
+}
 
-            drawCircle(
-                color = PrimaryDefault,
-                radius = radius,
-                center = center,
-                style = Stroke(strokeWidth)
-            )
-        }
-
-        Image(
-            painter = profileImage,
-            contentDescription = "프로필 이미지",
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
+@Preview
+@Composable
+private fun ProfileImagePreview() {
+    TraceTheme {
+        ProfileImage(
+            profileImageUrl = null,
+            size = 40
         )
     }
 }

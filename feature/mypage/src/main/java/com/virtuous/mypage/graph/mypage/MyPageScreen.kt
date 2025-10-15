@@ -164,9 +164,7 @@ private fun MyPageScreen(
                 ) {
                     ProfileImage(
                         profileImageUrl = userInfo.profileImageUrl,
-                        imageSize = if (userInfo.profileImageUrl != null) 96.dp else 86.dp,
-                        paddingValue = if (userInfo.profileImageUrl != null) 2.dp else 7.dp,
-                        strokeWidth = 10f,
+                        size = 86
                     )
 
                     Spacer(Modifier.width(20.dp))

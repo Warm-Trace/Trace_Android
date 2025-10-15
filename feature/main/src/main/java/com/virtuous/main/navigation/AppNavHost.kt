@@ -69,7 +69,6 @@ fun AppNavHost(
             navigateToPostById = { postId ->
                 navController.navigateToPost(postId)
             },
-            navigateToMission = navController::navigateToMission,
             navigateBack = navController::popBackStack,
         )
 

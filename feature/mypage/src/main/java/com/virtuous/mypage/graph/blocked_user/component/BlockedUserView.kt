@@ -57,8 +57,7 @@ internal fun BlockedUserView(
     {
         ProfileImage(
             profileImageUrl = blockedUser.profileImageUrl,
-            imageSize = if (blockedUser.profileImageUrl != null) 40.dp else 36.dp,
-            paddingValue = if (blockedUser.profileImageUrl != null) 1.dp else 3.dp,
+            size = 40
         )
 
         Spacer(Modifier.width(12.dp))

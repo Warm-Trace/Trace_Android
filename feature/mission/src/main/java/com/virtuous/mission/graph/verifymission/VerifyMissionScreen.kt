@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.ImageContent
 import com.virtuous.designsystem.component.TraceContentField
 import com.virtuous.designsystem.component.TraceTitleField
@@ -177,22 +178,13 @@ private fun VerifyMissionScreen(
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
                 .height(50.dp)
-                .padding(horizontal = 15.dp, vertical = 8.dp),
+                .padding(start = 5.dp, end = 20.dp)
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(R.drawable.close_ic),
-                contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .size(22.dp)
-                    .clickable(
-                        isRipple = true
-                    ) {
-                        navigateBack()
-                    }
-            )
+            BackButton(navigateBack, icon = R.drawable.close_ic)
 
-            Spacer(Modifier.width(26.dp))
+            Spacer(Modifier.width(15.dp))
 
             Text("미션 인증하기", style = TraceTheme.typography.headingMR)
 

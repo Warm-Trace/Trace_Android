@@ -228,8 +228,7 @@ private fun PostScreen(
                 ) {
                     ProfileImage(
                         profileImageUrl = postDetail.profileImageUrl,
-                        imageSize = if (postDetail.profileImageUrl != null) 38.dp else 34.dp,
-                        paddingValue = if (postDetail.profileImageUrl != null) 1.dp else 3.dp,
+                        size = 38,
                         navigateToUserProfile = { navigateToUserProfile(postDetail.providerId) }
                     )
 
@@ -439,9 +438,7 @@ private fun PostScreen(
                             color = WarmGray
                         )
                     }
-
                 }
-
             }
 
             items(
@@ -496,7 +493,7 @@ private fun PostScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 20.dp),
+                .padding(start = 10.dp, end = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             BackButton(navigateBack)

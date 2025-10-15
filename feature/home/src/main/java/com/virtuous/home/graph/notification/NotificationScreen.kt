@@ -34,6 +34,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
@@ -130,18 +131,8 @@ private fun NotificationScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { navigateBack() },
-                modifier = Modifier
-                    .padding(start = 10.dp, top = 2.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.arrow_left_ic),
-                    contentDescription = "뒤로가기",
-                    modifier = Modifier.size(36.dp),
-                )
-            }
-
+            BackButton(navigateBack)
+            
             Spacer(Modifier.width(10.dp))
 
             Text("알림", style = TraceTheme.typography.bodyMSB)

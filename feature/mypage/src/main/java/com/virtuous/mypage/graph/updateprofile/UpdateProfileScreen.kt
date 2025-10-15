@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,9 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,10 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import androidx.compose.ui.res.painterResource
@@ -52,10 +46,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.rememberAsyncImagePainter
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.BackButton
+import com.virtuous.designsystem.component.ProfileImage
 import com.virtuous.designsystem.theme.PrimaryActive
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.Red
@@ -151,21 +145,11 @@ private fun UpdateProfileScreen(
                 .padding(top = 120.dp, start = 30.dp, end = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box() {
-                Canvas(modifier = Modifier.size(133.dp)) {
-                    val canvasWidth = size.width
-                    val center = center
-                    val radius = canvasWidth / 2f
-
-                    drawCircle(
-                        color = PrimaryDefault,
-                        radius = radius,
-                        center = center,
-                        style = Stroke(12f)
-                    )
-                }
-
-                ProfileImage(profileImageUrl)
+            Box {
+                ProfileImage(
+                    profileImageUrl = profileImageUrl,
+                    size = 115
+                )
 
                 Box(
                     modifier = Modifier.align(Alignment.BottomEnd)
@@ -179,7 +163,7 @@ private fun UpdateProfileScreen(
                             }
                     )
 
-                    Box() {
+                    Box {
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
@@ -317,23 +301,6 @@ private fun UpdateProfileScreen(
     }
 }
 
-@Composable
-private fun ProfileImage(imageUrl: String?) {
-    val profileImage = rememberAsyncImagePainter(imageUrl ?: R.drawable.default_profile)
-    val imageSize = if (imageUrl != null) 129.dp else 115.dp
-    val paddingValue = if (imageUrl != null) 2.dp else 9.dp
-
-    Box(Modifier.padding(paddingValue)) {
-        Image(
-            painter = profileImage,
-            contentDescription = "프로필 이미지",
-            modifier = Modifier
-                .size(imageSize)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
 
 @Preview
 @Composable
