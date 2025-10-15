@@ -10,7 +10,7 @@ data class CommentResponse(
     val commentId : Int,
     val parentId: Int? = null,
     val nickName : String,
-    val userProfileImageUrl : String,
+    val userProfileImageUrl : String?,
     val content : String,
     val createdAt : LocalDateTime,
     val isDeleted : Boolean,

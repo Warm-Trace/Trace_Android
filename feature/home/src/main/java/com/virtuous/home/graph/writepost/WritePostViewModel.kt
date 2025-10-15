@@ -75,6 +75,8 @@ class WritePostViewModel @Inject constructor(
     }
 
     fun addPost() = viewModelScope.launch {
+        if(_isCreatingPost.value || _isVerifyingPost.value) return@launch
+
         _isCreatingPost.value = true
 
         postRepository.addPost(
@@ -93,6 +95,8 @@ class WritePostViewModel @Inject constructor(
     }
 
     fun verifyAndAddPost() = viewModelScope.launch {
+        if(_isCreatingPost.value || _isVerifyingPost.value) return@launch
+
         _isVerifyingPost.value = true
 
         postRepository.verifyAndAddPost(

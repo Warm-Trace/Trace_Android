@@ -53,6 +53,8 @@ class VerifyMissionViewModel @Inject constructor(
     }
 
     fun verifyMission() = viewModelScope.launch {
+        if(_isVerifyingMission.value) return@launch
+
         _isVerifyingMission.value = true
 
         missionRepository.verifyDailyMission(
