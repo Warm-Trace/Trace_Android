@@ -10,7 +10,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,6 +28,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.rememberLazyListState
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.PrimaryDefault
@@ -46,6 +49,8 @@ internal fun MissionRoute(
     navigateToPost: (Int) -> Unit,
     navigateToVerifyMission: (String) -> Unit,
 ) {
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
     val dailyMission by viewModel.dailyMission.collectAsStateWithLifecycle()
     val completedMissions = viewModel.completedMissions.collectAsLazyPagingItems()
 
@@ -63,6 +68,17 @@ internal fun MissionRoute(
 
             onDispose {
                 lifecycleOwner.lifecycle.removeObserver(observer)
+            }
+        }
+    }
+
+
+    LaunchedEffect(true) {
+        viewModel.eventChannel.collect { event ->
+            when (event) {
+                is MissionViewModel.MissionEvent.ShowSnackbar -> snackbarHostState.showSnackbar(
+                    event.message
+                )
             }
         }
     }

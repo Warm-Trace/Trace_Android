@@ -1,8 +1,11 @@
 package com.virtuous.mission.graph.mission
 
+import android.R.attr.description
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.mission.DailyMission
 import com.virtuous.domain.model.mission.Mission
 import com.virtuous.domain.repository.MissionRepository
@@ -17,6 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<MissionEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -38,14 +43,26 @@ class MissionViewModel @Inject constructor(
     fun getDailyMission() = viewModelScope.launch {
         missionRepository.getDailyMission().onSuccess { dailyMission ->
             _dailyMission.value = dailyMission
+        }.onFailure {
+            errorHelper.logError(it)
         }
     }
 
     fun changeDailyMission() = viewModelScope.launch {
         missionRepository.changeDailyMission().onSuccess { dailyMission ->
+            val originMissionDescription = _dailyMission.value.mission.description
             _dailyMission.value = dailyMission
+            analyticsHelper.trackActionEvent(
+                screenName = "mission",
+                actionName = "change_daily_mission",
+                properties = mutableMapOf(
+                    "origin_mission" to originMissionDescription,
+                    "change_count" to _dailyMission.value.changeCount
+                )
+            )
         }.onFailure {
             _eventChannel.send(MissionEvent.ShowSnackbar("일일 미션 변경횟수를 초과했습니다."))
+            errorHelper.logError(it)
         }
     }
 

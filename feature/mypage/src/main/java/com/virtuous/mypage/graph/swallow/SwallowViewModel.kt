@@ -2,6 +2,7 @@ package com.virtuous.mypage.graph.swallow
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.user.SwallowLevel
 import com.virtuous.domain.model.user.UserInfo
 import com.virtuous.domain.repository.UserRepository
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SwallowViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _userInfo = MutableStateFlow(
         UserInfo(
@@ -29,15 +31,13 @@ class SwallowViewModel @Inject constructor(
 
     val swallowLevel: StateFlow<SwallowLevel> = _userInfo.map {
         SwallowLevel.getLevel(
-            it.verifiedPostCount,
-            it.completedMissionCount
+            it.verifiedPostCount, it.completedMissionCount
         )
     }.distinctUntilChanged().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = SwallowLevel.getLevel(
-            _userInfo.value.verifiedPostCount,
-            _userInfo.value.completedMissionCount
+            _userInfo.value.verifiedPostCount, _userInfo.value.completedMissionCount
         )
     )
 
@@ -48,6 +48,8 @@ class SwallowViewModel @Inject constructor(
     private fun getUserInfo() = viewModelScope.launch {
         userRepository.getMyUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
+        }.onFailure {
+            errorHelper.logError(it)
         }
     }
 }

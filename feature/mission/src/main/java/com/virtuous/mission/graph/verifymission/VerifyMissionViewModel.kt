@@ -3,6 +3,8 @@ package com.virtuous.mission.graph.verifymission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.repository.MissionRepository
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +20,8 @@ class VerifyMissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
     private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<VerifyMissionEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -65,8 +69,14 @@ class VerifyMissionViewModel @Inject constructor(
             _eventChannel.send(VerifyMissionEvent.NavigateToPost(postId = postId))
             _eventChannel.send(VerifyMissionEvent.ShowSnackbar("미션 인증에 성공했습니다!"))
             userRepository.loadMyUserInfo()
+            analyticsHelper.trackActionEvent(
+                screenName = "verify_mission",
+                actionName = "verify_mission",
+                properties = mutableMapOf("mission" to description)
+            )
         }.onFailure {
             _eventChannel.send(VerifyMissionEvent.ShowSnackbar("미션 인증에 실패했습니다."))
+            errorHelper.logError(it)
         }
 
         _isVerifyingMission.value = false

@@ -69,7 +69,7 @@ internal fun EditProfileRoute(
 ) {
     val name by viewModel.name.collectAsStateWithLifecycle()
     val isNameValid by viewModel.isNameValid.collectAsStateWithLifecycle()
-    val profileImageUrl by viewModel.profileImage.collectAsStateWithLifecycle()
+    val profileImageUrl by viewModel.profileImageUrl.collectAsStateWithLifecycle()
 
     val snackbarHostState = LocalSnackbarHostState.current
     val scope = rememberCoroutineScope()
