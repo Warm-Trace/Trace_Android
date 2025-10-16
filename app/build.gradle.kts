@@ -79,9 +79,10 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.core.domain)
+    baselineProfile(projects.baselineprofile)
 
     implementation(libs.kakao.user)
     implementation(libs.firebase.messaging)
     implementation(libs.androidx.profileinstaller)
-    baselineProfile(projects.baselineprofile)
+
 }

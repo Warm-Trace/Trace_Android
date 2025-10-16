@@ -40,7 +40,24 @@ fun AppNavHost(
         startDestination = SplashRoute,
         modifier = modifier,
     ) {
-        splashScreen()
+        splashScreen(
+            navigateToHome = {
+                navController.navigateToHome(
+                    navOptions = navOptions {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                )
+            },
+            navigateToLogin = {
+                navController.navigateToLogin(
+                    navOptions = navOptions {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                )
+            }
+        )
 
         authNavGraph(
             navigateToHome = {
@@ -58,7 +75,6 @@ fun AppNavHost(
                 })
             }
         )
-
 
         homeNavGraph(
             navigateToPost = { postDetail ->

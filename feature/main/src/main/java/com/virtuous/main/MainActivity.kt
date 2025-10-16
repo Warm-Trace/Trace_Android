@@ -3,7 +3,6 @@ package com.virtuous.main
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -23,11 +22,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.lifecycleScope
@@ -72,37 +69,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen()
+        enableEdgeToEdge()
+        requestNotificationPermission(this)
 
         if (intent.extras != null && intent.getStringExtra("type") != null && intent.getStringExtra(
                 "id"
             ) != null
         ) { // 백그라운드 알림으로 앱에 진입
             handleNotificationIntent(intent)
-        } else {
-            lifecycleScope.launch {
-                val isSessionValid = viewModel.checkSession()
-                if (isSessionValid) {
-                    navController.navigateToHome(navOptions {
-                        popUpTo(0) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    })
-                } else {
-                    navController.navigateToLogin(navOptions {
-                        popUpTo(0) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                    })
-                }
-            }
-
-            requestNotificationPermission(this)
         }
-
-        enableEdgeToEdge()
-
 
         setContent {
             navController = rememberNavController()

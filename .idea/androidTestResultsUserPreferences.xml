@@ -36,6 +36,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_6" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung SM-G986N" value="120" />
                 </map>
