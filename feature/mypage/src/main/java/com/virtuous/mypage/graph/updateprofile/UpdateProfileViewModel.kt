@@ -17,7 +17,6 @@ import javax.inject.Inject
 class UpdateProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val analyticsHelper: AnalyticsHelper,
-    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdateProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()

@@ -40,6 +40,7 @@ import com.virtuous.mission.graph.mission.component.MissionCompletedHeaderView
 import com.virtuous.mission.graph.mission.component.MissionHeaderView
 import com.virtuous.mission.graph.mission.component.VerifiedMissionBox
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
 
@@ -76,20 +77,24 @@ internal fun MissionRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is MissionViewModel.MissionEvent.ShowSnackbar -> snackbarHostState.showSnackbar(
-                    event.message
-                )
+                is MissionViewModel.MissionEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            event.message
+                        )
+                    }
+                }
             }
-        }
     }
+}
 
-    MissionScreen(
-        dailyMission = dailyMission,
-        completedMissions = completedMissions,
-        changeMission = viewModel::changeDailyMission,
-        navigateToPost = navigateToPost,
-        onVerifyMission = navigateToVerifyMission
-    )
+MissionScreen(
+dailyMission = dailyMission,
+completedMissions = completedMissions,
+changeMission = viewModel::changeDailyMission,
+navigateToPost = navigateToPost,
+onVerifyMission = navigateToVerifyMission
+)
 }
 
 @Composable

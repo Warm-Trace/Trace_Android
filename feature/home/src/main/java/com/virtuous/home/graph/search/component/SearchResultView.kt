@@ -7,11 +7,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -52,7 +56,7 @@ internal fun SearchResultView(
     displayedPosts: LazyPagingItems<PostFeed>,
     onSearchTypeChange: (SearchType) -> Unit,
     onTabTypeChange: (SearchTab) -> Unit,
-    navigateToPost: (PostFeed) -> Unit,
+    onPostFeedClick: (PostFeed) -> Unit,
 ) {
     val tabs = SearchType.entries
     var showSearchTypeMenu by remember { mutableStateOf(false) }
@@ -99,17 +103,21 @@ internal fun SearchResultView(
 
                 Spacer(Modifier.height(40.dp))
 
-                TabRow(
+                SecondaryTabRow(
                     selectedTabIndex = tabs.indexOf(searchType),
+                    modifier = Modifier,
                     containerColor = Background,
                     contentColor = Black,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.SecondaryIndicator(
-                            color = TabIndicator,
+                    indicator = {
+                        Box(
                             modifier = Modifier
-                                .tabIndicatorOffset(tabPositions[tabs.indexOf(searchType)])
+                                .tabIndicatorOffset(tabs.indexOf(searchType), matchContentSize = false)
+                                .height(3.dp)
+                                .padding(horizontal = 12.dp)
+                                .background(color = TabIndicator, shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
                         )
-                    }
+                    },
+                    divider = { HorizontalDivider() }
                 ) {
                     tabs.forEach { tab ->
                         Tab(
@@ -179,7 +187,7 @@ internal fun SearchResultView(
                     displayedPosts[index]?.postId ?: index
                 }) { index ->
                 displayedPosts[index]?.let { postFeed ->
-                    PostFeed(postFeed, navigateToPost = { navigateToPost(postFeed) })
+                    PostFeed(postFeed, onPostFeedClick)
 
                     Spacer(Modifier.height(8.dp))
 
