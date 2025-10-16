@@ -3,6 +3,7 @@ package com.virtuous.home.graph.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.virtuous.analytics.AnalyticsHelper
 import com.virtuous.domain.model.post.HomeTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.repository.PostRepository
@@ -18,13 +19,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val postRepository: PostRepository,
+    private val analyticsHelper: AnalyticsHelper
 ) : ViewModel() {
     private val _eventChannel = Channel<HomeEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
-
-    internal fun onEvent(event: HomeEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
-    }
 
     private val _tabType: MutableStateFlow<HomeTab> = MutableStateFlow(HomeTab.ALL)
     val tabType = _tabType.asStateFlow()
@@ -33,9 +31,22 @@ class HomeViewModel @Inject constructor(
         postRepository.getPosts(tab).cachedIn(viewModelScope)
     }
 
-
     fun setTabType(tabType: HomeTab) {
         _tabType.value = tabType
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "home",
+                actionName = "change_tab",
+                properties = mutableMapOf("tab" to _tabType.value.name)
+            )
+        }
+    }
+
+    fun onRefresh() = viewModelScope.launch {
+        analyticsHelper.trackActionEvent(
+            screenName = "home",
+            actionName = "refresh_post_feed",
+        )
     }
 
     sealed class HomeEvent {

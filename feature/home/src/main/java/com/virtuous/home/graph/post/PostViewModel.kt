@@ -8,6 +8,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.map
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.post.Comment
 import com.virtuous.domain.model.post.Emotion
 import com.virtuous.domain.model.post.EmotionCount
@@ -34,6 +36,8 @@ class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
     private val savedStateHandle: SavedStateHandle,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<PostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -115,8 +119,14 @@ class PostViewModel @Inject constructor(
 
     fun onRefresh() {
         getPost()
-        _deletedCommentIds.value = emptySet()
         refreshComments()
+        _deletedCommentIds.value = emptySet()
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "post",
+                actionName = "refresh_post",
+            )
+        }
     }
 
     fun setCommentInput(commentInput: String) {
@@ -125,6 +135,12 @@ class PostViewModel @Inject constructor(
 
     fun setReplyTargetId(commentId: Int) {
         _replyTargetId.value = commentId
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "post",
+                actionName = "set_reply_target",
+            )
+        }
     }
 
     fun clearReplyTargetId() {
@@ -144,20 +160,47 @@ class PostViewModel @Inject constructor(
 
     fun reportPost(reason: String) = viewModelScope.launch {
         postRepository.reportPost(postId, reason)
-            .onSuccess { _eventChannel.send(PostEvent.ShowSnackbar("신고가 접수되었습니다.")) }
-            .onFailure { _eventChannel.send(PostEvent.ShowSnackbar("신고 접수에 실패했습니다.")) }
+            .onSuccess {
+                _eventChannel.send(PostEvent.ShowSnackbar("신고가 접수되었습니다."))
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "report_post",
+                )
+            }
+            .onFailure {
+                _eventChannel.send(PostEvent.ShowSnackbar("신고 접수에 실패했습니다."))
+                errorHelper.logError(it)
+            }
     }
 
     fun blockUser(providerId: String) = viewModelScope.launch {
         postRepository.blockUser(providerId)
-            .onSuccess { _eventChannel.send(PostEvent.NavigateBack) }
-            .onFailure { _eventChannel.send(PostEvent.ShowSnackbar("유저 차단에 실패했습니다.")) }
+            .onSuccess {
+                _eventChannel.send(PostEvent.NavigateBack)
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "block_user",
+                )
+            }
+            .onFailure {
+                _eventChannel.send(PostEvent.ShowSnackbar("유저 차단에 실패했습니다."))
+                errorHelper.logError(it)
+            }
     }
 
     fun deletePost() = viewModelScope.launch {
         postRepository.deletePost(postId = postId)
-            .onSuccess { _eventChannel.send(PostEvent.NavigateBack) }
-            .onFailure { _eventChannel.send(PostEvent.ShowSnackbar("게시글 삭제에 실패했습니다.")) }
+            .onSuccess {
+                _eventChannel.send(PostEvent.NavigateBack)
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "delete_post",
+                )
+            }
+            .onFailure {
+                _eventChannel.send(PostEvent.ShowSnackbar("게시글 삭제에 실패했습니다."))
+                errorHelper.logError(it)
+            }
     }
 
     fun toggleEmotion(emotion: Emotion) = viewModelScope.launch {
@@ -198,6 +241,17 @@ class PostViewModel @Inject constructor(
                     yourEmotionType = if (isAdded) emotion else null,
                     emotionCount = updatedEmotionCount
                 )
+
+            analyticsHelper.trackActionEvent(
+                screenName = "post",
+                actionName = "toggle_emotion",
+                properties = mutableMapOf(
+                    "isAdded" to isAdded,
+                    "emotion" to emotion.name
+                )
+            )
+        }.onFailure {
+            errorHelper.logError(it)
         }
     }
 
@@ -216,8 +270,13 @@ class PostViewModel @Inject constructor(
                 _commentInput.value = ""
                 refreshComments()
                 _eventChannel.send(PostEvent.ShowSnackbar("댓글이 등록되었습니다."))
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "add_comment",
+                )
             }.onFailure {
                 _eventChannel.send(PostEvent.ShowSnackbar("댓글 등록에 실패했습니다."))
+                errorHelper.logError(it)
             }
     }
 
@@ -240,8 +299,13 @@ class PostViewModel @Inject constructor(
                 refreshComments()
                 onSuccess(parentId)
                 _eventChannel.send(PostEvent.ShowSnackbar("대댓글이 등록되었습니다."))
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "reply_comment",
+                )
             }.onFailure {
                 _eventChannel.send(PostEvent.ShowSnackbar("대댓글 등록에 실패했습니다."))
+                errorHelper.logError(it)
             }
         }
 
@@ -250,14 +314,30 @@ class PostViewModel @Inject constructor(
             .onSuccess {
                 _eventChannel.send(PostEvent.ShowSnackbar("댓글이 삭제되었습니다."))
                 _deletedCommentIds.value += commentId
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "delete_comment",
+                )
             }
-            .onFailure { _eventChannel.send(PostEvent.ShowSnackbar("댓글 삭제에 실패했습니다.")) }
+            .onFailure {
+                _eventChannel.send(PostEvent.ShowSnackbar("댓글 삭제에 실패했습니다."))
+                errorHelper.logError(it)
+            }
     }
 
     fun reportComment(commentId: Int, reason: String) = viewModelScope.launch {
         commentRepository.reportComment(commentId, reason)
-            .onSuccess { _eventChannel.send(PostEvent.ShowSnackbar("신고가 접수되었습니다.")) }
-            .onFailure { _eventChannel.send(PostEvent.ShowSnackbar("신고 접수에 실패했습니다.")) }
+            .onSuccess {
+                _eventChannel.send(PostEvent.ShowSnackbar("신고가 접수되었습니다."))
+                analyticsHelper.trackActionEvent(
+                    screenName = "post",
+                    actionName = "report_comment",
+                )
+            }
+            .onFailure {
+                _eventChannel.send(PostEvent.ShowSnackbar("신고 접수에 실패했습니다."))
+                errorHelper.logError(it)
+            }
     }
 
     sealed class PostEvent {

@@ -2,6 +2,8 @@ package com.virtuous.mypage.graph.updateprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -13,7 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdateProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -82,9 +86,16 @@ class UpdateProfileViewModel @Inject constructor(
             }
 
             if (success) {
-                userRepository.loadMyUserInfo().onSuccess {
-                    _eventChannel.send(UpdateProfileEvent.NavigateBack)
-                }
+                userRepository.loadMyUserInfo()
+                _eventChannel.send(UpdateProfileEvent.NavigateBack)
+                analyticsHelper.trackActionEvent(
+                    screenName = "update_profile",
+                    actionName = "update_profile",
+                    properties = mutableMapOf(
+                        "is_name_changed" to _isNameChanged.value,
+                        "is_profile_image_changed" to _isProfileImageChanged.value
+                    )
+                )
             } else {
                 _eventChannel.send(UpdateProfileEvent.ShowSnackbar("프로필 수정에 실패했습니다."))
             }

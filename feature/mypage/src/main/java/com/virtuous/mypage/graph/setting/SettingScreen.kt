@@ -50,7 +50,6 @@ internal fun SettingRoute(
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SettingEvent.Logout -> navigateToLogin()
                 is SettingEvent.NavigateToLogin -> navigateToLogin()
                 is SettingEvent.ShowSnackbar -> {
                     scope.launch {

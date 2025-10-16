@@ -87,8 +87,8 @@ internal fun SearchRoute(
         searchByInput = viewModel::searchByInput,
         searchByRecentKeyword = viewModel::searchByRecentKeyword,
         resetSearch = viewModel::resetSearch,
-        navigateBack = { viewModel.onEvent(SearchEvent.NavigateBack) },
-        navigateToPost = { postFeed -> viewModel.onEvent(SearchEvent.NavigateToPost(postFeed)) }
+        onBackButtonClick = navigateBack,
+        onPostFeedClick = navigateToPost
     )
 }
 
@@ -108,8 +108,8 @@ private fun SearchScreen(
     removeKeyword: (String) -> Unit,
     clearKeywords: () -> Unit,
     resetSearch: () -> Unit,
-    navigateBack: () -> Unit,
-    navigateToPost: (PostFeed) -> Unit,
+    onBackButtonClick: () -> Unit,
+    onPostFeedClick: (PostFeed) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -143,7 +143,7 @@ private fun SearchScreen(
                     onSearchTypeChange = onSearchTypeChange,
                     onTabTypeChange = onTabTypeChange,
                     displayedPosts = displayedPosts,
-                    navigateToPost = navigateToPost,
+                    navigateToPost = onPostFeedClick,
                 )
             }
         }
@@ -156,7 +156,7 @@ private fun SearchScreen(
                 .padding(top = 10.dp, bottom = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BackButton(navigateBack)
+            BackButton(onBackButtonClick)
 
             Spacer(Modifier.width(5.dp))
 
@@ -178,7 +178,7 @@ private fun SearchScreen(
 @Composable
 private fun SearchScreenBeforePreview() {
     SearchScreen(
-        navigateBack = {},
+        onBackButtonClick = {},
         keywordInput = "",
         recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
         isSearched = false,
@@ -193,7 +193,7 @@ private fun SearchScreenBeforePreview() {
         searchByInput = {},
         searchByRecentKeyword = {},
         resetSearch = {},
-        navigateToPost = {}
+        onPostFeedClick = {}
     )
 }
 
@@ -201,7 +201,7 @@ private fun SearchScreenBeforePreview() {
 @Composable
 private fun SearchScreenAfterPreview() {
     SearchScreen(
-        navigateBack = {},
+        onBackButtonClick = {},
         keywordInput = "",
         recentKeywords = listOf("선행", "제비", "흥부", "선행자", "쓰레기"),
         isSearched = true,
@@ -216,6 +216,6 @@ private fun SearchScreenAfterPreview() {
         searchByInput = {},
         searchByRecentKeyword = {},
         resetSearch = {},
-        navigateToPost = {}
+        onPostFeedClick = {}
     )
 }

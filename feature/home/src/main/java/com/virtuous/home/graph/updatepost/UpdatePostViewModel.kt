@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostType
 import com.virtuous.domain.repository.PostRepository
@@ -20,6 +22,8 @@ import javax.inject.Inject
 class UpdatePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdatePostEvent>(Channel.BUFFERED)
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -76,6 +80,8 @@ class UpdatePostViewModel @Inject constructor(
             setTitle(postDetail.title)
             setContent(postDetail.content)
             addImages(postDetail.images)
+        }.onFailure {
+            errorHelper.logError(it)
         }
     }
 
@@ -89,8 +95,13 @@ class UpdatePostViewModel @Inject constructor(
         ).onSuccess { postDetail ->
             _eventChannel.send(UpdatePostEvent.NavigateToPostDetail(postDetail))
             _eventChannel.send(UpdatePostEvent.ShowSnackbar("게시글이 수정되었습니다."))
+            analyticsHelper.trackActionEvent(
+                screenName = "update_post",
+                actionName = "update_post",
+            )
         }.onFailure {
             _eventChannel.send(UpdatePostEvent.ShowSnackbar("게시글 수정에 실패했습니다."))
+            errorHelper.logError(it)
         }
     }
 

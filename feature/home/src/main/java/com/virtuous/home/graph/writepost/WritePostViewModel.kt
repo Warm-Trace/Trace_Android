@@ -2,6 +2,8 @@ package com.virtuous.home.graph.writepost
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.domain.repository.PostRepository
@@ -18,6 +20,8 @@ import javax.inject.Inject
 class WritePostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<WritePostEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -87,8 +91,13 @@ class WritePostViewModel @Inject constructor(
         ).onSuccess { postDetail ->
             _eventChannel.send(WritePostEvent.NavigateToPostDetail(postDetail))
             _eventChannel.send(WritePostEvent.ShowSnackbar("게시글이 등록되었습니다."))
+            analyticsHelper.trackActionEvent(
+                screenName = "write_post",
+                actionName = "add_post",
+            )
         }.onFailure {
             _eventChannel.send(WritePostEvent.ShowSnackbar("게시글 등록에 실패했습니다."))
+            errorHelper.logError(it)
         }
 
         _isCreatingPost.value = false
@@ -107,8 +116,13 @@ class WritePostViewModel @Inject constructor(
             _eventChannel.send(WritePostEvent.NavigateToPostDetail(postDetail))
             _eventChannel.send(WritePostEvent.ShowSnackbar("게시글이 등록되었습니다."))
             userRepository.loadMyUserInfo()
+            analyticsHelper.trackActionEvent(
+                screenName = "write_post",
+                actionName = "verify_and_add_post",
+            )
         }.onFailure {
             setShowVerifyFailureDialog(true)
+            errorHelper.logError(it)
         }
 
         _isVerifyingPost.value = false
