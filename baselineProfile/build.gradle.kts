@@ -1,5 +1,6 @@
 import com.android.build.api.dsl.ManagedVirtualDevice
 
+
 plugins {
     alias(libs.plugins.android.test)
     alias(libs.plugins.kotlin.android)
@@ -8,16 +9,13 @@ plugins {
 
 android {
     namespace = "com.virtuous.baselineprofile"
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
 
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 
     defaultConfig {
         minSdk = 28
@@ -28,21 +26,23 @@ android {
 
     targetProjectPath = ":app"
 
-    testOptions.managedDevices.devices {
-        create<ManagedVirtualDevice>("pixel6Api35") {
-            device = "Pixel 6"
-            apiLevel = 35
-            systemImageSource = "aosp"
+    testOptions {
+        managedDevices {
+            allDevices {
+                create<ManagedVirtualDevice>("pixel6Api36") {
+                    device = "Pixel 6"
+                    apiLevel = 36
+                    systemImageSource = "aosp"
+                }
+            }
         }
     }
 }
 
-// This is the configuration block for the Baseline Profile plugin.
-// You can specify to run the generators on a managed devices or connected devices.
 baselineProfile {
     managedDevices.clear()
-    managedDevices += "pixel6Api35"
-    useConnectedDevices = true
+    managedDevices += "pixel6Api36"
+    useConnectedDevices = false
 }
 
 dependencies {

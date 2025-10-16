@@ -16,21 +16,25 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.virtuous.common_ui.event.TraceEvent
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.CheckCancelDialog
+import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Gray
 import com.virtuous.designsystem.theme.GrayLine
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.mypage.BuildConfig
 import com.virtuous.mypage.graph.setting.SettingViewModel.SettingEvent
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun SettingRoute(
@@ -40,13 +44,18 @@ internal fun SettingRoute(
     navigateBack: () -> Unit,
     viewModel: SettingViewModel = hiltViewModel(),
 ) {
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is SettingEvent.Logout -> navigateToLogin()
-                is SettingEvent.UnregisterUserSuccess -> navigateToLogin()
-                is SettingEvent.UnregisterUserFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("회원 탈퇴에 실패했습니다."))
+                is SettingEvent.NavigateToLogin -> navigateToLogin()
+                is SettingEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
             }
         }
@@ -236,7 +245,7 @@ private fun SettingScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Text("설정", style = TraceTheme.typography.bodyMSB)
+            Text(stringResource(R.string.setting), style = TraceTheme.typography.bodyMSB)
         }
     }
 }

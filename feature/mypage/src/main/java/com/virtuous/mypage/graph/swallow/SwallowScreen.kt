@@ -18,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.getSwallowRes
 import com.virtuous.designsystem.theme.TraceTheme
@@ -70,15 +72,24 @@ private fun SwallowScreen(
 
                 Spacer(Modifier.height(20.dp))
 
-                Text("현재 제비 레벨 : ${swallowLevel.label}", style = TraceTheme.typography.bodyMM)
+                Text(
+                    stringResource(R.string.current_swallow_level, swallowLevel.label),
+                    style = TraceTheme.typography.bodyMM
+                )
 
                 Spacer(Modifier.height(20.dp))
 
-                Text("나의 선행 인증 글 : ${userInfo.verifiedPostCount}개" , style = TraceTheme.typography.bodyMM)
+                Text(
+                    stringResource(R.string.my_verified_post, userInfo.verifiedPostCount),
+                    style = TraceTheme.typography.bodyMM
+                )
 
                 Spacer(Modifier.height(10.dp))
 
-                Text("나의 미션 인증 : ${userInfo.verifiedPostCount}개" , style = TraceTheme.typography.bodyMM)
+                Text(
+                    stringResource(R.string.my_mission_verified, userInfo.completedMissionCount),
+                    style = TraceTheme.typography.bodyMM
+                )
 
                 Spacer(Modifier.height(20.dp))
 
@@ -97,11 +108,21 @@ private fun SwallowScreen(
 
                         when (level) {
                             SwallowLevel.EGG -> {
-                                Text("${level.label} : 첫가입 시 지급", style = TraceTheme.typography.bodySM)
+                                Text(
+                                    stringResource(R.string.swallow_level_egg),
+                                    style = TraceTheme.typography.bodySM
+                                )
                             }
 
                             else -> {
-                                Text("${level.label} : 선행 인증 글 ${level.verifiedPostCount}개와 미션 인증 ${level.completedMissionCount}개", style = TraceTheme.typography.bodySM)
+                                Text(
+                                    stringResource(
+                                        R.string.swallow_level,
+                                        level.label,
+                                        level.verifiedPostCount,
+                                        level.completedMissionCount
+                                    ), style = TraceTheme.typography.bodySM
+                                )
                             }
                         }
                     }
@@ -121,7 +142,7 @@ private fun SwallowScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Text("나의 제비", style = TraceTheme.typography.bodyMSB)
+            Text(stringResource(R.string.my_swallow), style = TraceTheme.typography.bodyMSB)
         }
     }
 

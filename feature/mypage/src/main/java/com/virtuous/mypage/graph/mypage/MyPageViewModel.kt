@@ -3,6 +3,8 @@ package com.virtuous.mypage.graph.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.mypage.MyPageTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.user.SwallowLevel
@@ -27,6 +29,8 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<MyPageEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -74,11 +78,20 @@ class MyPageViewModel @Inject constructor(
     fun getUserInfo() = viewModelScope.launch {
         userRepository.getMyUserInfo().onSuccess { userInfo ->
             _userInfo.value = userInfo
+        }.onFailure {
+            errorHelper.logError(it)
         }
     }
 
     fun setTabType(tab: MyPageTab) {
         _tapType.value = tab
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "my_page",
+                actionName = "select_tab",
+                properties = mutableMapOf("tab_type" to tab.name)
+            )
+        }
     }
 
     sealed class MyPageEvent {

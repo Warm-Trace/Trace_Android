@@ -36,7 +36,7 @@ object RetrofitModule {
             .addInterceptor(interceptor)
             .authenticator(authenticator)
 
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             builder.addInterceptor(loggingInterceptor)
@@ -55,7 +55,7 @@ object RetrofitModule {
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .addCallAdapterFactory(callAdapterFactory)
-        .baseUrl(com.virtuous.network.BuildConfig.TRACE_BASE_URL)
+        .baseUrl(BuildConfig.TRACE_BASE_URL)
         .build()
         .create(TraceApi::class.java)
 }

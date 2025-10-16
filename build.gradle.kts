@@ -11,5 +11,11 @@ plugins {
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.android.test) apply false
     alias(libs.plugins.baselineprofile) apply false
+    alias(libs.plugins.ktlint)
 }
-val defaultTargetSdkVersion by extra(35)
+
+ktlint {
+    version.set("1.7.1")
+}
+
+apply(from = "gradle/dependencyGraph.gradle")

@@ -3,6 +3,8 @@ package com.virtuous.home.graph.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.search.SearchCondition
 import com.virtuous.domain.model.search.SearchTab
@@ -23,14 +25,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
-    val eventHelper: com.virtuous.common_ui.event.EventHelper
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<SearchEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
-
-    internal fun onEvent(event: SearchEvent) = viewModelScope.launch {
-        _eventChannel.send(event)
-    }
 
     private val _recentKeywords = MutableStateFlow<List<String>>(emptyList())
     val recentKeywords = _recentKeywords.asStateFlow()
@@ -75,10 +74,24 @@ class SearchViewModel @Inject constructor(
 
     fun setSearchType(searchType: SearchType) {
         _searchType.value = searchType
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "search",
+                actionName = "set_search_type",
+                properties = mutableMapOf("search_type" to _searchType.value)
+            )
+        }
     }
 
     fun setTabType(tabType: SearchTab) {
         _tabType.value = tabType
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "search",
+                actionName = "set_tab_type",
+                properties = mutableMapOf("tab_type" to _tabType.value)
+            )
+        }
     }
 
     fun setKeywordInput(keywordInput: String) {
@@ -87,12 +100,12 @@ class SearchViewModel @Inject constructor(
 
     fun searchByInput() = viewModelScope.launch {
         if (_keywordInput.value.isEmpty()) {
-            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("검색할 키워드를 입력해주세요."))
+            _eventChannel.send(SearchEvent.ShowSnackbar("검색할 키워드를 입력해주세요."))
             return@launch
         }
 
         if (_keywordInput.value.length < MIN_SEARCH_LENGTH) {
-            eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("검색어는 두 글자 이상 입력해 주세요."))
+            _eventChannel.send(SearchEvent.ShowSnackbar("검색어는 두 글자 이상 입력해 주세요."))
             return@launch
         }
 
@@ -104,6 +117,13 @@ class SearchViewModel @Inject constructor(
         _keywordInput.value = keyword
         _isSearched.value = true
         addKeyword(keyword)
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "search",
+                actionName = "search_by_recent_keyword",
+                properties = mutableMapOf("keyword" to keyword)
+            )
+        }
     }
 
     fun loadRecentKeywords() = viewModelScope.launch {
@@ -117,16 +137,28 @@ class SearchViewModel @Inject constructor(
     fun removeKeyword(keyword: String) = viewModelScope.launch {
         searchRepository.removeKeyword(keyword)
         loadRecentKeywords()
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "search",
+                actionName = "remove_recent_keyword",
+                properties = mutableMapOf("keyword" to keyword)
+            )
+        }
     }
 
     fun clearKeywords() = viewModelScope.launch {
         searchRepository.clearKeywords()
         loadRecentKeywords()
+        analyticsHelper.trackActionEvent(
+            screenName = "search",
+            actionName = "clear_recent_keyword",
+        )
     }
 
     sealed class SearchEvent {
         data object NavigateBack : SearchEvent()
         data class NavigateToPost(val postFeed: PostFeed) : SearchEvent()
+        data class ShowSnackbar(val message: String) : SearchEvent()
     }
 
     companion object {

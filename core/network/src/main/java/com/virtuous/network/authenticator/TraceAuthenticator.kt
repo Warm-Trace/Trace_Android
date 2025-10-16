@@ -27,7 +27,6 @@ class TraceAuthenticator @Inject constructor(
     override fun authenticate(route: Route?, response: Response): Request? {
         val originRequest = response.request
 
-        Log.d("traceAuthenticate", originRequest.toString())
         if (originRequest.header("Authorization")
                 .isNullOrEmpty() && !originRequest.url.encodedPath.contains("/api/v1/token/expiration")
         ) {

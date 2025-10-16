@@ -31,4 +31,107 @@
     <string name="report_reason_off_topic_description">해당 게시판의 주제 또는 목적과 맞지 않는 내용\n예시) 게시판 취지와 무관한 글, 반복 도배, 커뮤니티 취지 훼손 등</string>
     <string name="report_reason_unpleasant_user_description">다른 이용자에게 불쾌감, 불편함, 또는 부정적인 감정을 유발하는 행위\n예시) 의도적 도발, 반복적 비꼼·조롱, 무례한 언행, 공격적 반응</string>
     <string name="default_report_description">신고는 반대의견을 나타내는 기능이 아닙니다.\n신고 사유에 맞지 않는 신고를 했을 경우, 해당 신고는 처리되지 않습니다.</string>
+
+    <!-- Auth -->
+    <string name="app_title_line1">작은 선행,</string>
+    <string name="app_title_line2">따뜻한 흔적을 남기다</string>
+    <string name="profile_setup">프로필 설정</string>
+    <string name="user_name">사용자 이름</string>
+    <string name="enter_user_name">사용자 이름을 입력해주세요</string>
+    <string name="nickname_validation_message">닉네임은 최소 2자, 최대 12자까지 가능해요</string>
+    <string name="complete">완료</string>
+
+    <!-- MyPage -->
+    <string name="profile_edit">프로필 편집</string>
+    <string name="setting">설정</string>
+    <string name="blocked_accounts">차단된 계정</string>
+    <string name="unblock">차단 해제</string>
+    <string name="unblock_user_title">%s님을 차단 해제하시겠습니까?</string>
+    <string name="unblock_user_message">이제 %s님의 모든 콘텐츠가 다시 표시되고, 관련 알림 수신이 재개됩니다</string>
+    <string name="my_swallow">나의 제비</string>
+
+    <!-- Home -->
+    <string name="title_hint">제목</string>
+    <string name="traces">흔적들</string>
+    <string name="view_count_suffix">%d 읽음</string>
+    <string name="good_deed_hint">따뜻한 흔적을 남겨보세요!</string>
+    <string name="general_content_hint">내용을 입력하세요</string>
+    <string name="board_name">%s게시판</string>
+    <string name="update">수정</string>
+    <string name="search_placeholder">검색어를 입력하세요.</string>
+    <string name="recent_searches">최근 검색어</string>
+    <string name="clear_all">전체 삭제</string>
+    <string name="no_recent_search">최근 검색어 내역이 없습니다.</string>
+    <string name="search_result_count">%d개</string>
+    <string name="no_comments_yet">아직 댓글이 없습니다.</string>
+    <string name="leave_your_thoughts">당신의 생각을 댓글로 남겨주세요.</string>
+    <string name="read_count">%d 읽음</string>
+    <string name="comment_placeholder">댓글을 입력하세요.</string>
+    <string name="reply_placeholder">답글을 입력하세요.</string>
+    <string name="deleted_comment">삭제된 댓글입니다.</string>
+    <string name="notification">알림</string>
+
+    <!-- Write Post -->
+    <string name="verify_fail_dialog_text">게시글이 선행 인증에 실패했습니다.\n그래도 등록하시겠습니까?</string>
+    <string name="write_content_hint_good_deed">따뜻한 흔적을 남겨보세요!</string>
+    <string name="write_content_hint_free">내용을 입력하세요.</string>
+    <string name="image_limit">5장 제한</string>
+    <string name="representative_image">대표</string>
+ㄴ
+    <!-- Mission -->
+    <string name="todays_goodness_mission">오늘의 선행 미션</string>
+    <string name="mission_record">미션 기록</string>
+    <string name="verify_mission">미션 인증하기</string>
+    <string name="mission_challenge_hint">미션에 도전해보세요!</string>
+
+    <!-- Navigation -->
+    <string name="home_tab_title">홈</string>
+    <string name="mission_tab_title">미션</string>
+    <string name="mypage_tab_title">마이페이지</string>
+
+    <!-- Common -->
+    <string name="all">전체</string>
+    <string name="free">자유</string>
+    <string name="good_deed">선행</string>
+    <string name="mission">미션</string>
+
+    <string name="just_now">방금</string>
+    <string name="moments_ago">방금 전</string>
+
+    <string name="delete_photo">사진 삭제하기</string>
+    <string name="pick_from_album">사진/앨범에서 불러오기</string>
+    <string name="apply_default_image">기본 이미지 적용</string>
+
+    <string name="verify">인증하기</string>
+
+    <string name="items_count">%d개</string>
+    <string name="written_posts">나의 흔적</string>
+    <string name="user_written_posts">남긴 흔적</string>
+    <string name="commented_posts">댓글단 글</string>
+    <string name="reacted_posts">반응한 글</string>
+
+    <string name="content">내용</string>
+    <string name="title">제목</string>
+
+    <string name="heartwarming">따뜻해요</string>
+    <string name="likeable">좋아요</string>
+    <string name="touching">감동이에요</string>
+    <string name="impressive">멋져요</string>
+    <string name="grateful">고마워요</string>
+
+    <string name="current_level">현재 레벨: %s</string>
+    <string name="current_swallow_level">현재 제비 레벨 : %s</string>
+    <string name="my_verified_post">나의 선행 인증 글 : %d개</string>
+    <string name="my_mission_verified">나의 미션 인증 : %d개</string>
+    <string name="level_initial_reward">%s : 첫가입 시 지급</string>
+    <string name="level_requirement">%s : 선행 인증 글 %d개와 미션 인증 %d개 달성</string>
+    <string name="swallow_level_egg">알 : 첫가입 시 지급</string>
+    <string name="swallow_level">%s : 선행 인증 글 %d개와 미션 인증 %d개</string>
+
+    <string name="no_mission_assigned">아직 미션이 할당되지 않았습니다</string>
+
+    <string name="verifying_message">당신의 따뜻한 흔적을 인증 중이에요.</string>
+    <string name="please_wait">조금만 기다려주세요!</string>
+
+    <string name="register">등록</string>
 </resources>

@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -29,8 +27,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.virtuous.common_ui.util.clickable
+import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.Background
 import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.Gray
@@ -57,14 +58,14 @@ internal fun SearchInitialView(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("최근 검색어", style = TraceTheme.typography.bodySSB)
+                Text(stringResource(R.string.recent_searches), style = TraceTheme.typography.bodySSB)
 
                 Spacer(Modifier.weight(1f))
 
                 if (recentKeywords.isNotEmpty()) {
                     TextButton(onClick = clearKeywords) {
                         Text(
-                            "전체 삭제",
+                            stringResource(R.string.clear_all),
                             style = TraceTheme.typography.bodySM,
                             color = LightGray
                         )
@@ -80,7 +81,7 @@ internal fun SearchInitialView(
 
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        "최근 검색어 내역이 없습니다.",
+                        stringResource(R.string.no_recent_search),
                         style = TraceTheme.typography.bodyMM,
                         color = Gray,
                         modifier = Modifier.align(Alignment.Center)
@@ -154,10 +155,10 @@ private fun RecentKeyword(
                     }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Close,
+                   painter = painterResource(id = R.drawable.close_ic),
                     contentDescription = "최근 검색어 삭제",
                     modifier = Modifier
-                        .size(18.dp)
+                        .size(10.dp)
                         .align(Alignment.Center)
                 )
             }

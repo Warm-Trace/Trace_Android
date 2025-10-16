@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,19 +25,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.ImageContent
 import com.virtuous.designsystem.component.TraceContentField
 import com.virtuous.designsystem.component.TraceTitleField
@@ -51,7 +52,7 @@ import com.virtuous.designsystem.theme.TextHint
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.mission.graph.verifymission.VerifyMissionViewModel.VerifyMissionEvent
 import com.virtuous.mission.graph.verifymission.component.VerifyMissionHeaderView
-
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun VerifyMissionRoute(
@@ -66,18 +67,21 @@ internal fun VerifyMissionRoute(
     val images by viewModel.images.collectAsStateWithLifecycle()
     val isVerifyingMission by viewModel.isVerifyingMission.collectAsStateWithLifecycle()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is VerifyMissionEvent.VerifyMissionSuccess -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 성공했습니다!"))
+                is VerifyMissionEvent.NavigateToPost -> {
                     navigateToPost(event.postId)
                 }
-
-                is VerifyMissionEvent.VerifyMissionFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("미션 인증에 실패했습니다."))
+                is VerifyMissionEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
-
                 is VerifyMissionEvent.NavigateToBack -> navigateBack()
             }
         }
@@ -175,29 +179,20 @@ private fun VerifyMissionScreen(
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
                 .height(50.dp)
-                .padding(horizontal = 15.dp, vertical = 8.dp),
+                .padding(start = 5.dp, end = 20.dp)
+                .padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Default.Clear,
-                contentDescription = "뒤로 가기",
-                modifier = Modifier
-                    .size(32.dp)
-                    .clickable(
-                        isRipple = true
-                    ) {
-                        navigateBack()
-                    }
-            )
+            BackButton(navigateBack, icon = R.drawable.close_ic)
 
-            Spacer(Modifier.width(26.dp))
+            Spacer(Modifier.width(15.dp))
 
-            Text("미션 인증하기", style = TraceTheme.typography.headingMR)
+            Text(stringResource(R.string.verify_mission), style = TraceTheme.typography.headingMR)
 
             Spacer(Modifier.weight(1f))
 
             Text(
-                "완료",
+                stringResource(R.string.complete),
                 style = TraceTheme.typography.bodyMM,
                 color = if (requestAvailable) PrimaryActive else TextHint,
                 modifier = Modifier.clickable(isRipple = true, enabled = requestAvailable) {

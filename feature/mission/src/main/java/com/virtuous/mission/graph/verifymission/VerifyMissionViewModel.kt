@@ -3,7 +3,8 @@ package com.virtuous.mission.graph.verifymission
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.virtuous.common_ui.event.EventHelper
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.repository.MissionRepository
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ class VerifyMissionViewModel @Inject constructor(
     private val missionRepository: MissionRepository,
     private val userRepository: UserRepository,
     private val savedStateHandle: SavedStateHandle,
-    val eventHelper: EventHelper
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<VerifyMissionEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -55,6 +57,8 @@ class VerifyMissionViewModel @Inject constructor(
     }
 
     fun verifyMission() = viewModelScope.launch {
+        if(_isVerifyingMission.value) return@launch
+
         _isVerifyingMission.value = true
 
         missionRepository.verifyDailyMission(
@@ -62,10 +66,17 @@ class VerifyMissionViewModel @Inject constructor(
             content = _content.value,
             images = _images.value
         ).onSuccess { postId ->
-            _eventChannel.send(VerifyMissionEvent.VerifyMissionSuccess(postId = postId))
+            _eventChannel.send(VerifyMissionEvent.NavigateToPost(postId = postId))
+            _eventChannel.send(VerifyMissionEvent.ShowSnackbar("미션 인증에 성공했습니다!"))
             userRepository.loadMyUserInfo()
+            analyticsHelper.trackActionEvent(
+                screenName = "verify_mission",
+                actionName = "verify_mission",
+                properties = mutableMapOf("mission" to description)
+            )
         }.onFailure {
-            _eventChannel.send(VerifyMissionEvent.VerifyMissionFailure)
+            _eventChannel.send(VerifyMissionEvent.ShowSnackbar("미션 인증에 실패했습니다."))
+            errorHelper.logError(it)
         }
 
         _isVerifyingMission.value = false
@@ -73,7 +84,7 @@ class VerifyMissionViewModel @Inject constructor(
 
     sealed class VerifyMissionEvent {
         data object NavigateToBack : VerifyMissionEvent()
-        data class VerifyMissionSuccess(val postId: Int) : VerifyMissionEvent()
-        data object VerifyMissionFailure : VerifyMissionEvent()
+        data class NavigateToPost(val postId: Int) : VerifyMissionEvent()
+        data class ShowSnackbar(val message: String) : VerifyMissionEvent()
     }
 }

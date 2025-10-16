@@ -2,6 +2,8 @@ package com.virtuous.mypage.graph.updateprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdateProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val eventHelper: com.virtuous.common_ui.event.EventHelper
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<UpdateProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -77,18 +80,24 @@ class UpdateProfileViewModel @Inject constructor(
                 val result = userRepository.updateNickname(_name.value)
                 if (result.isFailure) success = false
             }
-
             if (_isProfileImageChanged.value) {
                 val result = userRepository.updateProfileImage(_profileImageUrl.value)
                 if (result.isFailure) success = false
             }
 
             if (success) {
-                userRepository.loadMyUserInfo().onSuccess {
-                    _eventChannel.send(UpdateProfileEvent.NavigateBack)
-                }
+                userRepository.loadMyUserInfo()
+                _eventChannel.send(UpdateProfileEvent.NavigateBack)
+                analyticsHelper.trackActionEvent(
+                    screenName = "update_profile",
+                    actionName = "update_profile",
+                    properties = mutableMapOf(
+                        "is_name_changed" to _isNameChanged.value,
+                        "is_profile_image_changed" to _isProfileImageChanged.value
+                    )
+                )
             } else {
-                eventHelper.sendEvent(com.virtuous.common_ui.event.TraceEvent.ShowSnackBar("프로필 수정에 실패했습니다."))
+                _eventChannel.send(UpdateProfileEvent.ShowSnackbar("프로필 수정에 실패했습니다."))
             }
         }
     }
@@ -100,5 +109,6 @@ class UpdateProfileViewModel @Inject constructor(
 
     sealed class UpdateProfileEvent {
         data object NavigateBack : UpdateProfileEvent()
+        data class ShowSnackbar(val message: String) : UpdateProfileEvent()
     }
 }

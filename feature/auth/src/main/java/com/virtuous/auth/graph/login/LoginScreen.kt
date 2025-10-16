@@ -1,31 +1,35 @@
 package com.virtuous.auth.graph.login
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
+import com.virtuous.designsystem.R as DesignR
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.virtuous.auth.graph.login.LoginViewModel.LoginEvent
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.theme.TraceTheme
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -34,21 +38,35 @@ internal fun LoginRoute(
     navigateToEditProfile: (String, String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
                 is LoginEvent.NavigateToHome -> navigateToHome()
-                is LoginEvent.NavigateEditProfile -> navigateToEditProfile(
+                is LoginEvent.NavigateToEditProfile -> navigateToEditProfile(
                     event.signUpToken,
                     event.providerId
                 )
+                is LoginEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
+                }
             }
         }
     }
 
     LoginScreen(
         viewModel::loginKakao,
-        onLoginFailure = { viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("로그인에 실패했습니다")) },
+        onLoginFailure = {
+            scope.launch {
+                snackbarHostState.currentSnackbarData?.dismiss()
+                snackbarHostState.showSnackbar("로그인에 실패했습니다")
+            }
+        },
     )
 }
 
@@ -68,13 +86,20 @@ private fun LoginScreen(
         Image(
             painter = painterResource(R.drawable.app_title),
             contentDescription = "앱 타이틀",
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(Modifier.height(50.dp))
 
-        Text("작은 선행,", style = TraceTheme.typography.appDescription)
+        Text(
+            "작은 선행,",
+            style = TraceTheme.typography.appDescription
+        )
 
-        Text("따뜻한 흔적을 남기다", style = TraceTheme.typography.appDescription)
+        Text(
+            "따뜻한 흔적을 남기다",
+            style = TraceTheme.typography.appDescription
+        )
 
         Spacer(Modifier.height(40.dp))
 
@@ -114,7 +139,6 @@ private fun loginKakao(
                     loginWithKakaoAccount(context, callback = callback)
                 } else if (token?.idToken != null) {
                     onSuccess(token.idToken!!)
-                    Log.d("idToken", token.idToken!!)
                 }
             }
         } else {

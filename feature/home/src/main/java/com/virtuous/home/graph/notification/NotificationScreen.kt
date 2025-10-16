@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -25,14 +23,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.virtuous.common_ui.util.rememberLazyListState
+import com.virtuous.designsystem.R
+import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.notification.Notification
@@ -47,7 +50,6 @@ import java.time.LocalDateTime
 internal fun NotificationRoute(
     navigateBack: () -> Unit,
     navigateToPost: (Int) -> Unit,
-    navigateToMission: () -> Unit,
     viewModel: NotificationViewModel = hiltViewModel(),
 ) {
     val notifications = viewModel.notifications.collectAsLazyPagingItems()
@@ -130,21 +132,11 @@ private fun NotificationScreen(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(
-                onClick = { navigateBack() },
-                modifier = Modifier
-                    .padding(start = 10.dp, top = 2.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "뒤로가기",
-                    modifier = Modifier.size(36.dp),
-                )
-            }
-
+            BackButton(navigateBack)
+            
             Spacer(Modifier.width(10.dp))
 
-            Text("알림", style = TraceTheme.typography.bodyMSB)
+            Text(stringResource(R.string.notification), style = TraceTheme.typography.bodyMSB)
         }
 
         PullRefreshIndicator(

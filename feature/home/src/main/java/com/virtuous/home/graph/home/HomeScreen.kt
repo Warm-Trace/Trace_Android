@@ -32,10 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -86,10 +88,11 @@ internal fun HomeRoute(
         postFeeds = postFeeds,
         tabType = tabType,
         onTabTypeChange = viewModel::setTabType,
-        navigateToPost = { postFeed -> viewModel.onEvent(HomeEvent.NavigateToPost(postFeed)) },
-        navigateToWritePost = { viewModel.onEvent(HomeEvent.NavigateToWritePost) },
-        navigateToSearch = { viewModel.onEvent(HomeEvent.NavigateToSearch) },
-        navigateToNotification = { viewModel.onEvent(HomeEvent.NavigateToNotification) }
+        onPostFeedClick = navigateToPost,
+        onWritePostClick = navigateToWritePost,
+        onSearchClick = navigateToSearch,
+        onNotificationClick = navigateToNotification,
+        onRefresh = viewModel::onRefresh
     )
 }
 
@@ -100,10 +103,11 @@ private fun HomeScreen(
     postFeeds: LazyPagingItems<PostFeed>,
     tabType: HomeTab,
     onTabTypeChange: (HomeTab) -> Unit,
-    navigateToSearch: () -> Unit,
-    navigateToPost: (PostFeed) -> Unit,
-    navigateToWritePost: () -> Unit,
-    navigateToNotification: () -> Unit,
+    onSearchClick: () -> Unit,
+    onNotificationClick: () -> Unit,
+    onPostFeedClick: (PostFeed) -> Unit,
+    onWritePostClick: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
     var isHomeDropDownMenuExpanded by remember { mutableStateOf(false) }
 
@@ -114,6 +118,7 @@ private fun HomeScreen(
         refreshing = isRefreshing,
         onRefresh = {
             postFeeds.refresh()
+            onRefresh()
         }
     )
     val listState = postFeeds.rememberLazyListState()
@@ -143,7 +148,7 @@ private fun HomeScreen(
                 postFeeds[index]?.let {
                     PostFeed(
                         postFeed = it,
-                        navigateToPost = navigateToPost
+                        navigateToPost = onPostFeedClick
                     )
 
                     Spacer(Modifier.height(8.dp))
@@ -177,7 +182,7 @@ private fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "흔적들",
+                    stringResource(R.string.traces),
                     style = TraceTheme.typography.headingMB,
                     modifier = Modifier.height(24.dp)
                 )
@@ -188,7 +193,7 @@ private fun HomeScreen(
                     painter = painterResource(R.drawable.notification_ic),
                     contentDescription = "알림",
                     modifier = Modifier.clickable {
-                        navigateToNotification()
+                        onNotificationClick()
                     })
 
                 Spacer(Modifier.width(25.dp))
@@ -197,12 +202,12 @@ private fun HomeScreen(
                     painter = painterResource(R.drawable.search_ic),
                     contentDescription = "검색",
                     modifier = Modifier.clickable {
-                        navigateToSearch()
+                        onSearchClick()
                     })
 
                 Spacer(Modifier.width(25.dp))
 
-                Box() {
+                Box {
                     Image(
                         painter = painterResource(R.drawable.menu_ic),
                         contentDescription = "메뉴",
@@ -219,6 +224,7 @@ private fun HomeScreen(
                                 labelRes = R.string.refresh,
                                 action = {
                                     postFeeds.refresh()
+                                    onRefresh()
                                     coroutineScope.launch {
                                         listState.scrollToItem(0)
                                     }
@@ -227,7 +233,7 @@ private fun HomeScreen(
                             TraceDropdownMenuItem(
                                 iconRes = R.drawable.pencil_ic,
                                 labelRes = R.string.write_post,
-                                action = { navigateToWritePost() }
+                                action = { onWritePostClick() }
                             )
                         )
                     )
@@ -258,7 +264,7 @@ private fun HomeScreen(
         }
 
         FloatingActionButton(
-            onClick = navigateToWritePost,
+            onClick = onWritePostClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 25.dp, end = 16.dp)
@@ -290,10 +296,11 @@ fun HomeScreenPreview() {
     HomeScreen(
         tabType = HomeTab.ALL,
         onTabTypeChange = {},
-        navigateToPost = {},
-        navigateToWritePost = {},
-        navigateToSearch = {},
-        navigateToNotification = {},
+        onPostFeedClick = {},
+        onWritePostClick = {},
+        onSearchClick = {},
+        onNotificationClick = {},
+        onRefresh = {},
         postFeeds = fakeLazyPagingPosts()
     )
 }
@@ -427,5 +434,3 @@ internal fun fakeLazyPagingPosts(): LazyPagingItems<PostFeed> {
         )
     ).collectAsLazyPagingItems()
 }
-
-

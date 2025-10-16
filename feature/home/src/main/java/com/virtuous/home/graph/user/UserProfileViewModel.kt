@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.cachedIn
+import com.virtuous.analytics.AnalyticsHelper
+import com.virtuous.analytics.error.ErrorHelper
 import com.virtuous.domain.model.home.UserProfileTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.user.UserInfo
@@ -25,6 +27,8 @@ class UserProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val postRepository: PostRepository,
     private val savedStateHandle: SavedStateHandle,
+    private val analyticsHelper: AnalyticsHelper,
+    private val errorHelper: ErrorHelper,
 ) : ViewModel() {
     private val _eventChannel = Channel<UserProfileEvent>()
     val eventChannel = _eventChannel.receiveAsFlow()
@@ -59,11 +63,20 @@ class UserProfileViewModel @Inject constructor(
     private fun getUserInfo() = viewModelScope.launch {
         userRepository.loadUserInfo(providerId).onSuccess {
             _userInfo.value = it
+        }.onFailure {
+            errorHelper.logError(it)
         }
     }
 
     fun setTabType(tab: UserProfileTab) {
         _tabType.value = tab
+        viewModelScope.launch {
+            analyticsHelper.trackActionEvent(
+                screenName = "user_profile",
+                actionName = "select_tab",
+                properties = mutableMapOf("tab_type" to tab.name)
+            )
+        }
     }
 
     sealed class UserProfileEvent {

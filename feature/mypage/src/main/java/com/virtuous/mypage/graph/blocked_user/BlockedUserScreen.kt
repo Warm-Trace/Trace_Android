@@ -13,18 +13,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.virtuous.common_ui.event.TraceEvent
+import com.virtuous.common_ui.compositionlocal.LocalSnackbarHostState
 import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.user.BlockedUser
 import com.virtuous.mypage.graph.blocked_user.BlockedUserViewModel.BlockedUserEvent
 import com.virtuous.mypage.graph.blocked_user.component.BlockedUserView
+import kotlinx.coroutines.launch
+import com.virtuous.designsystem.R
 
 @Composable
 fun BlockedUserRoute(
@@ -34,14 +38,17 @@ fun BlockedUserRoute(
 ) {
     val blockedUsers by viewModel.blockedUsers.collectAsStateWithLifecycle()
 
+    val snackbarHostState = LocalSnackbarHostState.current
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(true) {
         viewModel.eventChannel.collect { event ->
             when (event) {
-                is BlockedUserEvent.UnblockUserSuccess -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("차단이 해제되었습니다."))
-                }
-                is BlockedUserEvent.UnblockUserFailure -> {
-                    viewModel.eventHelper.sendEvent(TraceEvent.ShowSnackBar("차단 해제에 실패했습니다."))
+                is BlockedUserEvent.ShowSnackbar -> {
+                    scope.launch {
+                        snackbarHostState.currentSnackbarData?.dismiss()
+                        snackbarHostState.showSnackbar(event.message)
+                    }
                 }
             }
         }
@@ -95,7 +102,7 @@ private fun BlockedUserScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Text("차단된 계정", style = TraceTheme.typography.bodyMSB)
+            Text(stringResource(R.string.blocked_accounts), style = TraceTheme.typography.bodyMSB)
         }
     }
 }
