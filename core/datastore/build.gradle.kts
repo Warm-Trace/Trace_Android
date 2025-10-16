@@ -5,15 +5,11 @@ plugins {
 
 android {
     namespace = "com.virtuous.datastore"
-
-    buildTypes {
-        release { consumerProguardFiles("consumer-rules.pro") }
-    }
 }
 
 dependencies {
     implementation(projects.core.domain)
 
     implementation(libs.androidx.datastore)
-    implementation(libs.gson)
+    implementation(libs.kotlinx.serialization.json)
 }

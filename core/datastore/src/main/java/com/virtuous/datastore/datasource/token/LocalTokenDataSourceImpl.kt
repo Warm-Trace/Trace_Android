@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.virtuous.datastore.di.TokenDataSource
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -15,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LocalTokenDataSourceImpl @Inject constructor(
-    @Named("token") private val dataStore: DataStore<Preferences>
+    @TokenDataSource private val dataStore: DataStore<Preferences>
 ) : LocalTokenDataSource {
 
     override val accessToken: Flow<String> = dataStore.data
@@ -52,18 +53,9 @@ class LocalTokenDataSourceImpl @Inject constructor(
     }
 
     override suspend fun clearToken() {
-        coroutineScope {
-            launch {
-                dataStore.edit { preferences ->
-                    preferences.remove(REFRESH_TOKEN)
-                }
-            }
-
-            launch {
-                dataStore.edit { preferences ->
-                    preferences.remove(ACCESS_TOKEN)
-                }
-            }
+        dataStore.edit { preferences ->
+            preferences.remove(REFRESH_TOKEN)
+            preferences.remove(ACCESS_TOKEN)
         }
     }
 

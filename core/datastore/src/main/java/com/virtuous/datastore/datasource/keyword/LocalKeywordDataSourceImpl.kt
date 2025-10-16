@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.virtuous.datastore.di.KeywordDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -13,7 +14,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LocalKeywordDataSourceImpl @Inject constructor(
-    @Named("keyword") private val dataStore : DataStore<Preferences>
+    @KeywordDataSource private val dataStore : DataStore<Preferences>
 ) : LocalKeywordDataSource {
     override val recentKeywords: Flow<List<String>>  = dataStore.data
     .catch { exception ->

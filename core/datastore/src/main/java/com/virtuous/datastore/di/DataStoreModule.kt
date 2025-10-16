@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.virtuous.datastore.datasource.keyword.LocalKeywordDataSource
 import com.virtuous.datastore.datasource.keyword.LocalKeywordDataSourceImpl
 import com.virtuous.datastore.datasource.token.LocalTokenDataSource
@@ -35,25 +33,21 @@ object DataStoreProvidesModule {
 
     @Provides
     @Singleton
-    fun provideGson(): Gson = GsonBuilder().create()
-
-    @Provides
-    @Singleton
-    @Named("token")
+    @TokenDataSource
     fun provideTokenDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> = context.tokenDataStore
 
     @Provides
     @Singleton
-    @Named("keyword")
+    @KeywordDataSource
     fun provideKeywordDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> = context.keywordDataStore
 
     @Provides
     @Singleton
-    @Named("user")
+    @UserDataSource
     fun provideUserDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> = context.userDataStore
