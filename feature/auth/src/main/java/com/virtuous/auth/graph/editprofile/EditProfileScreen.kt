@@ -208,8 +208,7 @@ private fun EditProfileScreen(
 
             Text(
                 stringResource(R.string.user_name),
-                style = TraceTheme.typography.headingMB,
-                color = PrimaryDefault,
+                style = TraceTheme.typography.bodyMSB,
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(start = 20.dp)
