@@ -25,10 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -180,7 +178,7 @@ private fun WritePostScreen(
                         }
                     ) {
                         Image(
-                            painter = if (type == WritePostType.GOOD_DEED) painterResource(com.virtuous.designsystem.R.drawable.checkbox_on) else painterResource(
+                            painter = if (type == WritePostType.GOOD_DEED) painterResource(R.drawable.checkbox_on) else painterResource(
                                 R.drawable.checkbox_off
                             ),
                             contentDescription = null,
@@ -270,7 +268,7 @@ private fun WritePostScreen(
             Spacer(Modifier.width(15.dp))
 
             Text(
-                stringResource(R.string.title),
+                stringResource(R.string.write_post),
                 style = TraceTheme.typography.headingMR
             )
 
@@ -322,8 +320,6 @@ private fun WritePostScreen(
                     )
                 }
             }
-
-
         }
 
         if (isCreatingPost) {
@@ -403,7 +399,7 @@ private fun GalleryPicker(
 }
 
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun WritePostScreenPreview() {
     WritePostScreen(

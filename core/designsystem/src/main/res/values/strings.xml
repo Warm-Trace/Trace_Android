@@ -11,7 +11,7 @@
     <string name="report">신고</string>
     <string name="block">차단</string>
     <string name="refresh">새로고침</string>
-    <string name="write_post">글 쓰기</string>
+    <string name="write_post">글쓰기</string>
 
     <!-- Report Reasons -->
     <string name="report_reason_profanity_slander">욕설/비방/인신공격</string>
@@ -77,12 +77,24 @@
     <string name="write_content_hint_free">내용을 입력하세요.</string>
     <string name="image_limit">5장 제한</string>
     <string name="representative_image">대표</string>
-ㄴ
+
     <!-- Mission -->
     <string name="todays_goodness_mission">오늘의 선행 미션</string>
     <string name="mission_record">미션 기록</string>
     <string name="verify_mission">미션 인증하기</string>
     <string name="mission_challenge_hint">미션에 도전해보세요!</string>
+    
+    <!-- Setting -->
+    <string name="sign_out_confirm">정말 로그아웃 하시겠습니까?</string>
+    <string name="unregister_confirm">정말 회원탈퇴 하시겠습니까?</string>
+    <string name="guide">이용 안내</string>
+    <string name="app_version">앱 버전</string>
+    <string name="contact_us">문의하기</string>
+    <string name="privacy_policy">개인정보처리방침</string>
+    <string name="account">계정</string>
+    <string name="sign_out">로그아웃</string>
+    <string name="unregister">회원탈퇴</string>
+    <string name="app_version_value">1.0.7</string>
 
     <!-- Navigation -->
     <string name="home_tab_title">홈</string>

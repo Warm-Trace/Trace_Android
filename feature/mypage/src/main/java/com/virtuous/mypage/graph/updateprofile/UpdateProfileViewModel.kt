@@ -36,7 +36,7 @@ class UpdateProfileViewModel @Inject constructor(
     private val _isProfileImageChanged = MutableStateFlow(false)
     val isProfileImageChanged = _isProfileImageChanged.asStateFlow()
 
-    private var originalName: String = ""
+    private  var originalName: String = ""
     private var originalProfileImageUrl: String? = null
 
     init {
@@ -45,11 +45,10 @@ class UpdateProfileViewModel @Inject constructor(
 
     private fun getMyUserInfo() = viewModelScope.launch {
         userRepository.loadMyUserInfo().onSuccess { userInfo ->
+            _name.value = userInfo.name
             originalName = userInfo.name
+            _profileImageUrl.value  = userInfo.profileImageUrl
             originalProfileImageUrl = userInfo.profileImageUrl
-
-            setName(userInfo.name)
-            setProfileImageUrl(userInfo.profileImageUrl)
         }
     }
 

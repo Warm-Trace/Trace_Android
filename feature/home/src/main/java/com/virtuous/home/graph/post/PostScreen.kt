@@ -164,7 +164,6 @@ private fun PostScreen(
     var showOtherPostMenu by remember { mutableStateOf(false) }
 
     val isRefreshing = comments.loadState.refresh is LoadState.Loading
-    val isAppending = comments.loadState.append is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,

@@ -53,19 +53,24 @@ tasks.register('projectDependencyGraph') {
 
             project.configurations.configureEach { config ->
                 if (config.name.toLowerCase().contains("test")) return
-                config.dependencies
+
+                config.allDependencies
                         .withType(ProjectDependency)
-                        .collect { it.dependencyProject }
-                        .each { dependency ->
-                            projects.add(project)
-                            projects.add(dependency)
-                            rootProjects.remove(dependency)
+                        .each { dep ->
+                            // allprojects에서 이름으로 찾기
+                            def dependency = rootProject.allprojects.find { it.name == dep.name }
 
-                            def graphKey = new Tuple2<Project, Project>(project, dependency)
-                            def traits = dependencies.computeIfAbsent(graphKey) { new ArrayList<String>() }
+                            if (dependency != null) {
+                                projects.add(project)
+                                projects.add(dependency)
+                                rootProjects.remove(dependency)
 
-                            if (config.name.toLowerCase().endsWith('implementation')) {
-                                traits.add('style=dotted')
+                                def graphKey = new Tuple2<Project, Project>(project, dependency)
+                                def traits = dependencies.computeIfAbsent(graphKey) { new ArrayList<String>() }
+
+                                if (config.name.toLowerCase().endsWith('implementation')) {
+                                    traits.add('style=dotted')
+                                }
                             }
                         }
             }

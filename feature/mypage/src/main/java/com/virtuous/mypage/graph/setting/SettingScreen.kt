@@ -90,7 +90,7 @@ private fun SettingScreen(
                 showLogoutDg = false
             },
             onDismiss = { showLogoutDg = false },
-            dialogText = "정말 로그아웃 하시겠습니까?"
+            dialogText = stringResource(R.string.sign_out_confirm)
         )
     }
 
@@ -101,7 +101,7 @@ private fun SettingScreen(
                 showUnregisterUserDg = false
             },
             onDismiss = { showUnregisterUserDg = false },
-            dialogText = "정말 회원탈퇴 하시겠습니까?"
+            dialogText = stringResource(R.string.unregister_confirm)
         )
     }
 
@@ -118,7 +118,7 @@ private fun SettingScreen(
                 Spacer(Modifier.height(15.dp))
 
                 Text(
-                    "이용 안내",
+                    stringResource(R.string.guide),
                     style = TraceTheme.typography.bodyMSB
                 )
 
@@ -128,14 +128,14 @@ private fun SettingScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        "앱 버전",
+                        stringResource(R.string.app_version),
                         style = TraceTheme.typography.bodyMR
                     )
 
                     Spacer(Modifier.weight(1f))
 
                     Text(
-                        "1.0.7",
+                        stringResource(R.string.app_version_value),
                         color = Gray,
                         style = TraceTheme.typography.bodyMR
                     )
@@ -150,7 +150,7 @@ private fun SettingScreen(
                             navigateToInquiry()
                         }) {
                     Text(
-                        "문의하기",
+                        stringResource(R.string.contact_us),
                         style = TraceTheme.typography.bodyMR
                     )
                 }
@@ -164,7 +164,7 @@ private fun SettingScreen(
                             navigateToPrivacyPolicy()
                         }) {
                     Text(
-                        "개인정보처리방침",
+                        stringResource(R.string.privacy_policy),
                         style = TraceTheme.typography.bodyMR
                     )
                 }
@@ -180,7 +180,7 @@ private fun SettingScreen(
                 Spacer(Modifier.height(20.dp))
 
                 Text(
-                    "계정",
+                    stringResource(R.string.account),
                     style = TraceTheme.typography.bodyMSB
                 )
 
@@ -193,7 +193,7 @@ private fun SettingScreen(
                             navigateToBlockedUser()
                         }) {
                     Text(
-                        "차단된 계정",
+                        stringResource(R.string.blocked_accounts),
                         style = TraceTheme.typography.bodyMR
                     )
                 }
@@ -207,7 +207,7 @@ private fun SettingScreen(
                             showLogoutDg = true
                         }) {
                     Text(
-                        "로그아웃",
+                        stringResource(R.string.sign_out),
                         style = TraceTheme.typography.bodyMR
                     )
                 }
@@ -221,7 +221,7 @@ private fun SettingScreen(
                             showUnregisterUserDg = true
                         }) {
                     Text(
-                        "회원 탈퇴",
+                        stringResource(R.string.unregister),
                         style = TraceTheme.typography.bodyMR
                     )
                 }

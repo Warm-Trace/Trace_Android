@@ -52,6 +52,7 @@ import com.virtuous.common_ui.util.clickable
 import com.virtuous.designsystem.R
 import com.virtuous.designsystem.component.BackButton
 import com.virtuous.designsystem.component.ProfileImage
+import com.virtuous.designsystem.theme.Black
 import com.virtuous.designsystem.theme.PrimaryActive
 import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.Red
@@ -201,8 +202,8 @@ private fun UpdateProfileScreen(
 
             Text(
                 stringResource(R.string.user_name),
-                style = TraceTheme.typography.headingMB,
-                color = PrimaryDefault,
+                style = TraceTheme.typography.bodyMSB,
+                color = Black,
                 modifier = Modifier
                     .align(Alignment.Start)
                     .padding(start = 20.dp)
