@@ -9,9 +9,11 @@ import com.virtuous.domain.model.post.PostDetail
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.model.post.WritePostType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharedFlow
 
 
 interface PostRepository {
+    val postUpdateEvents: SharedFlow<PostUpdateEvent>
     fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>>
 
     fun getMyPosts(tabType: MyPageTab) : Flow<PagingData<PostFeed>>
@@ -48,4 +50,13 @@ interface PostRepository {
     suspend fun toggleEmotion(postId: Int, originEmotionType : Emotion?, emotionType: Emotion): Result<Boolean>
 
     suspend fun blockUser(providerId : String) : Result<Unit>
+
+    sealed class PostUpdateEvent {
+        data class PostAdded(val postFeed: PostFeed) : PostUpdateEvent()
+        data class PostDeleted(val postId: Int) : PostUpdateEvent()
+        data class PostUpdated(val postFeed: PostFeed) : PostUpdateEvent()
+        data class UserBlocked(val providerId: String) : PostUpdateEvent()
+        data class EmotionAdded(val postId : Int) : PostUpdateEvent()
+        data class EmotionDeleted(val postId : Int) : PostUpdateEvent()
+    }
 }

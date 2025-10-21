@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -61,10 +62,10 @@ internal fun TraceSearchField(
     focusRequester: FocusRequester,
     keyboardType: KeyboardType = KeyboardType.Text,
     value: String,
-    hint: String = "검색어를 입력하세요.",
+    hint: String = stringResource(R.string.search_placeholder),
     onValueChange: (String) -> Unit,
     onSearch: () -> Unit,
-    resetSearch: () -> Unit,
+    onFocusSearchField: () -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val isKeyboardVisible = WindowInsets.isImeVisible
@@ -73,7 +74,7 @@ internal fun TraceSearchField(
 
     LaunchedEffect(isKeyboardVisible) {
         if (isKeyboardVisible) {
-            resetSearch()
+            onFocusSearchField()
         }
     }
 

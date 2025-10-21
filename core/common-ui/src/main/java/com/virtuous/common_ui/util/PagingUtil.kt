@@ -8,7 +8,11 @@ import androidx.paging.compose.LazyPagingItems
 @Composable
 fun <T : Any> LazyPagingItems<T>.rememberLazyListState(): LazyListState {
     return when (itemCount) {
-        0 -> remember(this) { LazyListState(0, 0) }
-        else -> androidx.compose.foundation.lazy.rememberLazyListState()
+        0 -> {
+            remember(this) { LazyListState(0, 0) }
+        }
+        else -> {
+            androidx.compose.foundation.lazy.rememberLazyListState()
+        }
     }
 }

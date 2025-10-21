@@ -86,7 +86,7 @@ internal fun SearchRoute(
         clearKeywords = viewModel::clearKeywords,
         searchByInput = viewModel::searchByInput,
         searchByRecentKeyword = viewModel::searchByRecentKeyword,
-        resetSearch = viewModel::resetSearch,
+        onFocusSearchField = viewModel::onFocusSearchField,
         onBackButtonClick = navigateBack,
         onPostFeedClick = navigateToPost
     )
@@ -107,16 +107,18 @@ private fun SearchScreen(
     searchByRecentKeyword: (String) -> Unit,
     removeKeyword: (String) -> Unit,
     clearKeywords: () -> Unit,
-    resetSearch: () -> Unit,
+    onFocusSearchField: () -> Unit,
     onBackButtonClick: () -> Unit,
     onPostFeedClick: (PostFeed) -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
-        keyboardController?.show()
+    LaunchedEffect(isSearched) {
+        if(!isSearched) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
     }
 
     Box(
@@ -167,7 +169,7 @@ private fun SearchScreen(
                 onSearch = {
                     searchByInput()
                 },
-                resetSearch = resetSearch
+                onFocusSearchField = onFocusSearchField
             )
 
         }
@@ -192,7 +194,7 @@ private fun SearchScreenBeforePreview() {
         removeKeyword = {},
         searchByInput = {},
         searchByRecentKeyword = {},
-        resetSearch = {},
+        onFocusSearchField = {},
         onPostFeedClick = {}
     )
 }
@@ -215,7 +217,7 @@ private fun SearchScreenAfterPreview() {
         removeKeyword = {},
         searchByInput = {},
         searchByRecentKeyword = {},
-        resetSearch = {},
+        onFocusSearchField = {},
         onPostFeedClick = {}
     )
 }

@@ -18,12 +18,23 @@ import com.virtuous.domain.model.post.WritePostType
 import com.virtuous.domain.repository.PostRepository
 import com.virtuous.network.source.post.PostDataSource
 import jakarta.inject.Inject
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 
 class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
     private val imageResizer: ImageResizer,
 ) : PostRepository {
+    private val _postUpdateEvents = MutableSharedFlow<PostRepository.PostUpdateEvent>(
+        replay = 1,
+        extraBufferCapacity = 32,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+    override val postUpdateEvents: SharedFlow<PostRepository.PostUpdateEvent> = _postUpdateEvents.asSharedFlow()
+
 
     override fun getPosts(tabType: HomeTab): Flow<PagingData<PostFeed>> {
         return Pager(
@@ -69,8 +80,8 @@ class PostRepositoryImpl @Inject constructor(
             imageResizer.resizeImage(imageUrl)
         }
 
-        val response =
-            postDataSource.addPost(postType, title, content, imageStreams).getOrThrow()
+        val response = postDataSource.addPost(postType, title, content, imageStreams).getOrThrow()
+        _postUpdateEvents.emit(PostRepository.PostUpdateEvent.PostAdded(response.toDomain().toPostFeed()))
 
         response.toDomain()
     }
@@ -84,8 +95,8 @@ class PostRepositoryImpl @Inject constructor(
             imageResizer.resizeImage(imageUrl)
         }
 
-        val response =
-            postDataSource.verifyAndAddPost(title, content, imageStreams).getOrThrow()
+        val response = postDataSource.verifyAndAddPost(title, content, imageStreams).getOrThrow()
+        _postUpdateEvents.emit(PostRepository.PostUpdateEvent.PostAdded(response.toDomain().toPostFeed()))
 
         response.toDomain()
     }
@@ -109,11 +120,14 @@ class PostRepositoryImpl @Inject constructor(
             newImages = imageStreams
         ).getOrThrow()
 
+        _postUpdateEvents.emit(PostRepository.PostUpdateEvent.PostUpdated(response.toDomain().toPostFeed()))
+
         response.toDomain()
     }
 
     override suspend fun deletePost(postId: Int): Result<Unit> = suspendRunCatching {
         postDataSource.deletePost(postId).getOrThrow()
+        _postUpdateEvents.emit(PostRepository.PostUpdateEvent.PostDeleted(postId))
     }
 
     override suspend fun reportPost(postId: Int, reason: String): Result<Unit> =
@@ -128,12 +142,15 @@ class PostRepositoryImpl @Inject constructor(
     ): Result<Boolean> =
         suspendRunCatching {
             val response = postDataSource.toggleEmotion(postId, emotionType).getOrThrow()
+            if(originEmotionType == null && response.isAdded) _postUpdateEvents.emit(PostRepository.PostUpdateEvent.EmotionAdded(postId))
+            else if(originEmotionType == emotionType) _postUpdateEvents.emit(PostRepository.PostUpdateEvent.EmotionDeleted(postId))
 
             response.isAdded
         }
 
     override suspend fun blockUser(providerId: String): Result<Unit> = suspendRunCatching {
         postDataSource.blockUser(providerId)
+        _postUpdateEvents.emit(PostRepository.PostUpdateEvent.UserBlocked(providerId))
     }
 
     companion object {

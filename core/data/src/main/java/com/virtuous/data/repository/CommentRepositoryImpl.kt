@@ -25,7 +25,8 @@ class CommentRepositoryImpl @Inject constructor(
         extraBufferCapacity = 32,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    override val commentUpdateEvents: SharedFlow<CommentUpdateEvent> = _commentUpdateEvents.asSharedFlow()
+    override val commentUpdateEvents: SharedFlow<CommentUpdateEvent> =
+        _commentUpdateEvents.asSharedFlow()
 
     override fun getCommentPagingFlow(postId: Int): Flow<PagingData<Comment>> {
         return Pager(
@@ -38,10 +39,8 @@ class CommentRepositoryImpl @Inject constructor(
 
     override suspend fun addComment(postId: Int, content: String): Result<Comment> =
         suspendRunCatching {
-            val response =
-                commentDataSource.addComment(postId = postId, content = content).getOrThrow().also {
-                    _commentUpdateEvents.tryEmit(CommentUpdateEvent.CommentAdded(postId))
-                }
+            val response = commentDataSource.addComment(postId = postId, content = content).getOrThrow()
+            _commentUpdateEvents.emit(CommentUpdateEvent.CommentAdded(postId))
 
             Comment(
                 postId = response.postId,
@@ -67,9 +66,8 @@ class CommentRepositoryImpl @Inject constructor(
             postId = postId,
             commentId = commentId,
             content = content,
-        ).getOrThrow().also {
-            _commentUpdateEvents.emit(CommentUpdateEvent.CommentAdded(postId))
-        }
+        ).getOrThrow()
+        _commentUpdateEvents.emit(CommentUpdateEvent.CommentAdded(postId))
 
         Comment(
             postId = response.postId,
@@ -86,11 +84,11 @@ class CommentRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteComment(postId : Int, commentId: Int): Result<Unit> = suspendRunCatching {
-        commentDataSource.deleteComment(commentId = commentId).also {
+    override suspend fun deleteComment(postId: Int, commentId: Int): Result<Unit> =
+        suspendRunCatching {
+            commentDataSource.deleteComment(commentId = commentId)
             _commentUpdateEvents.emit(CommentUpdateEvent.CommentDeleted(postId))
         }
-    }
 
     override suspend fun reportComment(commentId: Int, reason: String): Result<Unit> =
         suspendRunCatching {

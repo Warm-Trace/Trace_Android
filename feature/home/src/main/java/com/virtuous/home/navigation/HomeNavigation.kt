@@ -118,10 +118,14 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.SearchRoute>(
             enterTransition = {
-                defaultSlideFadeIn()
+                if (targetState.destination.containsRoute(listOf(HomeGraph.SearchRoute::class))) {
+                    null
+                } else defaultSlideFadeIn()
             },
             exitTransition = {
-                defaultSlideFadeOut()
+                if (targetState.destination.containsRoute(listOf(HomeGraph.SearchRoute::class))) {
+                    null
+                } else defaultSlideFadeOut()
             },
         ) {
             SearchRoute(
@@ -150,19 +154,6 @@ fun NavGraphBuilder.homeNavGraph(
                     null
                 } else {
                     defaultSlideFadeIn()
-                }
-            },
-            exitTransition = {
-                if (targetState.destination.containsRoute(
-                        listOf(
-                            HomeGraph.UpdatePostRoute::class,
-                            HomeGraph.UserProfileRoute::class
-                        )
-                    )
-                ) {
-                    null
-                } else {
-                    defaultSlideFadeOut()
                 }
             },
             popEnterTransition = null,
@@ -216,6 +207,5 @@ fun NavGraphBuilder.homeNavGraph(
                 navigateBack = navigateBack,
             )
         }
-
     }
 }
