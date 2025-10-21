@@ -65,8 +65,8 @@ class HomeViewModel @Inject constructor(
                 currentPost
             }
 
-        updates.addedPostFeeds.reversed().forEach {
-            result = result.insertHeaderItem(item = it)
+        updates.addedPostFeeds.reversed().forEach { postFeed ->
+           if(postFeed.postId !in updates.deletedIds) result = result.insertHeaderItem(item = postFeed)
         }
 
         result
