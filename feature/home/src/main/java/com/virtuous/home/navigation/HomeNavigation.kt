@@ -146,7 +146,7 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.PostRoute>(
             enterTransition = {
-                if (initialState.destination.containsRoute(listOf(HomeGraph.UpdatePostRoute::class))) {
+                if (!initialState.destination.containsRoute(listOf(HomeGraph.UpdatePostRoute::class))) {
                     null
                 } else {
                     defaultSlideFadeIn()

@@ -68,7 +68,7 @@ class SearchViewModel @Inject constructor(
         loadRecentKeywords()
     }
 
-    fun resetSearch() {
+    fun onFocusSearchField() {
         _isSearched.value = false
     }
 

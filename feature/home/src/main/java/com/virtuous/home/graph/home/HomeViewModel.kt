@@ -8,6 +8,7 @@ import com.virtuous.domain.model.post.HomeTab
 import com.virtuous.domain.model.post.PostFeed
 import com.virtuous.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,9 +28,10 @@ class HomeViewModel @Inject constructor(
     private val _tabType: MutableStateFlow<HomeTab> = MutableStateFlow(HomeTab.ALL)
     val tabType = _tabType.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val postFeeds = tabType.flatMapLatest { tab ->
-        postRepository.getPosts(tab).cachedIn(viewModelScope)
-    }
+        postRepository.getPosts(tab)
+    }.cachedIn(viewModelScope)
 
     fun setTabType(tabType: HomeTab) {
         _tabType.value = tabType
