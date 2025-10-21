@@ -1,6 +1,5 @@
 package com.virtuous.home.graph.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -165,12 +164,12 @@ class HomeViewModel @Inject constructor(
     }
 
     private data class PostFeedUpdates(
-        var deletedIds: Set<Int> = emptySet(),
-        var blockedIds: Set<String> = emptySet(),
-        var addedPostFeeds: List<PostFeed> = emptyList(),
-        var updatedPostFeeds: Map<Int, PostFeed> = emptyMap(),
-        var emotionCountUpdates: Map<Int, Int> = emptyMap(),
-        var commentCountUpdates: Map<Int, Int> = emptyMap()
+        val deletedIds: Set<Int> = emptySet(),
+        val blockedIds: Set<String> = emptySet(),
+        val addedPostFeeds: List<PostFeed> = emptyList(),
+        val updatedPostFeeds: Map<Int, PostFeed> = emptyMap(),
+        val emotionCountUpdates: Map<Int, Int> = emptyMap(),
+        val commentCountUpdates: Map<Int, Int> = emptyMap()
     )
 }
 

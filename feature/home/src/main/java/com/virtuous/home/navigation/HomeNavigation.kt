@@ -199,10 +199,7 @@ fun NavGraphBuilder.homeNavGraph(
         }
 
         composable<HomeGraph.NotificationRoute>(
-            enterTransition = {
-
-                defaultSlideFadeIn()
-                              },
+            enterTransition = { defaultSlideFadeIn() },
             exitTransition = { defaultSlideFadeOut() }
         ) {
             NotificationRoute(
