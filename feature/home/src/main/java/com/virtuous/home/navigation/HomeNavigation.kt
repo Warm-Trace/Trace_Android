@@ -118,10 +118,14 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.SearchRoute>(
             enterTransition = {
-                defaultSlideFadeIn()
+                if (targetState.destination.containsRoute(listOf(HomeGraph.SearchRoute::class))) {
+                    null
+                } else defaultSlideFadeIn()
             },
             exitTransition = {
-                defaultSlideFadeOut()
+                if (targetState.destination.containsRoute(listOf(HomeGraph.SearchRoute::class))) {
+                    null
+                } else defaultSlideFadeOut()
             },
         ) {
             SearchRoute(
@@ -146,23 +150,10 @@ fun NavGraphBuilder.homeNavGraph(
 
         composable<HomeGraph.PostRoute>(
             enterTransition = {
-                if (!initialState.destination.containsRoute(listOf(HomeGraph.UpdatePostRoute::class))) {
+                if (initialState.destination.containsRoute(listOf(HomeGraph.UpdatePostRoute::class))) {
                     null
                 } else {
                     defaultSlideFadeIn()
-                }
-            },
-            exitTransition = {
-                if (targetState.destination.containsRoute(
-                        listOf(
-                            HomeGraph.UpdatePostRoute::class,
-                            HomeGraph.UserProfileRoute::class
-                        )
-                    )
-                ) {
-                    null
-                } else {
-                    defaultSlideFadeOut()
                 }
             },
             popEnterTransition = null,
@@ -208,7 +199,10 @@ fun NavGraphBuilder.homeNavGraph(
         }
 
         composable<HomeGraph.NotificationRoute>(
-            enterTransition = { defaultSlideFadeIn() },
+            enterTransition = {
+
+                defaultSlideFadeIn()
+                              },
             exitTransition = { defaultSlideFadeOut() }
         ) {
             NotificationRoute(
@@ -216,6 +210,5 @@ fun NavGraphBuilder.homeNavGraph(
                 navigateBack = navigateBack,
             )
         }
-
     }
 }

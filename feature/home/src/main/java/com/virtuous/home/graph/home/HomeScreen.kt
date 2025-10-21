@@ -117,8 +117,8 @@ private fun HomeScreen(
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
         onRefresh = {
-            postFeeds.refresh()
             onRefresh()
+            postFeeds.refresh()
         }
     )
     val listState = postFeeds.rememberLazyListState()
@@ -223,8 +223,8 @@ private fun HomeScreen(
                                 iconRes = R.drawable.refresh_ic,
                                 labelRes = R.string.refresh,
                                 action = {
-                                    postFeeds.refresh()
                                     onRefresh()
+                                    postFeeds.refresh()
                                     coroutineScope.launch {
                                         listState.scrollToItem(0)
                                     }
