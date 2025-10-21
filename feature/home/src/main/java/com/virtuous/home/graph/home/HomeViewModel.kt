@@ -56,10 +56,10 @@ class HomeViewModel @Inject constructor(
                 var currentPost = updatedPost ?: post
                 if (updatedEmotionCount != null) {
                     currentPost =
-                        currentPost.copy(totalEmotionCount = currentPost.totalEmotionCount + updatedEmotionCount)
+                        currentPost.copy(totalEmotionCount = (currentPost.totalEmotionCount + updatedEmotionCount).coerceAtLeast(0))
                 }
                 if (updatedCommentCount != null) {
-                    currentPost = currentPost.copy(commentCount = currentPost.commentCount + updatedCommentCount)
+                    currentPost = currentPost.copy(commentCount =( currentPost.commentCount + updatedCommentCount).coerceAtLeast(0))
                 }
 
                 currentPost
@@ -125,7 +125,7 @@ class HomeViewModel @Inject constructor(
                         is CommentUpdateEvent.CommentDeleted -> {
                             val currentCounts = currentUpdates.commentCountUpdates
                             val currentCount = currentCounts[event.postId] ?: 0
-                            val newCount = currentCount - 1
+                            val newCount =( currentCount - 1)
                             val newMap = currentCounts + (event.postId to newCount)
                             currentUpdates.copy(commentCountUpdates = newMap)
                         }
