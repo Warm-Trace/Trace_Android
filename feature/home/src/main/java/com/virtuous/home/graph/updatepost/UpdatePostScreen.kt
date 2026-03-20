@@ -113,6 +113,7 @@ private fun UpdatePostScreen(
     navigateBack: () -> Unit,
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
+    val coroutineScope = rememberCoroutineScope()
 
     val lazyListState = rememberLazyListState()
 
@@ -164,7 +165,14 @@ private fun UpdatePostScreen(
                 TraceContentField(
                     value = content,
                     onValueChange = onContentChange,
-                    lazyListState = lazyListState,
+                    onHeightChanged = { diff ->
+                        coroutineScope.launch {
+                            lazyListState.animateScrollToItem(
+                                lazyListState.firstVisibleItemIndex,
+                                lazyListState.firstVisibleItemScrollOffset + diff
+                            )
+                        }
+                    },
                     hint = if (type == PostType.GOOD_DEED) stringResource(R.string.write_content_hint_good_deed) else stringResource(
                         R.string.write_content_hint_free
                     ),

@@ -2,7 +2,7 @@ package com.virtuous.designsystem.component
 
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,9 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
@@ -26,7 +25,6 @@ import com.virtuous.designsystem.theme.PrimaryDefault
 import com.virtuous.designsystem.theme.TextHint
 import com.virtuous.designsystem.theme.TraceTheme
 import com.virtuous.domain.model.post.PostRule
-import kotlinx.coroutines.launch
 
 private val customTextSelectionColors = TextSelectionColors(
     handleColor = PrimaryDefault,
@@ -83,14 +81,13 @@ fun TraceTitleField(
 @Composable
 fun TraceContentField(
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState,
     value: String,
     onValueChange: (String) -> Unit,
+    onHeightChanged: (Int) -> Unit,
     hint: String = "",
     maxLength: Int = PostRule.MAX_CONTENT_LENGTH
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    var prevHeight by remember { mutableStateOf(0) }
+    var prevHeight by remember { mutableIntStateOf(0) }
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
@@ -123,12 +120,7 @@ fun TraceContentField(
                         return@onSizeChanged
                     }
 
-                    coroutineScope.launch {
-                        lazyListState.animateScrollToItem(
-                            lazyListState.firstVisibleItemIndex,
-                            lazyListState.firstVisibleItemScrollOffset + diff
-                        )
-                    }
+                    onHeightChanged(diff)
                 }
         )
     }

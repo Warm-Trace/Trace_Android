@@ -148,6 +148,7 @@ private fun WritePostScreen(
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutineScope = rememberCoroutineScope()
 
     val lazyListState = rememberLazyListState()
 
@@ -245,7 +246,14 @@ private fun WritePostScreen(
                 TraceContentField(
                     value = content,
                     onValueChange = onContentChange,
-                    lazyListState = lazyListState,
+                    onHeightChanged = { diff ->
+                        coroutineScope.launch {
+                            lazyListState.animateScrollToItem(
+                                lazyListState.firstVisibleItemIndex,
+                                lazyListState.firstVisibleItemScrollOffset + diff
+                            )
+                        }
+                    },
                     hint = if (type == WritePostType.GOOD_DEED) stringResource(R.string.write_content_hint_good_deed) else stringResource(
                         R.string.write_content_hint_free
                     ),

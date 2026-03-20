@@ -118,6 +118,7 @@ private fun VerifyMissionScreen(
 ) {
     val contentFieldFocusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutineScope = rememberCoroutineScope()
 
     val lazyListState = rememberLazyListState()
 
@@ -167,7 +168,14 @@ private fun VerifyMissionScreen(
                 TraceContentField(
                     value = content,
                     onValueChange = onContentChange,
-                    lazyListState = lazyListState,
+                    onHeightChanged = { diff ->
+                        coroutineScope.launch {
+                            lazyListState.animateScrollToItem(
+                                lazyListState.firstVisibleItemIndex,
+                                lazyListState.firstVisibleItemScrollOffset + diff
+                            )
+                        }
+                    },
                     hint = "미션에 도전해보세요!",
                     modifier = Modifier.focusRequester(contentFieldFocusRequester)
                 )
