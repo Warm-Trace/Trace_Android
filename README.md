@@ -70,6 +70,7 @@
 
 ## 🧰 기술 스택
 ### Architecture
+- Clean Architecture
 - Multi-Module
 - MVVM
   
